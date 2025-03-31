@@ -1,7 +1,7 @@
 package org.fp;
 
 //Student s = new Student("20251234", "Ming", "Yang", "mingyang@example.com");
-//System.out.println(s);  // 输出：Ming Yang (20251234): mingyang@example.com
+//System.out.println(s);  // output: Ming Yang (20251234): mingyang@example.com
 
 public class Student {
     private final String studentId;
