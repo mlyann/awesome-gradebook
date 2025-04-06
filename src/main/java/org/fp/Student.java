@@ -7,6 +7,7 @@ public class Student {
     private final String firstName;
     private final String lastName;
     private final String email;
+    private final String studentId;
 
     public Student(String studentId, String firstName, String lastName, String email) {
         if (studentId == null || studentId.isEmpty()) {
@@ -18,8 +19,8 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.studentId = studentId;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -37,8 +38,12 @@ public class Student {
         return email;
     }
 
+    public String getStudentId(){
+        return studentId;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s (%s): %s", getFullName(), email);
+        return String.format("%s (%s): %s", getFullName(), getStudentId(), email);
     }
 }
