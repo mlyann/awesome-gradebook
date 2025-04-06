@@ -4,7 +4,6 @@ package org.fp;
 //System.out.println(s);  // output: Ming Yang (20251234): mingyang@example.com
 
 public class Student {
-    private final String studentId;
     private final String firstName;
     private final String lastName;
     private final String email;
@@ -16,15 +15,11 @@ public class Student {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
         }
-        this.studentId = studentId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public String getStudentId() {
-        return studentId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -44,6 +39,6 @@ public class Student {
 
     @Override
     public String toString() {
-        return String.format("%s (%s): %s", getFullName(), studentId, email);
+        return String.format("%s (%s): %s", getFullName(), email);
     }
 }
