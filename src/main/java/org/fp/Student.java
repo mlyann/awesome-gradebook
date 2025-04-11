@@ -7,10 +7,10 @@ public class Student {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String studentId;
+    private final String stuID;
 
-    public Student(String studentId, String firstName, String lastName, String email) {
-        if (studentId == null || studentId.isEmpty()) {
+    public Student(String stuID, String firstName, String lastName, String email) {
+        if (stuID == null || stuID.isEmpty()) {
             throw new IllegalArgumentException("Student ID cannot be null or empty.");
         }
         if (email == null || !email.contains("@")) {
@@ -19,7 +19,7 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.studentId = studentId;
+        this.stuID = stuID;
     }
 
     public String getFirstName() {
@@ -38,12 +38,12 @@ public class Student {
         return email;
     }
 
-    public String getStudentId(){
-        return studentId;
+    public String getStuID(){
+        return stuID;
     }
 
     @Override
     public String toString() {
-        return String.format("%s (%s): %s", getFullName(), getStudentId(), email);
+        return String.format("%s (%s): %s", getFullName(), getStuID(), email);
     }
 }
