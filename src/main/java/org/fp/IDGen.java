@@ -1,6 +1,11 @@
 package org.fp;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+import java.util.Collections;
 
 public class IDGen {
     // Set does not allow duplicates. Guarantees unique IDs
