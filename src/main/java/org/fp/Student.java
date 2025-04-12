@@ -9,17 +9,18 @@ public class Student {
     private final String email;
     private final String stuID;
 
-    public Student(String stuID, String firstName, String lastName, String email) {
-        if (stuID == null || stuID.isEmpty()) {
-            throw new IllegalArgumentException("Student ID cannot be null or empty.");
-        }
+    public Student(String firstName, String lastName, String email) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
         }
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.stuID = stuID;
+        this.stuID = IDGen.getUniqueID();
+
+        if(stuID == null){
+            throw new IllegalArgumentException("Student ID cannot be null or empty.");
+        }
     }
 
     public String getFirstName() {

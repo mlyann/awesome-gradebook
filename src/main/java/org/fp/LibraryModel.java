@@ -62,18 +62,18 @@ public class LibraryModel {
 
     public void state() {
         // Create students
-        Student s1 = new Student("20250001", "Ming", "Yang", "mingyang@example.com");
-        Student s2 = new Student("20250002", "Li", "Wei", "liwei@example.com");
-        Student s3 = new Student("20250003", "Zhang", "Hua", "zhanghua@example.com");
+        Student s1 = new Student("Ming", "Yang", "mingyang@example.com");
+        Student s2 = new Student("Li", "Wei", "liwei@example.com");
+        Student s3 = new Student("Zhang", "Hua", "zhanghua@example.com");
 
         stuID_Map.put(s1.getStuID(), s1);
         stuID_Map.put(s2.getStuID(), s2);
         stuID_Map.put(s3.getStuID(), s3);
 
         // Create courses
-        Course c1 = new Course("CSE101", "Intro to Programming", "Basic programming in Java.");
-        Course c2 = new Course("CSE102", "Data Structures", "Learn about lists, stacks, queues.");
-        Course c3 = new Course("CSE103", "Database Systems", "Learn relational DB and SQL.");
+        Course c1 = new Course("Intro to Programming", "Basic programming in Java.");
+        Course c2 = new Course("Data Structures", "Learn about lists, stacks, queues.");
+        Course c3 = new Course("Database Systems", "Learn relational DB and SQL.");
 
         courseID_Map.put(c1.getCourseID(), c1);
         courseID_Map.put(c2.getCourseID(), c2);

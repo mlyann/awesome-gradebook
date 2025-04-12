@@ -5,13 +5,14 @@ public class Teacher {
     private final String lastName;
     private  final String teacherID;
 
-    public Teacher(String teacherID, String firstName, String lastName) {
+    public Teacher(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.teacherID = IDGen.getUniqueID();
+
         if (teacherID == null || teacherID.isEmpty()){
             throw new IllegalArgumentException("Teacher ID cannot be null or empty.");
         }
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.teacherID = teacherID;
     }
 
     public String getFirstName(){

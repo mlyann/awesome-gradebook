@@ -19,8 +19,9 @@ public class ReadStudents {
             // Looping through each line in studentlist
             while((lineRead = reader.readLine()) != null){
                 String[] values = lineRead.split(",");
-                System.out.println(values[0] + values[1] + values[2] + values[3]);
-                students.add(new Student(values[0], values[1], values[2], values[3]));
+
+                // value[0]=firstname, value[1]=lastname, value[2]=email
+                students.add(new Student(values[0], values[1], values[2]));
             }
         } catch (IOException e){
             System.out.println("Error: given StudentList file does not exist");
