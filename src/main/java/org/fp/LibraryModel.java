@@ -17,7 +17,7 @@ public class LibraryModel {
     private final HashMap<String, ArrayList<String>> couID_stuID_Map;
     // This map record the assignments in each course, course is a Key:
     // { "CourseID" : [AssignmentID1, AssignmentID2, ...] , ... }
-    private final HashMap<String, ArrayList<String>> stuID_assID_Map;
+    private final HashMap<String, ArrayList<String>> couID_assID_Map;
     // This map record the student who submitted each assignment, assignment is a Key:
     // { "StudentID" : [AssignmentID1, AssignmentID2, ...] , ... }
     private final HashMap<String, ArrayList<String>> assID_Map_stuID_Map;
@@ -28,7 +28,7 @@ public class LibraryModel {
         this.stuID_Map = new HashMap<>();
         this.stuID_couID_Map = new HashMap<>();
         this.couID_stuID_Map = new HashMap<>();
-        this.stuID_assID_Map = new HashMap<>();
+        this.couID_assID_Map = new HashMap<>();
         this.assID_Map_stuID_Map = new HashMap<>();
         this.courseID_Map = new HashMap<>();
         this.assignmentID_Map = new HashMap<>();
@@ -75,12 +75,41 @@ public class LibraryModel {
     }
 
     // Add assignments to a course
+    public void addAssignmentToCourse(String assID, String couID){
+        couID_assID_Map.get(couID).add(assID);
+    }
 
     // Remove assignments to a course
+    public void removeAssignmentFromCourse(String assID, String couID){
+        couID_assID_Map.get(couID).remove(assID);
+    }
 
     // Import list of students to add to a course
+    public void importStudentAddToCourse(String studentList, String couID){
+        ArrayList<Student> gottenStudents = ReadStudents.getStudents(studentList);
+        ArrayList<String> stuIDs = couID_stuID_Map.get(couID);
+
+        // Updating couID_StuID map and stuID_couID map
+        for(Student s : gottenStudents){
+            stuIDs.add(s.getStuID());
+            stuID_couID_Map.get(s.getStuID()).add(courseID_Map.get(couID));
+
+            // Update stuID Map because we have added new students
+            stuID_Map.put(s.getStuID(), s);
+        }
+    }
 
     // View students enrolled in a course
+    public ArrayList<String> viewStudentsInCourse(String couID){
+        ArrayList<String> studentNames = new ArrayList<>();
+        ArrayList<String> studentIds = couID_stuID_Map.get(couID);
+
+        for (String s : studentIds){
+            studentNames.add(stuID_Map.get(s).getFullName());
+        }
+
+        return studentNames;
+    }
 
     // Add grades for a given student for an assignment
 
@@ -101,6 +130,11 @@ public class LibraryModel {
     // Choose a mode for calculating class averages
 
     // Set up categories of assignments with weights, allowing for dropped assignments
+
+    // Gets course title
+    public String getCourseTitle(String couID){
+        return courseID_Map.get(couID).getCourseDescription();
+    }
 
     public void state() {
         // Create students
