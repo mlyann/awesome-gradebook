@@ -91,24 +91,52 @@ public class StudentUI {
     }
 
     private static void viewMyCurrentGrade(String courseID) {
-        String grade = model.getStudentCourseGrade(stuID, courseID);  // 假设你有这个方法
+        String grade = model.getStudentCourseGrade(stuID, courseID);
         System.out.println("📈 Your current grade for the course is: " + grade);
     }
 
     private static void viewAllGrades(String courseID) {
-        ArrayList<ArrayList<String>> grades = model.getAllGrades(courseID);  // 假设每项：[stuName, grade]
-        List<String> header = List.of("Student Name", "Grade");
+        String courseTitle = model.getCourseTitle(courseID); // e.g. "CSc 460, Database Design (Spring,2025)"
+        List<String> identifiers = model.getAssignmentIdentifiers(courseID); // e.g. ["LDAYS", "PROG1", ..., "EXAM1"]
+        List<String> weights = model.getAssignmentWeights(courseID);         // e.g. ["0", "6", ..., "20"]
+        List<String> maxPoints = model.getAssignmentMaxPoints(courseID);     // e.g. ["5", "100", ..., "90"]
+        List<String> submissionDates = model.getAssignmentSubmissions(courseID);
+        List<String> resubmits = model.getAssignmentResubmitDates(courseID);
+        ArrayList<ArrayList<String>> studentGrades = model.getGradeRows(courseID); // each: [stuID, g1, g2, ..., avg]
+
         List<List<String>> rows = new ArrayList<>();
-        rows.add(header);
-        for (ArrayList<String> row : grades) {
-            rows.add(row);
+
+        // Metadata rows
+        rows.add(prependRow("       Weight", weights));
+        rows.add(prependRow("       Points", maxPoints));
+        rows.add(prependRow("    Submitted", submissionDates));
+        rows.add(prependRow("Resubmit Date", resubmits));
+        rows.add(List.of("###SEPARATOR###")); // separator for metadata & headers
+
+        rows.add(prependRow("   Identifier", identifiers));
+        rows.add(List.of("###SEPARATOR###"));
+
+        // Student grade rows
+        for (ArrayList<String> row : studentGrades) {
+            List<String> formattedRow = new ArrayList<>(row);
+            formattedRow.set(0, String.format("   %s", row.get(0))); // format ID
+            rows.add(formattedRow);
         }
-        printer.printDynamicTable("All Students' Grades for Course", rows);
+
+        printer.printDynamicTable("Full Grade Sheet: " + courseTitle, rows);
     }
+
+    private static List<String> prependRow(String label, List<String> items) {
+        List<String> newRow = new ArrayList<>();
+        newRow.add(label);
+        newRow.addAll(items);
+        return newRow;
+    }
+
 
     private static void viewMyAssignmentGrades(String courseID) {
         ArrayList<ArrayList<String>> assgGrades = model.getStudentAssignmentGrades(stuID, courseID);
-        List<String> header = List.of("Assignment", "Grade");
+        List<String> header = List.of("Assignment", "Grade"); // implement here yourself @Jerry
         List<List<String>> rows = new ArrayList<>();
         rows.add(header);
         for (ArrayList<String> row : assgGrades) {
