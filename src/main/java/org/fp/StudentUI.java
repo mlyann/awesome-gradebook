@@ -55,6 +55,68 @@ public class StudentUI {
 
     }
 
+
+    private static void level_2(int courseIndex) {
+        ArrayList<ArrayList<String>> courses = model.getCoursesString(stuID);
+        String courseID = courses.get(courseIndex).get(2);  // 假设第3列是courseID
+
+        System.out.println("\n📘 Course: " + courses.get(courseIndex).get(0));
+        System.out.println("1) 📊 View my current grade");
+        System.out.println("2) 👥 View all students' grades");
+        System.out.println("3) 📝 View my assignment grades");
+        System.out.println("0) 🔙 Back to course list");
+        System.out.print("👉 Enter choice: ");
+
+        while (true) {
+            String choice = sc.nextLine();
+            switch (choice) {
+                case "1":
+                    viewMyCurrentGrade(courseID);
+                    break;
+                case "2":
+                    viewAllGrades(courseID);
+                    break;
+                case "3":
+                    viewMyAssignmentGrades(courseID);
+                    break;
+                case "0":
+                    System.out.println("🔙 Back to course list...");
+                    level_1();
+                    return;
+                default:
+                    System.out.println("❌ Invalid choice. Please try again.");
+            }
+            System.out.print("\n👉 Enter another choice (or 0 to go back): ");
+        }
+    }
+
+    private static void viewMyCurrentGrade(String courseID) {
+        String grade = model.getStudentCourseGrade(stuID, courseID);  // 假设你有这个方法
+        System.out.println("📈 Your current grade for the course is: " + grade);
+    }
+
+    private static void viewAllGrades(String courseID) {
+        ArrayList<ArrayList<String>> grades = model.getAllGrades(courseID);  // 假设每项：[stuName, grade]
+        List<String> header = List.of("Student Name", "Grade");
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(header);
+        for (ArrayList<String> row : grades) {
+            rows.add(row);
+        }
+        printer.printDynamicTable("All Students' Grades for Course", rows);
+    }
+
+    private static void viewMyAssignmentGrades(String courseID) {
+        ArrayList<ArrayList<String>> assgGrades = model.getStudentAssignmentGrades(stuID, courseID);
+        List<String> header = List.of("Assignment", "Grade");
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(header);
+        for (ArrayList<String> row : assgGrades) {
+            rows.add(row);
+        }
+        printer.printDynamicTable("Your Assignment Grades", rows);
+    }
+
     private static void printCourse(String stuName, ArrayList<ArrayList<String>> result ) {
         List<String> header = new ArrayList<>();
         header.add("No.");
