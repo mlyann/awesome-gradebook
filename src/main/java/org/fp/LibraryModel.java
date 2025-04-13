@@ -37,6 +37,7 @@ public class LibraryModel {
 
     // Design for function
 
+    // Getting all courses for given student
     public ArrayList<ArrayList<String>> getCoursesString(String stuID) {
         ArrayList<Course> courses = stuID_couID_Map.get(stuID);
         ArrayList<ArrayList<String>> result = new ArrayList<>();
@@ -49,6 +50,7 @@ public class LibraryModel {
         return result;
     }
 
+    // Getting student name given id
     public String getStuName(String stuID) {
         StringBuilder result = new StringBuilder();
         Student student = stuID_Map.get(stuID);
@@ -59,6 +61,46 @@ public class LibraryModel {
         }
         return result.toString();
     }
+
+    // Adding a student to a course
+    public void addStudentToCourse(String stuID, String couID){
+        couID_stuID_Map.get(couID).add(stuID);
+        stuID_couID_Map.get(stuID).add(courseID_Map.get(couID));
+    }
+
+    // Remove a student from a course
+    public void removeStudentFromCourse(String stuID, String couID){
+        couID_stuID_Map.get(couID).remove(stuID);
+        stuID_couID_Map.get(stuID).remove(courseID_Map.get(couID));
+    }
+
+    // Add assignments to a course
+
+    // Remove assignments to a course
+
+    // Import list of students to add to a course
+
+    // View students enrolled in a course
+
+    // Add grades for a given student for an assignment
+
+    // Calculate class Average for assignment
+
+    // Calculate class median for assignment
+
+    // Calculate student's average
+
+    // Sort student by first name, last name, username, or grades
+
+    // Put students in groups
+
+    // Assign final grades to students based on course averages
+
+    // View ungraded assignments
+
+    // Choose a mode for calculating class averages
+
+    // Set up categories of assignments with weights, allowing for dropped assignments
 
     public void state() {
         // Create students
@@ -88,8 +130,6 @@ public class LibraryModel {
         couID_stuID_Map.put(c1.getCourseID(), new ArrayList<>(List.of(s1.getStuID(), s3.getStuID())));
         couID_stuID_Map.put(c2.getCourseID(), new ArrayList<>(List.of(s1.getStuID(), s2.getStuID())));
         couID_stuID_Map.put(c3.getCourseID(), new ArrayList<>(List.of(s2.getStuID(), s3.getStuID())));
-
-
     }
 
 
