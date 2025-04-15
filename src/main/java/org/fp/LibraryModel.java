@@ -1,6 +1,8 @@
 package org.fp;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +10,9 @@ public class LibraryModel {
     private final HashMap<String, Student> stuID_Map;
     private final HashMap<String, Course> courseID_Map;
     private final HashMap<String, Assignment> assignmentID_Map;
+    //creates a groupId, stores arrayList of students
+   
+
 
     // This map record the courses enrolled by each student, student is a Key:
     // { "StudentID" : [CourseID1, CourseID2, ...] , ... }
@@ -23,6 +28,9 @@ public class LibraryModel {
     private final HashMap<String, ArrayList<String>> assID_Map_stuID_Map;
     // This map record the assignments submitted by each student, student is a Key:
     // { "AssignmentID1" : [StudentID1, StudentID2, ...] , ... }
+    private final HashMap<String,HashMap<String,Score>> stuID_assID_Score_MAP;
+    private final HashMap<String, ArrayList<String>> groupID_studentIDs;
+
 
     public LibraryModel() {
         this.stuID_Map = new HashMap<>();
@@ -32,6 +40,8 @@ public class LibraryModel {
         this.assID_Map_stuID_Map = new HashMap<>();
         this.courseID_Map = new HashMap<>();
         this.assignmentID_Map = new HashMap<>();
+        this.stuID_assID_Score_MAP=new HashMap<>();
+        this.groupID_studentIDs=new HashMap<>();
 
     }
 
@@ -111,21 +121,91 @@ public class LibraryModel {
         return studentNames;
     }
 
-    // Add grades for a given student for an assignment
-
+    public void addGradeForStudent(String stuID, String assigID, int earned, int total) {
+        HashMap<String, Score> assScoreMap = stuID_assID_Score_MAP.get(stuID);
+        // If this student doesn't have any scores yet, create a new map
+        if (assScoreMap == null) {
+            assScoreMap = new HashMap<>();
+            stuID_assID_Score_MAP.put(stuID, assScoreMap);
+        }
+        Score score = Score.of(earned, total);
+        assScoreMap.put(assigID, score);
+    
+        
+    }
     // Calculate class Average for assignment
+    public double getAveragePercetangeAssig(String assigID){
+        int total=0;
+        int maxPoints=0;
+        ArrayList<String> studentsIDS=assID_Map_stuID_Map.get(assigID);
+        for(String s: studentsIDS){
+            HashMap<String,Score> current= stuID_assID_Score_MAP.get(s);
+            Score score= current.get(assigID);
+            total+=score.getEarned();
+            maxPoints+=score.getTotal();
+        }
+        return ((double) total / maxPoints) * 100;
+    }
+
+
+       // Put students in groups
+    public void createGroup(String groupName, String... studentIDs) {
+        ArrayList<String> stuIds = groupID_studentIDs.get(groupName);
+        if (stuIds == null) {
+            stuIds = new ArrayList<>();
+            groupID_studentIDs.put(groupName, stuIds);
+        }
+
+        for (String id : studentIDs) {
+            stuIds.add(id);
+        }
+    }
+    
+
 
     // Calculate class median for assignment
 
     // Calculate student's average
 
     // Sort student by first name, last name, username, or grades
+    public ArrayList<Student> sortByFirst(){
+        ArrayList<String> students=new ArrayList<>();
+        ArrayList<Student> studentsObj=new ArrayList<>();
+        for (Student s : stuID_Map.values()) {
+            students.add(s.getFirstName());
+        }
+        Collections.sort(students);
+        for(String s: students){
+            studentsObj.add(stuID_Map.get(s));
 
-    // Put students in groups
+        }
+        return studentsObj;
+        
+
+    }
+
+    public ArrayList<Student> sortByLast(){
+        ArrayList<String> students=new ArrayList<>();
+        ArrayList<Student> studentsObj=new ArrayList<>();
+        for (Student s : stuID_Map.values()) {
+            students.add(s.getLastName());
+        }
+        Collections.sort(students);
+        for(String s: students){
+            studentsObj.add(stuID_Map.get(s));
+
+        }
+        return studentsObj;
+        
+
+    }
+
+
 
     // Assign final grades to students based on course averages
 
     // View ungraded assignments
+
 
     // Choose a mode for calculating class averages
 
