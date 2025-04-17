@@ -14,6 +14,11 @@ public class LibraryModel {
         this.assignmentID_Map = new HashMap<>();
     }
 
+    // ----------- Student methods -----------
+
+
+    // ----------- Teacher methods -----------
+
     public void state() {
         // Create students
         Student s1 = new Student("Ming", "Yang", "mingyang@example.com");
@@ -42,5 +47,6 @@ public class LibraryModel {
         assignmentID_Map.put(a1.getAssignmentID(), a1);
         assignmentID_Map.put(a2.getAssignmentID(), a2);
         assignmentID_Map.put(a3.getAssignmentID(), a3);
+
     }
 }
