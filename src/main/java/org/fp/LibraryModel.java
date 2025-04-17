@@ -8,16 +8,22 @@ public class LibraryModel {
     private final HashMap<String, Course> courseID_Map;
     private final HashMap<String, Assignment> assignmentID_Map;
 
+    //couID                 stuID                         assID   grade
+    private final HashMap<String, HashMap<String, HashMap<String, Score>>> bigHashMap;
+
     public LibraryModel() {
         this.stuID_Map = new HashMap<>();
         this.courseID_Map = new HashMap<>();
         this.assignmentID_Map = new HashMap<>();
+        this.bigHashMap = new HashMap<>();
     }
 
     // ----------- Student methods -----------
 
 
+
     // ----------- Teacher methods -----------
+
 
     public void state() {
         // Create students
