@@ -118,7 +118,7 @@ public class LibraryModel {
         return studentNames;
     }
 
-    public void addGradeForStudent(String stuID, String assigID, int earned, int total) {
+    public void SubmitGradeAssignment(String stuID, String assigID, int earned, int total) {
         HashMap<String, Score> assScoreMap = stuID_assID_Score_MAP.get(stuID);
         // If this student doesn't have any scores yet, create a new map
         if (assScoreMap == null) {
@@ -127,7 +127,24 @@ public class LibraryModel {
         }
         Score score = Score.of(earned, total);
         assScoreMap.put(assigID, score);
+
+
+        // if the assigment is not already in there add it and update it
+        if(!assID_Map_stuID_Map.containsKey(assigID)){
+            assID_Map_stuID_Map.put(assigID,new ArrayList<>());
+        }
+         if (!assID_Map_stuID_Map.get(assigID).contains(stuID)){
+            assID_Map_stuID_Map.get(assigID).add(stuID);
+         }
+
+
+         
+     
     }
+   
+
+
+ 
 
     // Calculate class Average for assignment
     public double getAveragePercetangeAssig(String assigID){
@@ -194,7 +211,26 @@ public class LibraryModel {
         return sortStudents(Student.userNameDescendingComparator());
     }
 
-    // Sort students by grade
+    public ArrayList<Student> sortByGradeAssignment(String assigID) {
+        ArrayList<String> studentIDs = assID_Map_stuID_Map.get(assigID);
+        ArrayList<Student> sortedStudents = new ArrayList<>();
+        //this is not cheking it the students is not graded
+        for (String id : studentIDs) {
+            sortedStudents.add(stuID_Map.get(id));
+        }
+        Collections.sort(sortedStudents, new Comparator<Student>() {
+            public int compare(Student s1, Student s2) {
+                Score score1 = stuID_assID_Score_MAP.get(s1.getStuID()).get(assigID);
+                Score score2 = stuID_assID_Score_MAP.get(s2.getStuID()).get(assigID);
+                return score2.getLetterGrade().compareTo(score1.getLetterGrade());
+            }
+        });
+   
+        return sortedStudents;
+    }
+
+
+    
 
     // Assign final grades to students based on course averages
 
@@ -215,6 +251,28 @@ public class LibraryModel {
     // Set up categories of assignments with weights, allowing for dropped assignments
 
     // Calculate class median for assignment
+    public double calculateMedianAssignment(String assiID) {
+        ArrayList<Integer> gradesEarned = new ArrayList<>();
+        ArrayList<String> students = assID_Map_stuID_Map.get(assiID);
+   
+        if (students == null || students.isEmpty()) {
+             System.out.println("error assignment has no students or assignment not added");
+            return -1;
+        }
+   
+        for (String studentID : students) {
+            HashMap<String, Score> assigScore = stuID_assID_Score_MAP.get(studentID);
+            Score score = assigScore.get(assiID);
+            if (score != null && score.isGraded()) {
+                gradesEarned.add(score.getEarned());
+            }
+        }
+        Collections.sort(gradesEarned);
+        int size=gradesEarned.size();
+        return gradesEarned.get(size/2);
+    }
+   
+
 
     // Calculate student's average
 
