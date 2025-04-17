@@ -256,7 +256,7 @@ public class TeacherUI {
     }
 
     private static void showUngraded(String cid) {
-        List<String> ungraded = MODEL.getUngradedAssignments(cid); // TODO helper
+        List<String> ungraded = MODEL.getAllUngradedAssignments(cid); // TODO helper
         if (ungraded.isEmpty()) { pause("All assignments graded."); return; }
         System.out.println("Ungraded assignments: " + String.join(", ", ungraded));
         pause("");

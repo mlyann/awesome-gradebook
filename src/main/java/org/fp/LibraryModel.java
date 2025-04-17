@@ -27,6 +27,8 @@ public class LibraryModel {
     // { "AssignmentID1" : [StudentID1, StudentID2, ...] , ... }
     private final HashMap<String,HashMap<String,Score>> stuID_assID_Score_MAP;
     private final HashMap<String, ArrayList<String>> groupID_studentIDs;
+    //                     couID          stuID           assID   grade
+    private final HashMap<String, HashMap<String, HashMap<String, Score>>> bigHashMap;
 
 
     public LibraryModel() {
@@ -136,10 +138,6 @@ public class LibraryModel {
          if (!assID_Map_stuID_Map.get(assigID).contains(stuID)){
             assID_Map_stuID_Map.get(assigID).add(stuID);
          }
-
-
-         
-     
     }
    
 
@@ -229,13 +227,10 @@ public class LibraryModel {
         return sortedStudents;
     }
 
-
-    
-
     // Assign final grades to students based on course averages
 
     // View ungraded assignments
-    public ArrayList<Assignment> getUngradedAssignments(){
+    public ArrayList<Assignment> getAllUngradedAssignments(){
         ArrayList<Assignment> ungraded = new ArrayList<>();
         ArrayList<Assignment> allAssignments = new ArrayList<>(assignmentID_Map.values());
         for (Assignment a : allAssignments){
@@ -244,6 +239,16 @@ public class LibraryModel {
             }
         }
         return ungraded;
+    }
+
+    // View all ungraded assignment in course for a given student
+    public ArrayList<Assignment> getUngradedAssignmentStudent(String stuId, String couID){
+        ArrayList<Course> studentCourses = stuID_couID_Map.get(stuId);
+    }
+
+    // View all graded assignments in a course for a given student
+    public ArrayList<Assignment> getGradedAssignmentStudent(String stuId, String couID){
+
     }
 
     // Choose a mode for calculating class averages
@@ -309,5 +314,15 @@ public class LibraryModel {
         couID_stuID_Map.put(c1.getCourseID(), new ArrayList<>(List.of(s1.getStuID(), s3.getStuID())));
         couID_stuID_Map.put(c2.getCourseID(), new ArrayList<>(List.of(s1.getStuID(), s2.getStuID())));
         couID_stuID_Map.put(c3.getCourseID(), new ArrayList<>(List.of(s2.getStuID(), s3.getStuID())));
+
+        // Creating assignments
+        Assignment a1 = new Assignment("sim4", "Building a single cycle CPU based on MIPs architecture");
+        Assignment a2 = new Assignment("asm7", "Write quicksort and mergesort in MIPs");
+        Assignment a3 = new Assignment("asm6", "Working with binary trees in MIPs, including traversals, insertions and deletions");
+
+        // Adding assignments
+        assignmentID_Map.put(a1.getAssignmentID(), a1);
+        assignmentID_Map.put(a2.getAssignmentID(), a2);
+        assignmentID_Map.put(a3.getAssignmentID(), a3);
     }
 }
