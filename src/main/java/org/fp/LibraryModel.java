@@ -1,10 +1,7 @@
 package org.fp;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class LibraryModel {
     private final HashMap<String, Student> stuID_Map;
@@ -130,9 +127,8 @@ public class LibraryModel {
         }
         Score score = Score.of(earned, total);
         assScoreMap.put(assigID, score);
-    
-        
     }
+
     // Calculate class Average for assignment
     public double getAveragePercetangeAssig(String assigID){
         int total=0;
@@ -148,7 +144,7 @@ public class LibraryModel {
     }
 
 
-       // Put students in groups
+    // Put students in groups
     public void createGroup(String groupName, String... studentIDs) {
         ArrayList<String> stuIds = groupID_studentIDs.get(groupName);
         if (stuIds == null) {
@@ -160,47 +156,49 @@ public class LibraryModel {
             stuIds.add(id);
         }
     }
-    
-
 
     // Calculate class median for assignment
 
     // Calculate student's average
 
-    // Sort student by first name, last name, username, or grades
-    public ArrayList<Student> sortByFirst(){
-        ArrayList<String> students=new ArrayList<>();
-        ArrayList<Student> studentsObj=new ArrayList<>();
-        for (Student s : stuID_Map.values()) {
-            students.add(s.getFirstName());
-        }
-        Collections.sort(students);
-        for(String s: students){
-            studentsObj.add(stuID_Map.get(s));
-
-        }
-        return studentsObj;
-        
-
+    // Helper method for sorting
+    private ArrayList<Student> sortStudents(Comparator<Student> comparator) {
+        ArrayList<Student> studentList = new ArrayList<>(stuID_Map.values());
+        Collections.sort(studentList, comparator);
+        return studentList;
     }
 
-    public ArrayList<Student> sortByLast(){
-        ArrayList<String> students=new ArrayList<>();
-        ArrayList<Student> studentsObj=new ArrayList<>();
-        for (Student s : stuID_Map.values()) {
-            students.add(s.getLastName());
-        }
-        Collections.sort(students);
-        for(String s: students){
-            studentsObj.add(stuID_Map.get(s));
-
-        }
-        return studentsObj;
-        
-
+    // Sort student by first name ascending
+    public ArrayList<Student> sortByFirstAscending(){
+        return sortStudents(Student.firstNameAscendingComparator());
     }
 
+    // Sort student by first name descending
+    public ArrayList<Student> sortByFirstDescending(){
+        return sortStudents(Student.firstNameDescendingComparator());
+    }
 
+    // Sort student by last name ascending
+    public ArrayList<Student> sortByLastAscending(){
+        return sortStudents(Student.lastNameAscendingComparator());
+    }
+
+    // Sort student by last name descending
+    public ArrayList<Student> sortByLastDescending(){
+        return sortStudents(Student.lastNameDescendingComparator());
+    }
+
+    // Sort student by username ascending
+    public ArrayList<Student> sortByUserNameAscending(){
+        return sortStudents(Student.userNameAscendingComparator());
+    }
+
+    // Sort student by username ascending
+    public ArrayList<Student> sortByUserNameDescending(){
+        return sortStudents(Student.userNameDescendingComparator());
+    }
+
+    // Sort students by grade
 
     // Assign final grades to students based on course averages
 
@@ -245,6 +243,4 @@ public class LibraryModel {
         couID_stuID_Map.put(c2.getCourseID(), new ArrayList<>(List.of(s1.getStuID(), s2.getStuID())));
         couID_stuID_Map.put(c3.getCourseID(), new ArrayList<>(List.of(s2.getStuID(), s3.getStuID())));
     }
-
-
 }

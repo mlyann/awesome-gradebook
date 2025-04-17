@@ -3,6 +3,8 @@ package org.fp;
 //Student s = new Student("20251234", "Ming", "Yang", "mingyang@example.com");
 //System.out.println(s);  // output: Ming Yang (20251234): mingyang@example.com
 
+import java.util.Comparator;
+
 public class Student {
     private final String firstName;
     private final String lastName;
@@ -46,5 +48,44 @@ public class Student {
     @Override
     public String toString() {
         return String.format("%s (%s): %s", getFullName(), getStuID(), email);
+    }
+
+    public static Comparator<Student> firstNameAscendingComparator(){
+        return new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                return s1.firstName.compareTo(s2.firstName);
+            }
+        };
+    }
+
+    public static Comparator<Student> firstNameDescendingComparator() {
+        return firstNameAscendingComparator().reversed();
+    }
+
+    public static Comparator<Student> lastNameAscendingComparator(){
+        return new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                return s1.lastName.compareTo(s2.lastName);
+            }
+        };
+    }
+
+    public static Comparator<Student> lastNameDescendingComparator() {
+        return lastNameAscendingComparator().reversed();
+    }
+
+    public static Comparator<Student> userNameAscendingComparator(){
+        return new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                return s1.email.compareTo(s2.email);
+            }
+        };
+    }
+
+    public static Comparator<Student> userNameDescendingComparator() {
+        return userNameAscendingComparator().reversed();
     }
 }
