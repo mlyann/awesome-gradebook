@@ -157,10 +157,6 @@ public class LibraryModel {
         }
     }
 
-    // Calculate class median for assignment
-
-    // Calculate student's average
-
     // Helper method for sorting
     private ArrayList<Student> sortStudents(Comparator<Student> comparator) {
         ArrayList<Student> studentList = new ArrayList<>(stuID_Map.values());
@@ -203,11 +199,24 @@ public class LibraryModel {
     // Assign final grades to students based on course averages
 
     // View ungraded assignments
-
+    public ArrayList<Assignment> getUngradedAssignments(){
+        ArrayList<Assignment> ungraded = new ArrayList<>();
+        ArrayList<Assignment> allAssignments = new ArrayList<>(assignmentID_Map.values());
+        for (Assignment a : allAssignments){
+            if (!a.returnScore().isGraded()){
+                ungraded.add(new Assignment(a));
+            }
+        }
+        return ungraded;
+    }
 
     // Choose a mode for calculating class averages
 
     // Set up categories of assignments with weights, allowing for dropped assignments
+
+    // Calculate class median for assignment
+
+    // Calculate student's average
 
     // Gets course title
     public String getCourseTitle(String couID){

@@ -1,9 +1,10 @@
 package org.fp;
 
 public class Assignment {
-    final String assignmentID;
-    final String assignmentName;
+    private final String assignmentID;
+    private final String assignmentName;
     private Score score;
+
     public Assignment(String assignmentName) {
         this.assignmentID = IDGen.getUniqueID();
         this.assignmentName = assignmentName;
@@ -14,30 +15,25 @@ public class Assignment {
         }
     }
 
-    public Assignment(String assignmentName,int earned,int total) {
-        this.assignmentID = IDGen.getUniqueID();
-        this.assignmentName = assignmentName;
-        this.score=Score.of(earned,total);
-
-        if (assignmentID == null){
-            throw new IllegalArgumentException("Assignment ID cannot be null or empty.");
-        }
+    // Copy constructor for deep copy
+    public Assignment(Assignment asg){
+        this.assignmentID = asg.assignmentID;
+        this.assignmentName = asg.getAssignmentName();
+        this.score = asg.score;
     }
-
 
     public String getAssignmentID() {
         return assignmentID;
     }
 
-    // Implement this
-    public void setScore(int earned,int total){
-        if(!score.isGraded()){
-            score=Score.of(earned,total);
-        }
-
+    public String getAssignmentName(){
+        return assignmentName;
     }
 
-    // Implement this
+    public void setScore(int earned,int total){
+        score=Score.of(earned,total);
+    }
+
     public Score returnScore(){
         return score;
     }
