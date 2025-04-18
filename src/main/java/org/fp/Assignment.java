@@ -3,45 +3,50 @@ package org.fp;
 public class Assignment {
     private final String assignmentID;
     private final String assignmentName;
-    private final String assignmentDescription;
-    private Score score;
+    private int earnedScore;
+    private int totalScore;
 
-    public Assignment(String assignmentName, String assignmentDescription) {
-        this.assignmentID = IDGen.getUniqueID();
+    public Assignment(String assignmentName) {
+        this.assignmentID = IDGen.generate("ASG");
         this.assignmentName = assignmentName;
-        this.assignmentDescription = assignmentDescription;
-        this.score=Score.of(Score.UNGRADED,1);
+        this.earnedScore = -1; // ungraded
+        this.totalScore = 1;
 
-        if (assignmentID == null){
-            throw new IllegalArgumentException("Assignment ID cannot be null or empty.");
+        if (assignmentID == null) {
+            throw new IllegalArgumentException("Assignment ID cannot be null.");
         }
     }
 
-    // Copy constructor for deep copy
-    public Assignment(Assignment asg){
+    // Copy constructor
+    public Assignment(Assignment asg) {
         this.assignmentID = asg.assignmentID;
         this.assignmentName = asg.assignmentName;
-        this.assignmentDescription = asg.assignmentDescription;
-        this.score = asg.score;
+        this.earnedScore = asg.earnedScore;
+        this.totalScore = asg.totalScore;
     }
 
     public String getAssignmentID() {
         return assignmentID;
     }
 
-    public String getAssignmentName(){
+    public String getAssignmentName() {
         return assignmentName;
     }
 
-    public String getAssignmentDescription(){
-        return assignmentDescription;
+    public void setScore(int earned, int total) {
+        this.earnedScore = earned;
+        this.totalScore = total;
     }
 
-    public void setScore(int earned,int total){
-        score=Score.of(earned,total);
+    public int getEarnedScore() {
+        return earnedScore;
     }
 
-    public Score returnScore(){
-        return score;
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public boolean isGraded() {
+        return earnedScore >= 0 && totalScore > 0;
     }
 }
