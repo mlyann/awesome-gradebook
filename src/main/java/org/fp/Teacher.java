@@ -1,5 +1,6 @@
 package org.fp;
 
+/**
 public class Teacher {
 	private final String firstName;
     private final String lastName;
@@ -36,3 +37,4 @@ public class Teacher {
         return String.format("Teacher: %s (%s)", getFullName(), getTeacherID());
     }
 }
+ **/

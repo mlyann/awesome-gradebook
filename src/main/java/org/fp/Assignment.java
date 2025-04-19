@@ -1,52 +1,46 @@
 package org.fp;
 
+import java.time.LocalDate;
+
 public class Assignment {
     private final String assignmentID;
     private final String assignmentName;
-    private int earnedScore;
-    private int totalScore;
+    private final String studentID;   // 属于哪个学生
+    private final String courseID;    // 属于哪个课程
+    private final String gradeID;     // 在 LibraryModel 的 gradeMap 中查找
+    private final LocalDate assignDate;
+    private final LocalDate dueDate;
 
-    public Assignment(String assignmentName) {
-        this.assignmentID = IDGen.generate("ASG");
-        this.assignmentName = assignmentName;
-        this.earnedScore = -1; // ungraded
-        this.totalScore = 1;
-
-        if (assignmentID == null) {
-            throw new IllegalArgumentException("Assignment ID cannot be null.");
+    public Assignment(String assignmentID, String assignmentName,
+                      String studentID, String courseID, String gradeID,
+                      LocalDate assignDate, LocalDate dueDate) {
+        if (assignmentID == null || studentID == null || courseID == null || gradeID == null || dueDate == null || assignDate == null) {
+            throw new IllegalArgumentException("Assignment requires all fields.");
         }
+        this.assignmentID = assignmentID;
+        this.assignmentName = assignmentName;
+        this.studentID = studentID;
+        this.courseID = courseID;
+        this.gradeID = gradeID;
+        this.assignDate = assignDate;
+        this.dueDate = dueDate;
     }
 
-    // Copy constructor
-    public Assignment(Assignment asg) {
-        this.assignmentID = asg.assignmentID;
-        this.assignmentName = asg.assignmentName;
-        this.earnedScore = asg.earnedScore;
-        this.totalScore = asg.totalScore;
+    public String getAssignmentID() { return assignmentID; }
+    public String getAssignmentName() { return assignmentName; }
+    public String getStudentID() { return studentID; }
+    public String getCourseID() { return courseID; }
+    public String getGradeID() { return gradeID; }
+    public LocalDate getAssignDate() { return assignDate; }
+    public LocalDate getDueDate() { return dueDate; }
+
+    public String getDueDateString() {
+        return dueDate.toString();
     }
 
-    public String getAssignmentID() {
-        return assignmentID;
-    }
-
-    public String getAssignmentName() {
-        return assignmentName;
-    }
-
-    public void setScore(int earned, int total) {
-        this.earnedScore = earned;
-        this.totalScore = total;
-    }
-
-    public int getEarnedScore() {
-        return earnedScore;
-    }
-
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public boolean isGraded() {
-        return earnedScore >= 0 && totalScore > 0;
+    @Override
+    public String toString() {
+        return String.format("%s (%s) [Course: %s, Student: %s, Assigned: %s, Due: %s]",
+                assignmentName, assignmentID, courseID, studentID, assignDate, dueDate);
     }
 }

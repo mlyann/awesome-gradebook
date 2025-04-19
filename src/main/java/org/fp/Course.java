@@ -7,11 +7,14 @@ public class Course {
     private final String courseID;
     private final String courseName;
     private String courseDescription;
+    private final String teacherID;
     private final Map<String, Assignment> assignments;
 
-    public Course(String courseName, String courseDescription) {
+
+    public Course(String courseName, String courseDescription, String teacherID) {
         this.courseID = IDGen.generate("CRS");
         this.courseName = courseName;
+        this.teacherID = teacherID;
         this.courseDescription = courseDescription;
         this.assignments = new HashMap<>();
 
@@ -32,6 +35,8 @@ public class Course {
         return courseDescription;
     }
 
+    public String getTeacherID() { return teacherID; }
+
     public void setCourseDescription(String courseDescription) {
         this.courseDescription = courseDescription;
     }
@@ -44,6 +49,7 @@ public class Course {
         return assignments.get(assignmentID);
     }
 
+    /**
     public void setAssignmentScore(String assignmentID, int earned, int total) {
         Assignment assignment = assignments.get(assignmentID);
         if (assignment == null) {
@@ -55,4 +61,6 @@ public class Course {
     public Map<String, Assignment> getAllAssignments() {
         return assignments;
     }
+
+     **/
 }

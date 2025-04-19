@@ -1,45 +1,54 @@
 package org.fp;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * IDGen uses the Flyweight Pattern to manage unique ID generators
+ * for different object types (prefixes).
+ */
 public final class IDGen {
-    private static final Map<String, Queue<String>> ID_POOLS = new ConcurrentHashMap<>();
 
-    private IDGen() {}
+    // Flyweight pool: prefix -> counter generator
+    private static final Map<String, IDFlyweight> flyweightPool = new ConcurrentHashMap<>();
+
+    private IDGen() {} // prevent instantiation
 
     /**
-     * Initializes a unique ID pool for a given prefix.
-     * Each ID will be used once and only once.
+     * Generate a new unique ID for the given prefix.
+     * e.g., "STU00001", "ASG00010"
      */
-    public static void initPool(String prefix, int count) {
-        if (ID_POOLS.containsKey(prefix)) return;
-
-        LinkedList<String> pool = new LinkedList<>();
-        for (int i = 0; i < count; i++) {
-            pool.add(prefix + String.format("%02d", i)); // e.g., ASG001
-        }
-
-        Collections.shuffle(pool);
-        ID_POOLS.put(prefix, pool);
+    public static String generate(String prefix) {
+        return getFlyweight(prefix).generateID();
     }
 
     /**
-     * Generates a new, unused ID for the specified prefix.
-     * Throws an exception if the pool is exhausted.
+     * Internal flyweight interface (shared logic per type)
      */
-    public static String generate(String prefix) {
-        Queue<String> pool = ID_POOLS.get(prefix);
-        if (pool == null) {
-            throw new IllegalStateException("ID pool not initialized for prefix: " + prefix);
+    private interface IDFlyweight {
+        String generateID();
+    }
+
+    /**
+     * Shared ID generator for one specific prefix.
+     * Uses AtomicInteger to guarantee thread-safe uniqueness.
+     */
+    private static class SequentialIDFlyweight implements IDFlyweight {
+        private final String prefix;
+        private final AtomicInteger counter = new AtomicInteger(0);
+
+        public SequentialIDFlyweight(String prefix) {
+            this.prefix = prefix;
         }
-        String id = pool.poll();
-        if (id == null) {
-            throw new IllegalStateException("No more available IDs for prefix: " + prefix);
+
+        @Override
+        public String generateID() {
+            return prefix + String.format("%05d", counter.getAndIncrement());
         }
-        return id;
+    }
+
+    private static IDFlyweight getFlyweight(String prefix) {
+        return flyweightPool.computeIfAbsent(prefix, SequentialIDFlyweight::new);
     }
 }

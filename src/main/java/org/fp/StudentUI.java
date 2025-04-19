@@ -7,6 +7,7 @@ import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -18,79 +19,220 @@ public class StudentUI {
      *  Runtime state
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
+    private static Controller controller;
+    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
     private static String stuID;
-    private static LibraryModel model;
-
     // GPT client – created lazily
     private static OpenAIClient gpt;
 
     /* =============================================================
      *  Entry
      * ============================================================= */
+
     public static void main(String[] args) {
-        model = new LibraryModel();
-        model.state(); // demo seed
-        stuID = "20250001";//idk what is this
-        level_1(CourseSort.NONE);
+        // Initialize model and controller
+        LibraryModel model = new LibraryModel();
+        controller = new Controller(model);
+
+        model.state();
+        controller.setCurrentStudent("20250001");
+        // Launch UI
+        level_1(controller, sc);
     }
+
 
     /* =============================================================
      *  LEVEL‑1  – list courses with dynamic sort & GPA option
      * ============================================================= */
-    private enum CourseSort { NONE, NAME, STATUS }
 
-    private static void level_1(CourseSort sort) {
+
+    private static void level_1(Controller controller, Scanner sc) {
+        Controller.CourseSort sort = Controller.CourseSort.NONE;
+
         while (true) {
-            String stuName = model.getStuName(stuID);
-            ArrayList<ArrayList<String>> result = model.getCoursesString(stuID); // [name, desc, id]
-            if (result == null || result.isEmpty()) {
-                System.out.println("No courses found.");
+            Student currentStudent = controller.getCurrentStudent();
+            if (currentStudent == null) {
+                System.out.println("❌ No student is logged in.");
                 return;
             }
-            sortCourses(result, sort);
-            printCourseTable(stuName, result, sort);
 
-            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    2) 📈 GPA    0) 🚪 Exit");
+            String stuName = currentStudent.getFullName();
+            controller.loadStudentCourses();                     // 加载数据
+            controller.sortCachedCourses(sort);                  // 排序
+            List<List<String>> courseData = controller.getFormattedCourseListForDisplayRows();
+
+            if (courseData.isEmpty()) {
+                System.out.println("❌ No courses found.");
+                return;
+            }
+
+            printCourseTable(stuName, new ArrayList<>(courseData), sort);
+
+            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    g) 📈 GPA    0) 🚪 Exit");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
+
             if (choice.equals("0")) return;
-            if (choice.equals("2")) {
-                showGPA();
+            if (choice.equals("g")) {
+                showGPA(controller);
                 continue;
             }
             if (choice.equalsIgnoreCase("s")) {
-                sort = next(sort);
-                continue; // refresh table
+                sort = next(sort); // 循环切换 CourseSort
+                continue;
             }
-            if (choice.matches("[1-" + result.size() + "]")) {
-                int courseIndex = Integer.parseInt(choice) - 1;
-                level_2(courseIndex, result);
+            if (choice.matches("[1-" + courseData.size() + "]")) {
+                int index = Integer.parseInt(choice) - 1;
+                Course selected = controller.getCachedCourse(index);
+                level_2(controller, selected); // 进入下一级
             } else {
                 System.out.println("❌ Invalid choice. Enter again.");
             }
         }
     }
 
-    private static CourseSort next(CourseSort s) {
-        return switch (s) {
-            case NONE -> CourseSort.NAME;
-            case NAME -> CourseSort.STATUS;
-            case STATUS -> CourseSort.NONE;
+
+    private static Controller.CourseSort next(Controller.CourseSort sort) {
+        return switch (sort) {
+            case NONE -> Controller.CourseSort.NAME;
+            case NAME -> Controller.CourseSort.STATUS;
+            case STATUS -> Controller.CourseSort.NONE;
         };
     }
 
-    private static void sortCourses(List<ArrayList<String>> list, CourseSort mode) {
-        switch (mode) {
-            case NAME -> list.sort(Comparator.comparing(a -> a.get(0)));
-            case STATUS -> list.sort((a, b) -> {
-                boolean aCompl = model.isCourseCompleted(a.get(2));
-                boolean bCompl = model.isCourseCompleted(b.get(2));
-                if (aCompl != bCompl) return aCompl ? 1 : -1; // current first
-                return a.get(0).compareTo(b.get(0));
-            });
-            case NONE -> {}
+    private static void printCourseTable(String stuName, List<List<String>> data, Controller.CourseSort mode) {
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "Course Name", "Description"));
+
+        int idx = 1;
+        for (List<String> row : data) {
+            String courseName = row.size() > 0 ? row.get(0) : "";
+            String courseDesc = row.size() > 1 ? row.get(1) : "";
+            rows.add(List.of(String.valueOf(idx++), courseName, courseDesc));
+        }
+
+        String title = String.format("Courses of %s (sorted by %s)", stuName, mode.name().toLowerCase());
+        TablePrinter.printDynamicTable(title, rows);
+    }
+
+
+
+    private static void showGPA(Controller controller) {
+        System.out.println("📈 GPA: (Not implemented yet)");
+    }
+
+
+    private static void level_2(Controller controller, Course course) {
+        System.out.println("➡️ Entered course: " + course.getCourseName());
+        System.out.println("📝 Description: " + course.getCourseDescription());
+
+        controller.loadAssignmentsForCourse(course.getCourseID());
+        AssignmentSort sort = AssignmentSort.NONE;
+
+        while (true) {
+            switch (sort) {
+                case NAME -> controller.sortCachedAssignmentsByName();
+                case ASSIGN_DATE -> controller.sortCachedAssignmentsByAssignDate();
+                case DUE_DATE -> controller.sortCachedAssignmentsByDueDateAscending();
+                case GRADE -> controller.sortCachedAssignmentsByGradeAscending();
+                case NONE -> {} // no sort
+            }
+
+            List<List<String>> data = controller.getFormattedAssignmentTableRows();
+
+            List<List<String>> rows = new ArrayList<>();
+            rows.add(List.of("No.", "Assignment", "Assigned Date", "Due Date", "Score", "Grade", "Status"));
+
+            int index = 1;
+            for (List<String> row : data) {
+                String name = row.get(0);
+                String assign = row.get(1);
+                String due = row.get(2);
+                String score = row.get(3);
+                String grade = row.get(4);
+
+                LocalDate assignDate = LocalDate.parse(assign);
+                LocalDate dueDate = LocalDate.parse(due);
+                String status = ProgressBar.fullBar(assignDate, dueDate, SYSTEM_DATE);
+
+                rows.add(List.of(String.valueOf(index++), name, assign, due, score, grade, status));
+            }
+
+            TablePrinter.printDynamicTable("Assignments for " + course.getCourseName() + " (sorted by " + sort.name().toLowerCase() + ")", rows);
+
+            System.out.println("s) 🔀 Change sort    0) ⬅️ Back to courses");
+            System.out.print("👉 Choice: ");
+            String choice = sc.nextLine().trim();
+
+            if (choice.equals("0")) return;
+            if (choice.equalsIgnoreCase("s")) {
+                sort = nextAssignmentSort(sort);
+                continue;
+            }
+            if (choice.matches("[1-9][0-9]*")) {
+                index = Integer.parseInt(choice) - 1;
+                Assignment selected = controller.getCachedAssignment(index);
+                if (selected != null) {
+                    controller.setCurrentAssignment(selected);
+                    level_3(controller, selected);
+                } else {
+                    System.out.println("❌ Invalid assignment number.");
+                }
+            }
         }
     }
+
+    private enum AssignmentSort { NONE, NAME, ASSIGN_DATE, DUE_DATE, GRADE }
+
+    private static AssignmentSort nextAssignmentSort(AssignmentSort current) {
+        return switch (current) {
+            case NONE -> AssignmentSort.NAME;
+            case NAME -> AssignmentSort.ASSIGN_DATE;
+            case ASSIGN_DATE -> AssignmentSort.DUE_DATE;
+            case DUE_DATE -> AssignmentSort.GRADE;
+            case GRADE -> AssignmentSort.NONE;
+        };
+    }
+
+    private static void level_3(Controller controller, Assignment assignment) {
+        System.out.println("📘 Assignment Detail: " + assignment.getAssignmentName());
+        System.out.println("🧾 Course: " + assignment.getCourseID());
+        System.out.println("🗓️ Assigned: " + assignment.getAssignDate());
+        System.out.println("⏰ Due: " + assignment.getDueDate());
+
+        Score score = controller.getScoreForAssignment(assignment.getAssignmentID());
+        if (score != null) {
+            System.out.println("📊 Score: " + score.getEarned() + "/" + score.getTotal());
+            System.out.println("🎓 Grade: " + score.getLetterGrade());
+        } else {
+            System.out.println("📊 Score: —");
+        }
+
+        System.out.println("⬅️ Press ENTER to return...");
+        sc.nextLine();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+/**
+
 
     private static void level_2(int courseIndex, ArrayList<ArrayList<String>> courses) {
         String courseID = courses.get(courseIndex).get(2); // third column assumed id
@@ -115,8 +257,10 @@ public class StudentUI {
             }
         }
     }
-
+ **/
     /* ----------------  analytics  ---------------- */
+
+/**
     private static void viewMyCurrentGrade(String courseID) {
         String grade = model.getStudentCourseGrade(stuID, courseID);
         double classAvg = model.getClassAverage(courseID);
@@ -129,6 +273,7 @@ public class StudentUI {
     }
 
     /* ----------------  GPT System Prompts  ---------------- */
+/**
     private static void gptFeedbackCourse(String courseID) {
         ensureGPT();
         String courseName = model.getCourseTitle(courseID);
@@ -157,6 +302,8 @@ public class StudentUI {
     /* =============================================================
      *  Mccann Table Printer
      * ============================================================= */
+
+/**
     private static void viewAllGrades(String courseID) {
         // unchanged – relies on existing model helpers and TablePrinter
         String courseTitle = model.getCourseTitle(courseID);
@@ -206,3 +353,5 @@ public class StudentUI {
         TablePrinter.printDynamicTable("Courses of " + stuName + " (sorted by " + mode.name().toLowerCase() + ")", rows);
     }
 }
+
+ **/
