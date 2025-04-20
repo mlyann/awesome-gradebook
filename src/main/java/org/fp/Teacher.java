@@ -1,21 +1,31 @@
 package org.fp;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Teacher {
-	private final String firstName;
+    private final String teacherID;
+    private final String firstName;
     private final String lastName;
-    private  final String teacherID;
 
-    public Teacher(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.teacherID = IDGen.getUniqueID();
+    private final Set<String> teachingCourseIDs = new HashSet<>();
 
-        if (teacherID == null || teacherID.isEmpty()){
+
+    public Teacher(String teacherID, String firstName, String lastName) {
+        if (teacherID == null || teacherID.isEmpty()) {
             throw new IllegalArgumentException("Teacher ID cannot be null or empty.");
         }
+        this.teacherID = teacherID;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public String getFirstName(){
+    public String getTeacherID() {
+        return teacherID;
+    }
+
+    public String getFirstName() {
         return firstName;
     }
 
@@ -27,12 +37,19 @@ public class Teacher {
         return firstName + " " + lastName;
     }
 
-    public String getTeacherID(){
-        return teacherID;
+    public void addCourse(String courseID) {
+        if (courseID != null && !courseID.isEmpty()) {
+            teachingCourseIDs.add(courseID);
+        }
     }
 
+    public Set<String> getTeachingCourseIDs() {
+        return Collections.unmodifiableSet(teachingCourseIDs);
+    }
+
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("Teacher: %s (%s)", getFullName(), getTeacherID());
     }
 }

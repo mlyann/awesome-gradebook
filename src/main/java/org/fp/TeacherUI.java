@@ -1,5 +1,5 @@
 package org.fp;
-
+import org.fp.TeacherController.AssignmentSort;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
@@ -7,7 +7,9 @@ import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.time.LocalDate;
 import java.util.*;
+
 
 /**
  * Console‑based **Teacher UI** for the grade‑book system.
@@ -26,62 +28,373 @@ public class TeacherUI {
     /* =============================================================
      *  Runtime state & helpers
      * ============================================================= */
-    private static final Scanner SC = new Scanner(System.in);
-    private static final LibraryModel MODEL = new LibraryModel();
-    private static final TablePrinter PRINTER = new TablePrinter();
-
-    // GPT client initialised lazily
+    private static final Scanner sc = new Scanner(System.in);
+    private static TeacherController TeacherController;
+    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
+    private static String stuID;
+    // GPT client – created lazily
     private static OpenAIClient GPT;
+
+    /* =============================================================
+     *  Entry
+     * ============================================================= */
 
     /* =============================================================
      *  Entry point – simple username prompt for now
      * ============================================================= */
     public static void main(String[] args) {
-        MODEL.state(); // demo data
-        while (true) {
-            clear();
-            System.out.print("Enter teacher username (0 to quit): ");
-            String user = SC.nextLine().trim();
-            if (user.equals("0")) quit();
-            if (!MODEL.isValidTeacher(user)) {            // TODO add to model
-                pause("❌  Unknown teacher.");
-                continue;
-            }
-            teacherDashboard(user);
-        }
+        // Initialize model and controller
+        LibraryModel model = new LibraryModel();
+        TeacherController = new TeacherController(model);
+
+        model.state1();
+        TeacherController.setCurrentTeacher("Alice");
+        // Launch UI
+        level_1(TeacherController, sc);
     }
+
+    public static void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
 
     /* =============================================================
      *  DASHBOARD – list courses taught by this instructor
      * ============================================================= */
-    private static void teacherDashboard(String teacherUser) {
+    private static void level_1(TeacherController controller, Scanner sc) {
+        TeacherController.CourseSort sort = BaseController.CourseSort.NONE;
+
+
         while (true) {
-            clear();
-            List<Course> courses = MODEL.getCoursesTaughtBy(teacherUser); // TODO add to model
-            if (courses.isEmpty()) {
-                pause("You are not assigned to any courses.");
+            Teacher teacher = controller.getCurrentTeacher();
+            if (teacher == null) {
+                System.out.println("❌ No teacher is logged in.");
                 return;
             }
-            List<List<String>> rows = new ArrayList<>();
-            rows.add(List.of("No.", "Course", "Description"));
-            int i = 1;
-            for (Course c : courses) rows.add(List.of(String.valueOf(i++), c.getCourseName(), c.getCourseDescription()));
-            TablePrinter.printDynamicTable("Your Courses", rows);
 
-            System.out.println("0) 🔙  Log out    |    number) open course");
-            System.out.print("👉  Choice: ");
-            String in = SC.nextLine().trim();
-            if (in.equals("0")) return;
-            if (in.matches("[1-" + courses.size() + "]")) {
-                int pos = Integer.parseInt(in) - 1;
-                courseMenu(teacherUser, courses.get(pos));
+            String teacherName = teacher.getFullName();
+            controller.loadTeacherCourses();                     // 加载课程
+            controller.sortCachedCourses(sort);                  // 排序
+            List<List<String>> courseData = controller.getFormattedCourseListForDisplayRows();
+
+            if (courseData.isEmpty()) {
+                System.out.println("❌ No courses found.");
+                return;
+            }
+
+            printCourseTable(teacherName, new ArrayList<>(courseData), sort);
+
+            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    0) 🚪 Exit");
+            System.out.print("👉 Choice: ");
+            String choice = sc.nextLine().trim();
+
+            if (choice.equals("0")) return;
+            if (choice.equalsIgnoreCase("s")) {
+                sort = BaseController.nextCourseSort(sort);
+                continue;
+            }
+            if (choice.matches("[1-" + courseData.size() + "]")) {
+                int index = Integer.parseInt(choice) - 1;
+                Course selected = controller.getCachedCourse(index);
+                level_2(controller, selected); // 👈 进入教师视角的课程管理菜单
+            } else {
+                System.out.println("❌ Invalid choice. Enter again.");
             }
         }
     }
 
-    /* =============================================================
-     *  COURSE MENU
-     * ============================================================= */
+
+    private static void printCourseTable(String teacherName, List<List<String>> data, TeacherController.CourseSort mode) {
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "Course Name", "Description"));
+
+        int idx = 1;
+        for (List<String> row : data) {
+            String courseName = row.size() > 0 ? row.get(0) : "";
+            String courseDesc = row.size() > 1 ? row.get(1) : "";
+            rows.add(List.of(String.valueOf(idx++), courseName, courseDesc));
+        }
+
+        String title = String.format("Courses taught by %s (sorted by %s)", teacherName, mode.name().toLowerCase());
+        TablePrinter.printDynamicTable(title, rows);
+    }
+
+
+    private static void level_2(TeacherController controller, Course course) {
+        ViewMode view = ViewMode.ASSIGNMENTS;
+        AssignmentSort sort = AssignmentSort.NONE;
+        boolean filterActive = false;
+        Teacher teacher = controller.getCurrentTeacher();
+        if (teacher == null) {
+            System.out.println("❌ No teacher logged in.");
+            return;
+        }
+
+        while (true) {
+            clear();
+            System.out.println("📘 Course: " + course.getCourseName());
+            System.out.println("👩‍🏫 Instructor: " + teacher.getFullName());
+            System.out.println("==============================");
+
+            switch (view) {
+                case ASSIGNMENTS -> viewAssignments(controller, course, sort, filterActive);
+                // case ROSTER -> viewRoster(controller, course);
+            }
+
+            System.out.println();
+            System.out.println("a) 📄 Assignments    r) 👥 Roster    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    0) 🔙 Back");
+            System.out.print("👉 Choice: ");
+            String choice = sc.nextLine().trim();
+
+            if (choice.equals("0")) return;
+
+            if (choice.equalsIgnoreCase("a")) {
+                view = ViewMode.ASSIGNMENTS;
+            } else if (choice.equalsIgnoreCase("r")) {
+                view = ViewMode.ROSTER;
+            } else if (choice.equalsIgnoreCase("s")) {
+                if (view == ViewMode.ASSIGNMENTS) {
+                    searchAssignments(controller, course);
+                } else if (view == ViewMode.ROSTER) {
+                    // searchStudents(controller, course);
+                }
+            } else if (choice.equalsIgnoreCase("f")) {
+                filterActive = !filterActive;
+            } else if (choice.equalsIgnoreCase("o")) {
+                sort = nextSort(sort);
+            } else if (choice.matches("[1-9][0-9]*")) {
+                int index = Integer.parseInt(choice) - 1;
+                if (view == ViewMode.ASSIGNMENTS) {
+                    controller.refreshGroupedAssignments(course.getCourseID());
+                    controller.sortGroupedAssignments(sort, filterActive);
+
+                    List<String> sortedNames = controller.getSortedAssignmentNames();
+                    if (index >= 0 && index < sortedNames.size()) {
+                        String name = sortedNames.get(index);
+                        List<Assignment> group = controller.getAssignmentGroup(name);
+                        controller.setSelectedAssignmentGroup(name);
+                        viewAssignmentDetails(controller, name, group);
+                    }
+                } else if (view == ViewMode.ROSTER) {
+                    // TO DO: view selected student's assignments
+                }
+            } else {
+                System.out.println("❌ Invalid input.");
+            }
+
+        }
+    }
+
+    private enum ViewMode {
+        ASSIGNMENTS, ROSTER
+    }
+
+
+    private static AssignmentSort nextSort(AssignmentSort current) {
+        return switch (current) {
+            case NONE -> AssignmentSort.NAME;
+            case NAME -> AssignmentSort.ASSIGN_DATE;
+            case ASSIGN_DATE -> AssignmentSort.DUE_DATE;
+            case DUE_DATE -> AssignmentSort.SUBMISSION;
+            case SUBMISSION -> AssignmentSort.GRADED_PERCENT;
+            case GRADED_PERCENT -> AssignmentSort.NONE;
+        };
+    }
+
+    private static void viewAssignments(TeacherController controller, Course course, AssignmentSort sort, boolean filter) {
+        // 刷新分组与排序
+        controller.refreshGroupedAssignments(course.getCourseID());
+        controller.sortGroupedAssignments(sort, filter);
+
+        Map<String, List<Assignment>> grouped = controller.getGroupedAssignmentCache();
+        List<String> names = controller.getSortedAssignmentNames();
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of(
+                "No.", "Assignment Name", "Assigned", "Due",
+                "Progress", "Submissions", "Graded", "Published?"
+        ));
+
+        int totalStudents = controller.getStudentsInCourse(course.getCourseID()).size();
+        int index = 1;
+
+        for (String name : names) {
+            List<Assignment> group = grouped.get(name);
+            if (group == null || group.isEmpty()) continue;
+
+            Assignment sample = group.get(0);
+            String assignDate = sample.getAssignDate().toString();
+            String dueDate = sample.getDueDate().toString();
+            String progress = ProgressBar.fullBar(sample.getAssignDate(), sample.getDueDate(), SYSTEM_DATE);
+
+            long submitted = group.stream().filter(a -> a.getStatus() != Assignment.SubmissionStatus.UNSUBMITTED).count();
+            long graded = group.stream().filter(a -> a.getStatus() == Assignment.SubmissionStatus.GRADED).count();
+            int percent = (submitted == 0) ? 0 : (int) ((graded * 100.0) / submitted);
+            String gradedBar = generateGradedBar(percent, (int) graded, (int) submitted);
+            boolean allPublished = group.stream().allMatch(Assignment::isPublished);
+
+            rows.add(List.of(
+                    String.valueOf(index++),
+                    name,
+                    assignDate,
+                    dueDate,
+                    progress,
+                    submitted + "/" + totalStudents,
+                    gradedBar,
+                    allPublished ? "✅ Yes" : "❌ No"
+            ));
+        }
+
+        TablePrinter.printDynamicTable("Assignments for Course: " + course.getCourseName() +
+                " (sorted by " + sort.name().toLowerCase() + (filter ? ", filter on)" : ")"), rows);
+    }
+
+
+    private static String generateGradedBar(int percent, int graded, int total) {
+        int barCount = percent / 5;
+        String bar = "[" + "#".repeat(barCount) + "-".repeat(20 - barCount) + "] ";
+        return bar + graded + "/" + total;
+    }
+
+
+
+    private static int extractAssignmentNumber(String name) {
+        String[] parts = name.trim().split(" ");
+        try {
+            return Integer.parseInt(parts[parts.length - 1]);
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    private static void searchAssignments(TeacherController controller, Course course) {
+        System.out.print("🔍 Enter letters to match: ");
+        String pattern = sc.nextLine().trim().toLowerCase();
+
+        if (pattern.isEmpty()) {
+            System.out.println("⚠️ Empty input. Returning...");
+            return;
+        }
+
+        Map<String, List<Assignment>> grouped = controller.getGroupedAssignmentCache();
+        List<String> matchedNames = grouped.keySet().stream()
+                .filter(name -> isSubsequence(pattern, name.toLowerCase()))
+                .sorted()
+                .toList();
+
+        if (matchedNames.isEmpty()) {
+            System.out.println("❌ No matching assignments found.");
+            return;
+        }
+
+        int totalStudents = controller.getStudentsInCourse(course.getCourseID()).size();
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of(
+                "No.", "Assignment Name", "Assigned", "Due",
+                "Progress", "Submissions", "Graded", "Published?"
+        ));
+
+        int index = 1;
+        for (String name : matchedNames) {
+            List<Assignment> group = grouped.get(name);
+            if (group == null || group.isEmpty()) continue;
+
+            Assignment sample = group.get(0);
+            String assignDate = sample.getAssignDate().toString();
+            String dueDate = sample.getDueDate().toString();
+            String progress = ProgressBar.fullBar(sample.getAssignDate(), sample.getDueDate(), SYSTEM_DATE);
+            long submitted = group.stream().filter(a -> a.getStatus() != Assignment.SubmissionStatus.UNSUBMITTED).count();
+            long graded = group.stream().filter(a -> a.getStatus() == Assignment.SubmissionStatus.GRADED).count();
+            int percent = (submitted == 0) ? 0 : (int) ((graded * 100.0) / submitted);
+            String gradedBar = generateGradedBar(percent, (int) graded, (int) submitted);
+            boolean allPublished = group.stream().allMatch(Assignment::isPublished);
+
+            rows.add(List.of(
+                    String.valueOf(index++),
+                    name,
+                    assignDate,
+                    dueDate,
+                    progress,
+                    submitted + "/" + totalStudents,
+                    gradedBar,
+                    allPublished ? "✅ Yes" : "❌ No"
+            ));
+        }
+
+        TablePrinter.printDynamicTable("Search Results: \"" + pattern + "\"", rows);
+
+        System.out.println("0) 🔙 Back");
+        System.out.print("👉 Choice: ");
+        String input = sc.nextLine().trim();
+        if (input.matches("[1-9][0-9]*")) {
+            int idx = Integer.parseInt(input) - 1;
+            if (idx >= 0 && idx < matchedNames.size()) {
+                String selectedGroup = matchedNames.get(idx);
+                controller.setSelectedAssignmentGroup(selectedGroup);
+
+                // You can continue to level_3_teacher(controller, selectedGroup);
+                System.out.println("📌 Selected assignment group: " + selectedGroup);
+                List<Assignment> selectedGroupList = grouped.get(selectedGroup);
+                if (selectedGroupList != null) {
+                    viewAssignmentDetails(controller, selectedGroup, selectedGroupList);
+                }
+            }
+        }
+    }
+
+    private static boolean isSubsequence(String pattern, String target) {
+        int i = 0, j = 0;
+        while (i < pattern.length() && j < target.length()) {
+            if (pattern.charAt(i) == target.charAt(j)) i++;
+            j++;
+        }
+        return i == pattern.length();
+    }
+
+    private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group) {
+        if (group == null || group.isEmpty()) {
+            System.out.println("❌ No assignments found for: " + groupName);
+            return;
+        }
+
+        System.out.println("📄 Assignment Group: " + groupName);
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "Student", "Email", "Score", "Grade"));
+
+        int index = 1;
+        for (Assignment a : group) {
+            Student stu = controller.getStudent(a.getStudentID());
+            if (stu == null) continue;
+
+            String name = stu.getFullName();
+            String email = stu.getEmail();
+            Score score = controller.getScoreForAssignment(a.getAssignmentID());
+
+            String scoreStr = (score != null) ? score.getEarned() + "/" + score.getTotal() : "—";
+            String gradeStr = (score != null) ? score.getLetterGrade().name() : "N/A";
+
+            rows.add(List.of(
+                    String.valueOf(index++),
+                    name,
+                    email,
+                    scoreStr,
+                    gradeStr
+            ));
+        }
+
+        TablePrinter.printDynamicTable("🎉 Student Submissions for: " + groupName, rows);
+        System.out.println("⬅️ Press ENTER to return...");
+        sc.nextLine();
+    }
+
+
+
+
+
+    /**
+
     private enum SortMode { FIRST, LAST, USERNAME, ASSIGN }
 
     private static void courseMenu(String teacherUser, Course course) {
@@ -113,9 +426,6 @@ public class TeacherUI {
         }
     }
 
-    /* =============================================================
-     *  ROSTER VIEW & SORTING
-     * ============================================================= */
     private static void rosterMenu(String cid, SortMode mode) {
         while (true) {
             clear();
@@ -155,9 +465,7 @@ public class TeacherUI {
         }
     }
 
-    /* =============================================================
-     *  ASSIGNMENT MANAGEMENT
-     * ============================================================= */
+
     private static void addAssignment(String cid) {
         System.out.print("Identifier: ");
         String id = SC.nextLine().trim();
@@ -177,9 +485,7 @@ public class TeacherUI {
         pause("✅ Removed.");
     }
 
-    /* =============================================================
-     *  STUDENT MANAGEMENT
-     * ============================================================= */
+
     private static void addStudent(String cid) {
         System.out.print("Student ID: ");
         String sid = SC.nextLine().trim();
@@ -201,9 +507,7 @@ public class TeacherUI {
         pause("✅ Students imported.");
     }
 
-    /* =============================================================
-     *  GRADE ENTRY
-     * ============================================================= */
+
     private static void gradeEntryWizard(String cid) {
         System.out.print("Assignment ID: ");
         String aid = SC.nextLine().trim();
@@ -220,9 +524,7 @@ public class TeacherUI {
         pause("✅ Grades saved.");
     }
 
-    /* =============================================================
-     *  ANALYTICS & FINAL GRADES
-     * ============================================================= */
+
     private static void analyticsMenu(String cid) {
         while (true) {
             clear();
@@ -267,9 +569,7 @@ public class TeacherUI {
         pause("✅ Final grades assigned.");
     }
 
-    /* =============================================================
-     *  GPT TOOLS
-     * ============================================================= */
+
     private static void gptMenu(String cid) {
         while (true) {
             clear();
@@ -325,9 +625,7 @@ public class TeacherUI {
         GPT = OpenAIOkHttpClient.builder().apiKey(env.get("OPENAI_API_KEY", "")).build();
     }
 
-    /* =============================================================
-     *  Utility helpers
-     * ============================================================= */
+
     private static void pause(String msg) {
         if (!msg.isEmpty()) System.out.println("\n" + msg);
         System.out.print("<enter> …");
@@ -343,4 +641,5 @@ public class TeacherUI {
         System.out.print("\u001B[H\u001B[2J");
         System.out.flush();
     }
+ **/
 }

@@ -1,52 +1,81 @@
 package org.fp;
 
+import java.time.LocalDate;
+
 public class Assignment {
+    public enum SubmissionStatus {
+        UNSUBMITTED,
+        SUBMITTED_UNGRADED,
+        GRADED
+    }
+
     private final String assignmentID;
     private final String assignmentName;
-    private int earnedScore;
-    private int totalScore;
+    private final String studentID;   // 属于哪个学生
+    private final String courseID;    // 属于哪个课程
+    private String gradeID = null;    // 可选，评分时设置
+    private final LocalDate assignDate;
+    private final LocalDate dueDate;
+    private SubmissionStatus status = SubmissionStatus.UNSUBMITTED;
+    private boolean published = false; // 是否公布成绩
 
-    public Assignment(String assignmentName) {
-        this.assignmentID = IDGen.generate("ASG");
-        this.assignmentName = assignmentName;
-        this.earnedScore = -1; // ungraded
-        this.totalScore = 1;
-
-        if (assignmentID == null) {
-            throw new IllegalArgumentException("Assignment ID cannot be null.");
+    public Assignment(String assignmentID, String assignmentName,
+                      String studentID, String courseID,
+                      LocalDate assignDate, LocalDate dueDate) {
+        if (assignmentID == null || studentID == null || courseID == null || dueDate == null || assignDate == null) {
+            throw new IllegalArgumentException("Assignment requires all fields.");
         }
+        this.assignmentID = assignmentID;
+        this.assignmentName = assignmentName;
+        this.studentID = studentID;
+        this.courseID = courseID;
+        this.assignDate = assignDate;
+        this.dueDate = dueDate;
     }
 
-    // Copy constructor
-    public Assignment(Assignment asg) {
-        this.assignmentID = asg.assignmentID;
-        this.assignmentName = asg.assignmentName;
-        this.earnedScore = asg.earnedScore;
-        this.totalScore = asg.totalScore;
+    public void submit() {
+        if (this.status != SubmissionStatus.UNSUBMITTED) return;
+        this.status = SubmissionStatus.SUBMITTED_UNGRADED;
     }
 
-    public String getAssignmentID() {
-        return assignmentID;
+    public void markGraded(String gradeID) {
+        if (this.status != SubmissionStatus.SUBMITTED_UNGRADED) {
+            throw new IllegalStateException("Assignment must be submitted before grading.");
+        }
+        if (gradeID == null || gradeID.isEmpty()) {
+            throw new IllegalArgumentException("Grade ID cannot be null or empty when grading.");
+        }
+        this.gradeID = gradeID;
+        this.status = SubmissionStatus.GRADED;
     }
 
-    public String getAssignmentName() {
-        return assignmentName;
+    public void publish() {
+        if (status != SubmissionStatus.GRADED) {
+            throw new IllegalStateException("Assignment must be graded before publishing.");
+        }
+        this.published = true;
     }
 
-    public void setScore(int earned, int total) {
-        this.earnedScore = earned;
-        this.totalScore = total;
+    public boolean isPublished() {
+        return published;
     }
 
-    public int getEarnedScore() {
-        return earnedScore;
+    public String getAssignmentID() { return assignmentID; }
+    public String getAssignmentName() { return assignmentName; }
+    public String getStudentID() { return studentID; }
+    public String getCourseID() { return courseID; }
+    public String getGradeID() { return gradeID; }
+    public LocalDate getAssignDate() { return assignDate; }
+    public LocalDate getDueDate() { return dueDate; }
+    public SubmissionStatus getStatus() { return status; }
+
+    public String getDueDateString() {
+        return dueDate.toString();
     }
 
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public boolean isGraded() {
-        return earnedScore >= 0 && totalScore > 0;
+    @Override
+    public String toString() {
+        return String.format("%s (%s) [Course: %s, Student: %s, Assigned: %s, Due: %s, Status: %s, Published: %s]",
+                assignmentName, assignmentID, courseID, studentID, assignDate, dueDate, status.name(), published);
     }
 }
