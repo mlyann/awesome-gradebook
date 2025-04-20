@@ -89,8 +89,8 @@ public class StudentController extends BaseController {
     public void sortCachedAssignmentsByName() {
         cachedAssignments.sort(Comparator.comparingInt(a -> extractAssignmentNumber(a.getAssignmentName())));
     }
-
-    private int extractAssignmentNumber(String name) {
+//TODO: Change it to public it's fine? @Haocheng
+    public int extractAssignmentNumber(String name) {
         // 假设格式为 "Assignment N"，提取 N 的整数
         String[] parts = name.trim().split(" ");
         try {
