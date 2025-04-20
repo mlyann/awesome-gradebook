@@ -3,27 +3,61 @@ package org.fp;
 import java.time.LocalDate;
 
 public class Assignment {
+    public enum SubmissionStatus {
+        UNSUBMITTED,
+        SUBMITTED_UNGRADED,
+        GRADED
+    }
+
     private final String assignmentID;
     private final String assignmentName;
     private final String studentID;   // 属于哪个学生
     private final String courseID;    // 属于哪个课程
-    private final String gradeID;     // 在 LibraryModel 的 gradeMap 中查找
+    private String gradeID = null;    // 可选，评分时设置
     private final LocalDate assignDate;
     private final LocalDate dueDate;
+    private SubmissionStatus status = SubmissionStatus.UNSUBMITTED;
+    private boolean published = false; // 是否公布成绩
 
     public Assignment(String assignmentID, String assignmentName,
-                      String studentID, String courseID, String gradeID,
+                      String studentID, String courseID,
                       LocalDate assignDate, LocalDate dueDate) {
-        if (assignmentID == null || studentID == null || courseID == null || gradeID == null || dueDate == null || assignDate == null) {
+        if (assignmentID == null || studentID == null || courseID == null || dueDate == null || assignDate == null) {
             throw new IllegalArgumentException("Assignment requires all fields.");
         }
         this.assignmentID = assignmentID;
         this.assignmentName = assignmentName;
         this.studentID = studentID;
         this.courseID = courseID;
-        this.gradeID = gradeID;
         this.assignDate = assignDate;
         this.dueDate = dueDate;
+    }
+
+    public void submit() {
+        if (this.status != SubmissionStatus.UNSUBMITTED) return;
+        this.status = SubmissionStatus.SUBMITTED_UNGRADED;
+    }
+
+    public void markGraded(String gradeID) {
+        if (this.status != SubmissionStatus.SUBMITTED_UNGRADED) {
+            throw new IllegalStateException("Assignment must be submitted before grading.");
+        }
+        if (gradeID == null || gradeID.isEmpty()) {
+            throw new IllegalArgumentException("Grade ID cannot be null or empty when grading.");
+        }
+        this.gradeID = gradeID;
+        this.status = SubmissionStatus.GRADED;
+    }
+
+    public void publish() {
+        if (status != SubmissionStatus.GRADED) {
+            throw new IllegalStateException("Assignment must be graded before publishing.");
+        }
+        this.published = true;
+    }
+
+    public boolean isPublished() {
+        return published;
     }
 
     public String getAssignmentID() { return assignmentID; }
@@ -33,6 +67,7 @@ public class Assignment {
     public String getGradeID() { return gradeID; }
     public LocalDate getAssignDate() { return assignDate; }
     public LocalDate getDueDate() { return dueDate; }
+    public SubmissionStatus getStatus() { return status; }
 
     public String getDueDateString() {
         return dueDate.toString();
@@ -40,7 +75,7 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return String.format("%s (%s) [Course: %s, Student: %s, Assigned: %s, Due: %s]",
-                assignmentName, assignmentID, courseID, studentID, assignDate, dueDate);
+        return String.format("%s (%s) [Course: %s, Student: %s, Assigned: %s, Due: %s, Status: %s, Published: %s]",
+                assignmentName, assignmentID, courseID, studentID, assignDate, dueDate, status.name(), published);
     }
 }

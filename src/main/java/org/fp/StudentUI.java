@@ -1,11 +1,6 @@
 package org.fp;
 
 import com.openai.client.OpenAIClient;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.models.ChatModel;
-import com.openai.models.chat.completions.ChatCompletion;
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import io.github.cdimascio.dotenv.Dotenv;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -19,7 +14,7 @@ public class StudentUI {
      *  Runtime state
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
-    private static Controller controller;
+    private static StudentController StudentController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
     private static String stuID;
     // GPT client – created lazily
@@ -32,12 +27,12 @@ public class StudentUI {
     public static void main(String[] args) {
         // Initialize model and controller
         LibraryModel model = new LibraryModel();
-        controller = new Controller(model);
+        StudentController = new StudentController(model);
 
         model.state();
-        controller.setCurrentStudent("20250001");
+        StudentController.setCurrentStudent("20250001");
         // Launch UI
-        level_1(controller, sc);
+        level_1(StudentController, sc);
     }
 
 
@@ -46,20 +41,21 @@ public class StudentUI {
      * ============================================================= */
 
 
-    private static void level_1(Controller controller, Scanner sc) {
-        Controller.CourseSort sort = Controller.CourseSort.NONE;
+    private static void level_1(StudentController studentController, Scanner sc) {
+        StudentController.CourseSort sort = BaseController.CourseSort.NONE;
+
 
         while (true) {
-            Student currentStudent = controller.getCurrentStudent();
+            Student currentStudent = studentController.getCurrentStudent();
             if (currentStudent == null) {
                 System.out.println("❌ No student is logged in.");
                 return;
             }
 
             String stuName = currentStudent.getFullName();
-            controller.loadStudentCourses();                     // 加载数据
-            controller.sortCachedCourses(sort);                  // 排序
-            List<List<String>> courseData = controller.getFormattedCourseListForDisplayRows();
+            studentController.loadStudentCourses();                     // 加载数据
+            studentController.sortCachedCourses(sort);                  // 排序
+            List<List<String>> courseData = studentController.getFormattedCourseListForDisplayRows();
 
             if (courseData.isEmpty()) {
                 System.out.println("❌ No courses found.");
@@ -74,33 +70,25 @@ public class StudentUI {
 
             if (choice.equals("0")) return;
             if (choice.equals("g")) {
-                showGPA(controller);
+                showGPA(studentController);
                 continue;
             }
             if (choice.equalsIgnoreCase("s")) {
-                sort = next(sort); // 循环切换 CourseSort
+                sort = BaseController.nextCourseSort(sort);
+
                 continue;
             }
             if (choice.matches("[1-" + courseData.size() + "]")) {
                 int index = Integer.parseInt(choice) - 1;
-                Course selected = controller.getCachedCourse(index);
-                level_2(controller, selected); // 进入下一级
+                Course selected = studentController.getCachedCourse(index);
+                level_2(studentController, selected); // 进入下一级
             } else {
                 System.out.println("❌ Invalid choice. Enter again.");
             }
         }
     }
 
-
-    private static Controller.CourseSort next(Controller.CourseSort sort) {
-        return switch (sort) {
-            case NONE -> Controller.CourseSort.NAME;
-            case NAME -> Controller.CourseSort.STATUS;
-            case STATUS -> Controller.CourseSort.NONE;
-        };
-    }
-
-    private static void printCourseTable(String stuName, List<List<String>> data, Controller.CourseSort mode) {
+    private static void printCourseTable(String stuName, List<List<String>> data, StudentController.CourseSort mode) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(List.of("No.", "Course Name", "Description"));
 
@@ -117,50 +105,53 @@ public class StudentUI {
 
 
 
-    private static void showGPA(Controller controller) {
+    private static void showGPA(StudentController studentController) {
         System.out.println("📈 GPA: (Not implemented yet)");
     }
 
 
-    private static void level_2(Controller controller, Course course) {
+    private static void level_2(StudentController studentController, Course course) {
         System.out.println("➡️ Entered course: " + course.getCourseName());
         System.out.println("📝 Description: " + course.getCourseDescription());
 
-        controller.loadAssignmentsForCourse(course.getCourseID());
+        studentController.loadAssignmentsForCourse(course.getCourseID());
         AssignmentSort sort = AssignmentSort.NONE;
+        boolean onlyUnsubmitted = false;
 
         while (true) {
             switch (sort) {
-                case NAME -> controller.sortCachedAssignmentsByName();
-                case ASSIGN_DATE -> controller.sortCachedAssignmentsByAssignDate();
-                case DUE_DATE -> controller.sortCachedAssignmentsByDueDateAscending();
-                case GRADE -> controller.sortCachedAssignmentsByGradeAscending();
+                case NAME -> studentController.sortCachedAssignmentsByName();
+                case ASSIGN_DATE -> studentController.sortCachedAssignmentsByAssignDate();
+                case DUE_DATE -> studentController.sortCachedAssignmentsByDueDateAscending();
+                case GRADE -> studentController.sortCachedAssignmentsByGradeAscending();
                 case NONE -> {} // no sort
             }
 
-            List<List<String>> data = controller.getFormattedAssignmentTableRows();
+            List<List<String>> data = studentController.getFormattedAssignmentTableRowsWithState(onlyUnsubmitted);
 
             List<List<String>> rows = new ArrayList<>();
-            rows.add(List.of("No.", "Assignment", "Assigned Date", "Due Date", "Score", "Grade", "Status"));
+            rows.add(List.of("No.", "Assignment", "State", "Assigned Date", "Due Date", "Score", "Grade", "Status"));
 
             int index = 1;
             for (List<String> row : data) {
                 String name = row.get(0);
-                String assign = row.get(1);
-                String due = row.get(2);
-                String score = row.get(3);
-                String grade = row.get(4);
+                String state = row.get(1);
+                String assign = row.get(2);
+                String due = row.get(3);
+                String score = row.get(4);
+                String grade = row.get(5);
 
                 LocalDate assignDate = LocalDate.parse(assign);
                 LocalDate dueDate = LocalDate.parse(due);
                 String status = ProgressBar.fullBar(assignDate, dueDate, SYSTEM_DATE);
 
-                rows.add(List.of(String.valueOf(index++), name, assign, due, score, grade, status));
+                rows.add(List.of(String.valueOf(index++), name, state, assign, due, score, grade, status));
             }
 
-            TablePrinter.printDynamicTable("Assignments for " + course.getCourseName() + " (sorted by " + sort.name().toLowerCase() + ")", rows);
+            String filterLabel = onlyUnsubmitted ? "(filter: UNSUBMITTED)" : "";
+            TablePrinter.printDynamicTable("Assignments for " + course.getCourseName() + " (sorted by " + sort.name().toLowerCase() + ") " + filterLabel, rows);
 
-            System.out.println("s) 🔀 Change sort    0) ⬅️ Back to courses");
+            System.out.println("s) 🔀 Change sort    f) 🔎 Toggle filter    0) ⬅️ Back to courses");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
@@ -169,18 +160,25 @@ public class StudentUI {
                 sort = nextAssignmentSort(sort);
                 continue;
             }
+            if (choice.equalsIgnoreCase("f")) {
+                onlyUnsubmitted = !onlyUnsubmitted;
+                continue;
+            }
             if (choice.matches("[1-9][0-9]*")) {
-                index = Integer.parseInt(choice) - 1;
-                Assignment selected = controller.getCachedAssignment(index);
-                if (selected != null) {
-                    controller.setCurrentAssignment(selected);
-                    level_3(controller, selected);
+                int selectedIndex = Integer.parseInt(choice) - 1;
+                List<Assignment> visible = studentController.getFilteredCachedAssignments(onlyUnsubmitted);
+                if (selectedIndex >= 0 && selectedIndex < visible.size()) {
+                    Assignment selected = visible.get(selectedIndex);
+                    studentController.setCurrentAssignment(selected);
+                    level_3(studentController, selected);
                 } else {
                     System.out.println("❌ Invalid assignment number.");
                 }
             }
         }
     }
+
+
 
     private enum AssignmentSort { NONE, NAME, ASSIGN_DATE, DUE_DATE, GRADE }
 
@@ -194,13 +192,21 @@ public class StudentUI {
         };
     }
 
-    private static void level_3(Controller controller, Assignment assignment) {
+    private static void level_3(StudentController studentController, Assignment assignment) {
         System.out.println("📘 Assignment Detail: " + assignment.getAssignmentName());
         System.out.println("🧾 Course: " + assignment.getCourseID());
         System.out.println("🗓️ Assigned: " + assignment.getAssignDate());
         System.out.println("⏰ Due: " + assignment.getDueDate());
 
-        Score score = controller.getScoreForAssignment(assignment.getAssignmentID());
+        Score score = studentController.getScoreForAssignment(assignment.getAssignmentID());
+        Assignment.SubmissionStatus status = assignment.getStatus();
+
+        System.out.println("📌 Status: " + switch (status) {
+            case UNSUBMITTED -> "⛔ Not submitted";
+            case SUBMITTED_UNGRADED -> "✉️ Submitted but not graded";
+            case GRADED -> "✅ Graded";
+        });
+
         if (score != null) {
             System.out.println("📊 Score: " + score.getEarned() + "/" + score.getTotal());
             System.out.println("🎓 Grade: " + score.getLetterGrade());

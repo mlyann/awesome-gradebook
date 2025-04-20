@@ -41,7 +41,7 @@ public class ProgressBar {
         } else if (daysBetween == 0) {
             return "⚠️ Due today";
         } else {
-            return "⌛ Overdue by " + Math.abs(daysBetween) + " day" + (Math.abs(daysBetween) > 1 ? "s" : "");
+            return "⌛ Done";
         }
     }
 
