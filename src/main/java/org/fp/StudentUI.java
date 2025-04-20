@@ -4,7 +4,11 @@ import com.openai.client.OpenAIClient;
 
 import java.time.LocalDate;
 import java.util.*;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.*;
+import java.time.LocalDate;
+import java.util.UUID;
 /**
 * REQUIRED FUNCTIONS NOT CHECKED YET.
  */
@@ -25,14 +29,20 @@ public class StudentUI {
      * ============================================================= */
 
     public static void main(String[] args) {
-        // Initialize model and controller
         LibraryModel model = new LibraryModel();
-        StudentController = new StudentController(model);
+        try {
+            model.loadStudentsFromDirectory(Paths.get("src/main/DataBase/Students"));
+            model.state2();
+        } catch (IOException e) {
+            System.err.println("❌ 无法加载学生列表：" + e.getMessage());
+            return;
+        }
 
-        model.state();
-        StudentController.setCurrentStudent("20250001");
-        // Launch UI
-        level_1(StudentController, sc);
+        StudentController controller = new StudentController(model);
+        String firstId = model.getFirstStudentID();
+        controller.setCurrentStudent(firstId);
+
+        level_1(controller, sc);
     }
 
 

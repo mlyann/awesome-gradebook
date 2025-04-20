@@ -2,6 +2,11 @@ package org.fp;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.*;
+import java.time.LocalDate;
+import java.util.UUID;
 
 public class LibraryModel {
     private final Map<String, Student> studentMap = new HashMap<>();
@@ -247,11 +252,110 @@ public class LibraryModel {
                         addScore(new Score(gid, a.getAssignmentID(), s.getStuID(), earned, 100));
                     }
 
-                    addAssignment(a);         // ✅ 只在提交时加入系统
+                    addAssignment(a);         //
                     s.addAssignment(a.getAssignmentID());
                 }
 
             }
         }
     }
+    public void state2() {
+        // 1) 单个老师
+        Teacher t = new Teacher("Alice", "Zhao", "T001");
+        addTeacher(t);
+
+        // 2) 创建 5 门课程，并关联到老师
+        Course c1 = new Course("Math", "Basic Algebra", t.getTeacherID());
+        Course c2 = new Course("Physics", "Newtonian Mechanics", t.getTeacherID());
+        Course c3 = new Course("Biology", "Molecular Biology", t.getTeacherID());
+        Course c4 = new Course("History", "World History", t.getTeacherID());
+        Course c5 = new Course("CS", "Data Structures", t.getTeacherID());
+        addCourse(c1); addCourse(c2); addCourse(c3); addCourse(c4); addCourse(c5);
+        t.addCourse(c1.getCourseID());
+        t.addCourse(c2.getCourseID());
+        t.addCourse(c3.getCourseID());
+        t.addCourse(c4.getCourseID());
+        t.addCourse(c5.getCourseID());
+
+        // 3) 把所有从 CSV 加载进来的学生，选到第一门课
+        for (Student s : getAllStudents()) {
+            enrollStudentInCourse(s.getStuID(), c1.getCourseID());
+        }
+
+        // 4) 给每位学生生成 20 个作业，并随机提交 & 批改
+        LocalDate assignDate = LocalDate.of(2025, 4, 1);
+        for (int i = 1; i <= 20; i++) {
+            String aid = String.format("A%03d", i);
+            LocalDate due = LocalDate.of(2025, 4, 10 + i);
+
+            for (Student s : getAllStudents()) {
+                // 新作业
+                Assignment a = new Assignment(
+                        aid + "_" + s.getStuID(),
+                        "Assignment " + i,
+                        s.getStuID(),
+                        c1.getCourseID(),
+                        assignDate,
+                        due
+                );
+                addAssignment(a);
+                s.addAssignment(a.getAssignmentID());
+
+                // 随机提交
+                if (Math.random() < 0.6) {
+                    a.submit();
+                    // 随机批改
+                    if (Math.random() < 0.5) {
+                        String gid = "G" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+                        int earned = 60 + (i % 40);
+                        a.markGraded(gid);
+                        addScore(new Score(gid, a.getAssignmentID(), s.getStuID(), earned, 100));
+                    }
+                }
+            }
+        }
+    }
+    public void loadStudentsFromCSV(Path csvPath) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(csvPath)) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", -1);
+                if (parts.length >= 3) {
+                    String sid   = generateStudentID();
+                    String first = parts[0].trim();
+                    String last  = parts[1].trim();
+                    String email = parts[2].trim();
+                    Student s = new Student(sid, first, last, email);
+                    addStudent(s);
+                }
+            }
+        }
+        System.out.println(studentMap.size() + " students loaded");
+    }
+    public String getFirstStudentID() {
+        return studentMap.keySet()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No students loaded"));
+    }
+    /**
+     * @param dirPath CSV， "src/main/DataBase/Students"
+     */
+    public void loadStudentsFromDirectory(Path dirPath) throws IOException {
+        if (!Files.isDirectory(dirPath)) {
+            throw new IllegalArgumentException(dirPath + " 不是一个目录");
+        }
+        try (DirectoryStream<Path> stream =
+                     Files.newDirectoryStream(dirPath, "*.csv")) {
+            for (Path csvFile : stream) {
+                loadStudentsFromCSV(csvFile);
+            }
+        }
+    }
+
+    private String generateStudentID() {
+        int next = studentMap.size() + 1;
+        return String.format("STU%05d", next);
+    }
+
 }
