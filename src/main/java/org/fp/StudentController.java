@@ -13,6 +13,9 @@ public class StudentController extends BaseController {
     public void setCurrentStudent(String id) {
         if (model.studentExists(id)) {
             currentStudentID = id;
+            System.out.println("✅ Current student set: " + id);
+        } else {
+            System.out.println("❌ Tried to set non-existent student: " + id);
         }
     }
 
@@ -123,5 +126,10 @@ public class StudentController extends BaseController {
 
             return g1.getLetterGrade().compareTo(g2.getLetterGrade());
         });
+    }
+    public Course getCourseByAssignment(String assignmentID) {
+        Assignment a = model.getAssignment(assignmentID);
+        if (a == null) return null;
+        return model.getCourse(a.getCourseID());
     }
 }

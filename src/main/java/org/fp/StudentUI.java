@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.ChatModel;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import io.github.cdimascio.dotenv.Dotenv;
 /**
 * REQUIRED FUNCTIONS NOT CHECKED YET.
  */
@@ -223,22 +229,69 @@ public class StudentUI {
         } else {
             System.out.println("📊 Score: —");
         }
+        System.out.println("===============================================");
 
+// Show GPT option only if graded
+        if (score != null && assignment.getStatus() == Assignment.SubmissionStatus.GRADED) {
+            System.out.println("g) 🤖 Get GPT feedback for this assignment");
+        }
         System.out.println("⬅️ Press ENTER to return...");
+        String input = sc.nextLine().trim();
+
+// Only trigger GPT feedback if available
+        if (input.equalsIgnoreCase("g")) {
+            if (score == null || assignment.getStatus() != Assignment.SubmissionStatus.GRADED) {
+                System.out.println("⛔ Feedback is only available for graded assignments.");
+                return;
+            }
+
+            Student student = studentController.getCurrentStudent();
+            Course course = studentController.getCourseByAssignment(assignment.getAssignmentID());
+
+            if (student == null || course == null) {
+                System.out.println("❌ Missing student or course info.");
+                return;
+            }
+
+            ensureGPT();
+
+            String prompt = String.format(
+                    """
+                    You are a teaching assistant at the University of Arizona. 
+                    Please write a short, polite feedback email (around 4 sentences) to the student %s (%s) regarding their performance on the assignment "%s", part of the course "%s" (%s).
+            
+                    The student scored %d out of %d. 
+                    Provide two clear suggestions for improvement in a kind tone. Sign the email as "TA Team, University of Arizona".
+                    """,
+                    student.getFullName(), student.getEmail(),
+                    assignment.getAssignmentName(),
+                    course.getCourseName(), course.getCourseDescription(),
+                    score.getEarned(), score.getTotal()
+            );
+
+            System.out.println("\n📤 Sending prompt to GPT...");
+            String feedback = callGPT(prompt);
+            System.out.println("\n========== 📩 GPT Feedback Email =========\n" + feedback + "\n==========================================\n");
+            System.out.print("⬅️ Press ENTER to return...");
+            sc.nextLine();
+        }
         sc.nextLine();
     }
 
+    private static void ensureGPT() {
+        if (gpt != null) return;
+        Dotenv env = Dotenv.configure().ignoreIfMissing().load();
+        gpt = OpenAIOkHttpClient.builder().apiKey(env.get("OPENAI_API_KEY", "")).build();
+    }
 
-
-
-
-
-
-
-
-
-
-
+    private static String callGPT(String prompt) {
+        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                .model(ChatModel.GPT_4O_MINI)
+                .addUserMessage(prompt)
+                .build();
+        ChatCompletion cp = gpt.chat().completions().create(params);
+        return cp.choices().get(0).message().content().orElse("No response");
+    }
 
 
 
