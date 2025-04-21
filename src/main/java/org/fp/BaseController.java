@@ -77,6 +77,9 @@ public abstract class BaseController {
     }
 
     public Score getScoreForAssignment(String assignmentID) {
+        if (model.getScoreForAssignment(assignmentID) == null){
+            return null;
+        }
         return new Score(model.getScoreForAssignment(assignmentID));
     }
 }
