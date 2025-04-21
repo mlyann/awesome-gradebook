@@ -9,7 +9,7 @@ public class Teacher {
     private final String firstName;
     private final String lastName;
 
-    private final Set<String> teachingCourseIDs = new HashSet<>();
+    private Set<String> teachingCourseIDs = new HashSet<>();
 
 
     public Teacher(String teacherID, String firstName, String lastName) {
@@ -19,6 +19,17 @@ public class Teacher {
         this.teacherID = teacherID;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    // Copy constructor
+    public Teacher(Teacher other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot copy a null Teacher.");
+        }
+        this.teacherID = other.teacherID;
+        this.firstName = other.firstName;
+        this.lastName = other.lastName;
+        this.teachingCourseIDs = new HashSet<>(other.teachingCourseIDs);
     }
 
     public String getTeacherID() {

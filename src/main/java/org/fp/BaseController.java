@@ -14,11 +14,15 @@ public abstract class BaseController {
     }
 
     public List<Course> getCachedCourses() {
-        return cachedCourses;
+        List<Course> copyCourse = new ArrayList<>();
+        for (Course c : cachedCourses){
+            copyCourse.add(new Course(c));
+        }
+        return copyCourse;
     }
 
     public Course getCachedCourse(int index) {
-        return (index >= 0 && index < cachedCourses.size()) ? cachedCourses.get(index) : null;
+        return (index >= 0 && index < cachedCourses.size()) ? new Course(cachedCourses.get(index)) : null;
     }
 
     public enum CourseSort {
@@ -53,7 +57,7 @@ public abstract class BaseController {
 
 
     public Assignment getCachedAssignment(int index) {
-        return (index >= 0 && index < cachedAssignments.size()) ? cachedAssignments.get(index) : null;
+        return (index >= 0 && index < cachedAssignments.size()) ? new Assignment(cachedAssignments.get(index)) : null;
     }
 
     public void setCurrentAssignment(Assignment a) {
@@ -61,14 +65,21 @@ public abstract class BaseController {
     }
 
     public Assignment getCurrentAssignment() {
-        return currentAssignment;
+        return new Assignment(currentAssignment);
     }
 
     public List<Assignment> getCachedAssignments() {
-        return cachedAssignments;
+        List<Assignment> copyAssignments = new ArrayList<>();
+        for (Assignment a : cachedAssignments){
+            copyAssignments.add(new Assignment(a));
+        }
+        return copyAssignments;
     }
 
     public Score getScoreForAssignment(String assignmentID) {
-        return model.getScoreForAssignment(assignmentID);
+        if (model.getScoreForAssignment(assignmentID) == null){
+            return null;
+        }
+        return new Score(model.getScoreForAssignment(assignmentID));
     }
 }
