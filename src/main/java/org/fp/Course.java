@@ -94,6 +94,7 @@ public class Course {
     public Map<String, Integer> getCategoryDropCounts() {
         return Collections.unmodifiableMap(categoryDropCount);
     }
+
     /**
     public void setAssignmentScore(String assignmentID, int earned, int total) {
         Assignment assignment = assignments.get(assignmentID);

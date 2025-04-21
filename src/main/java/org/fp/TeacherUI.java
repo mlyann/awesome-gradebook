@@ -143,7 +143,7 @@ public class TeacherUI {
             }
             System.out.println();
             System.out.println("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n" +
-                    "w) ⚖\uFE0F  Set category weights & drop rules\n0) 🔙 Back\n");            System.out.print("👉 Choice: ");
+                    "w) ⚖\uFE0F  Set category weights & drop rules\nm) ⚙\uFE0F Grading Mode\n0) 🔙 Back\n");            System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
             if (choice.equals("0")) return;
@@ -182,6 +182,8 @@ public class TeacherUI {
                 viewFinalGrades(course.getCourseID());  // 👈 implement this method below
             } else if (choice.equalsIgnoreCase("w")) {
                 setCategoryWeightsAndDrops(course);  // ➕ new method
+            }    else if (choice.equalsIgnoreCase("m")) {        // ★ 新增分支
+                chooseGradingMode(course);                  // ↓ 方法见下一节
             } else {
                 System.out.println("❌ Invalid input.");
             }
@@ -467,7 +469,28 @@ public class TeacherUI {
         return rows;
     }
 
+    private static void chooseGradingMode(Course viewCopy){
+        String cid   = viewCopy.getCourseID();
+        LibraryModel model = TeacherController.getModel();
 
+        boolean current = model.getCourse(cid).isUsingWeightedGrading();
+        System.out.println("\n⚙️  Current mode: "
+                + (current ? "Option 2 ‑ category weights" : "Option 1 ‑ total points"));
+
+        System.out.println("""
+        Choose new mode:
+          1) Option 1  – Total points earned / total points possible
+          2) Option 2  – Categories with weights (allows drops)
+          0) Cancel
+        """);
+        System.out.print("👉 ");
+        switch (sc.nextLine().trim()) {
+            case "1" -> model.setGradingMode(cid, false);
+            case "2" -> model.setGradingMode(cid, true);
+            default  -> { System.out.println("❌ Cancelled."); return; }
+        }
+        System.out.println("✅ Mode saved.\n");
+    }
 }
     /**
 
