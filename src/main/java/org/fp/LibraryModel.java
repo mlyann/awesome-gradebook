@@ -26,7 +26,7 @@ public class LibraryModel {
     }
 
     public Student getStudent(String id) {
-        return studentMap.get(id);
+        return new Student(studentMap.get(id));
     }
 
     public boolean studentExists(String id) {
@@ -34,7 +34,11 @@ public class LibraryModel {
     }
 
     public Collection<Student> getAllStudents() {
-        return Collections.unmodifiableCollection(studentMap.values());
+        List<Student> copiedList = new ArrayList<>();
+        for (Student s : studentMap.values()) {
+            copiedList.add(new Student(s));  // assumes you have a copy constructor
+        }
+        return Collections.unmodifiableCollection(copiedList);
     }
 
     public void addTeacher(Teacher t) {
@@ -42,7 +46,7 @@ public class LibraryModel {
     }
 
     public Teacher getTeacher(String id) {
-        return teacherMap.get(id);
+        return new Teacher(teacherMap.get(id));
     }
 
     public boolean teacherExists(String id) {
@@ -50,7 +54,11 @@ public class LibraryModel {
     }
 
     public Collection<Teacher> getAllTeachers() {
-        return Collections.unmodifiableCollection(teacherMap.values());
+        List<Teacher> copiedList = new ArrayList<>();
+        for (Teacher t : teacherMap.values()){
+            copiedList.add(new Teacher(t));
+        }
+        return Collections.unmodifiableCollection(copiedList);
     }
 
     public void addCourse(Course c) {
@@ -58,11 +66,15 @@ public class LibraryModel {
     }
 
     public Course getCourse(String id) {
-        return courseMap.get(id);
+        return new Course(courseMap.get(id));
     }
 
     public Collection<Course> getAllCourses() {
-        return Collections.unmodifiableCollection(courseMap.values());
+        List<Course> copiedList = new ArrayList<>();
+        for (Course c : courseMap.values()){
+            copiedList.add(new Course(c));
+        }
+        return Collections.unmodifiableCollection(copiedList);
     }
 
     public List<Course> getCoursesByTeacher(String teacherID) {
@@ -80,11 +92,15 @@ public class LibraryModel {
     }
 
     public Assignment getAssignment(String id) {
-        return assignmentMap.get(id);
+        return new Assignment(assignmentMap.get(id));
     }
 
     public Collection<Assignment> getAllAssignments() {
-        return Collections.unmodifiableCollection(assignmentMap.values());
+        List<Assignment> copiedList = new ArrayList<>();
+        for (Assignment a : assignmentMap.values()){
+            copiedList.add(new Assignment(a));
+        }
+        return Collections.unmodifiableCollection(copiedList);
     }
 
     public List<Assignment> getAssignmentsInCourse(String courseID) {
@@ -102,18 +118,22 @@ public class LibraryModel {
     }
 
     public Score getScore(String gradeID) {
-        return gradeMap.get(gradeID);
+        return new Score(gradeMap.get(gradeID));
     }
 
     public Map<String, Score> getAllScores() {
-        return Collections.unmodifiableMap(gradeMap);
+        Map<String, Score> copiedMap = new HashMap<>();
+        for (Map.Entry<String, Score> entry : gradeMap.entrySet()) {
+            copiedMap.put(entry.getKey(), new Score(entry.getValue())); // deep copy
+        }
+        return Collections.unmodifiableMap(copiedMap);
     }
 
     public List<Assignment> getAssignmentsForStudentInCourse(String studentID, String courseID) {
         List<Assignment> result = new ArrayList<>();
         for (Assignment a : assignmentMap.values()) {
             if (a.getStudentID().equals(studentID) && a.getCourseID().equals(courseID)) {
-                result.add(a);
+                result.add(new Assignment(a));
             }
         }
         return result;
@@ -121,11 +141,16 @@ public class LibraryModel {
 
     public Score getScoreForAssignment(String assignmentID) {
         Assignment a = assignmentMap.get(assignmentID);
-        return (a == null || a.getGradeID() == null) ? null : gradeMap.get(a.getGradeID());
+        return (a == null || a.getGradeID() == null) ? null : new Score(gradeMap.get(a.getGradeID()));
     }
 
     public List<String> getStudentIDsInCourse(String courseID) {
-        return courseStudents.getOrDefault(courseID, new ArrayList<>());
+        if (courseStudents.containsKey(courseID)){
+            return new ArrayList<>(courseStudents.get(courseID));
+        }
+        else{
+            return new ArrayList<>();
+        }
     }
 
     public void enrollStudentInCourse(String studentID, String courseID) {

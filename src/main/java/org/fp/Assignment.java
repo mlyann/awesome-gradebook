@@ -33,6 +33,22 @@ public class Assignment {
         this.dueDate = dueDate;
     }
 
+    // Copy constructor
+    public Assignment(Assignment other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot copy a null Assignment.");
+        }
+        this.assignmentID = other.assignmentID;
+        this.assignmentName = other.assignmentName;
+        this.studentID = other.studentID;
+        this.courseID = other.courseID;
+        this.assignDate = other.assignDate;
+        this.dueDate = other.dueDate;
+        this.gradeID = other.gradeID;
+        this.status = other.status;
+        this.published = other.published;
+    }
+
     public void submit() {
         if (this.status != SubmissionStatus.UNSUBMITTED) return;
         this.status = SubmissionStatus.SUBMITTED_UNGRADED;

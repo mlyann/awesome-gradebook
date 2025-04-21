@@ -15,6 +15,18 @@ public class Score {
         this.total = total;
     }
 
+    // Copy constructor
+    public Score(Score other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot copy a null Score.");
+        }
+        this.gradeID = other.gradeID;
+        this.assignmentID = other.assignmentID;
+        this.studentID = other.studentID;
+        this.earned = other.earned;
+        this.total = other.total;
+    }
+
     public String getGradeID() { return gradeID; }
     public String getAssignmentID() { return assignmentID; }
     public String getStudentID() { return studentID; }

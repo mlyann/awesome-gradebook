@@ -23,6 +23,21 @@ public class Course {
 //        } TODO: I remove them for test coverage.
     }
 
+    // Copy constructor
+    public Course (Course c){
+        if (c == null){
+            throw new IllegalArgumentException("Cannot copy a null Course.");
+        }
+        this.courseID = c.courseID;
+        this.courseName = c.courseName;
+        this.courseDescription = c.courseDescription;
+        this.teacherID = c.teacherID;
+        this.assignments = new HashMap<>();
+        for (Map.Entry<String, Assignment> entry : c.assignments.entrySet()) {
+            this.assignments.put(entry.getKey(), new Assignment(entry.getValue()));
+        }
+    }
+
     public String getCourseID() {
         return courseID;
     }

@@ -8,8 +8,8 @@ public class Student {
     private final String lastName;
     private final String email;
 
-    private final Set<String> enrolledCourseIDs = new HashSet<>();
-    private final Set<String> assignmentIDs = new HashSet<>();
+    private Set<String> enrolledCourseIDs = new HashSet<>();
+    private Set<String> assignmentIDs = new HashSet<>();
 
     public Student(String stuID, String firstName, String lastName, String email) {
         if (stuID == null || stuID.isEmpty()) {
@@ -23,6 +23,19 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    // Copy constructor
+    public Student(Student other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Cannot copy a null Student.");
+        }
+        this.stuID = other.stuID;
+        this.firstName = other.firstName;
+        this.lastName = other.lastName;
+        this.email = other.email;
+        this.enrolledCourseIDs = new HashSet<>(other.enrolledCourseIDs);
+        this.assignmentIDs = new HashSet<>(other.assignmentIDs);
     }
 
     public String getStuID() {
