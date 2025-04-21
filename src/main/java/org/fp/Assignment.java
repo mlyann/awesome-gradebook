@@ -47,6 +47,7 @@ public class Assignment {
         this.gradeID = other.gradeID;
         this.status = other.status;
         this.published = other.published;
+        this.category  = other.category;
     }
 
     public void submit() {
@@ -93,5 +94,14 @@ public class Assignment {
     public String toString() {
         return String.format("%s (%s) [Course: %s, Student: %s, Assigned: %s, Due: %s, Status: %s, Published: %s]",
                 assignmentName, assignmentID, courseID, studentID, assignDate, dueDate, status.name(), published);
+    }
+
+    private String category = "Default";
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public String getCategory() {
+        return category;
     }
 }

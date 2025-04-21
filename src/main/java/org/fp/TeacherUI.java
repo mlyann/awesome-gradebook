@@ -47,7 +47,7 @@ public class TeacherUI {
         LibraryModel model = new LibraryModel();
         TeacherController = new TeacherController(model);
 
-        model.state1();
+        model.state3();
         TeacherController.setCurrentTeacher("Alice");
         // Launch UI
         level_1(TeacherController, sc);
@@ -141,9 +141,9 @@ public class TeacherUI {
                 case ASSIGNMENTS -> viewAssignments(controller, course, sort, filterActive);
                 // case ROSTER -> viewRoster(controller, course);
             }
-
             System.out.println();
-            System.out.println("a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    0) 🔙 Back");            System.out.print("👉 Choice: ");
+            System.out.println("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n" +
+                    "w) ⚖\uFE0F  Set category weights & drop rules\n0) 🔙 Back\n");            System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
             if (choice.equals("0")) return;
@@ -180,6 +180,8 @@ public class TeacherUI {
                 }
             } else if (choice.equalsIgnoreCase("g")) {
                 viewFinalGrades(course.getCourseID());  // 👈 implement this method below
+            } else if (choice.equalsIgnoreCase("w")) {
+                setCategoryWeightsAndDrops(course);  // ➕ new method
             } else {
                 System.out.println("❌ Invalid input.");
             }
@@ -395,41 +397,77 @@ public class TeacherUI {
         System.out.println("⬅️ Press ENTER to return...");
         sc.nextLine();
     }
-    public static List<List<String>> getFinalGradesForCourse(String courseID) {
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("Student ID", "Full Name", "Email", "Score", "Percent", "Grade", "GPA"));
 
-        List<Student> students = TeacherController.getStudentsInCourse(courseID); // ✅ from controller
-        for (Student s : students) {
-            List<Assignment> assignments = TeacherController.getModel()
-                    .getAssignmentsForStudentInCourse(s.getStuID(), courseID);
+    private static void setCategoryWeightsAndDrops(Course viewCopy) {
+        String cid   = viewCopy.getCourseID();
+        LibraryModel model = TeacherController.getModel();
+        model.setGradingMode(cid, true);                 // keep as is
 
-            int earned = 0, total = 0;
-            for (Assignment a : assignments) {
-                Score score = TeacherController.getScoreForAssignment(a.getAssignmentID());
-                if (score != null) {
-                    earned += score.getEarned();
-                    total += score.getTotal();
-                }
+        /* ---------- NEW BLOCK ① : show existing table ---------- */
+        Course snap = model.getCourse(cid);              // safe copy
+        Map<String, Double> w = snap.getCategoryWeights();
+        Map<String, Integer> d = snap.getCategoryDropCounts();
+        int count = w.size();
+
+        if (count > 0) {
+            System.out.println("\nCurrent categories (" + count + " total):");
+            System.out.println("  Category        Weight   Drop");
+            System.out.println("  --------        ------   ----");
+            for (String c : w.keySet()) {
+                System.out.printf("  %-14s  %5.2f    %d%n", c, w.get(c), d.getOrDefault(c,0));
             }
+            double total = w.values().stream().mapToDouble(Double::doubleValue).sum();
+            System.out.printf("  %-14s  %5.2f%n%n", "Total weight =", total);
+        } else {
+            System.out.println("\nNo categories yet – start adding below.\n");
+        }
+        /* ---------- END BLOCK ① ---------- */
 
-            double percent = total == 0 ? 0.0 : (100.0 * earned / total);
-            Grade grade = Grade.fromScore(percent);
-            double gpa = TeacherController.getModel().calculateGPA(s.getStuID()); // ✅ get GPA from model
+        while (true) {
+            System.out.print("Enter category name (or blank to finish): ");
+            String cat = sc.nextLine().trim();
+            if (cat.isEmpty()) break;
+
+            System.out.print("  → Weight for " + cat + " (0‑1): ");
+            double weight = Double.parseDouble(sc.nextLine().trim());
+            model.setCategoryWeight(cid, cat, weight);   // use safe setter
+
+            System.out.print("  → Drop how many lowest scores? ");
+            int drop = Integer.parseInt(sc.nextLine().trim());
+            model.setCategoryDrop(cid, cat, drop);       // safe setter
+        }
+
+        System.out.println("\n✅ Grading mode set to category‑based. Use analytics to verify.\n");
+    }
+
+    private static List<List<String>> getFinalGradesForCourse(String courseID) {
+        LibraryModel model = TeacherController.getModel();
+        Course course = model.getCourse(courseID);          // 拿到课程，看它是不是加权
+        boolean weighted = course.isUsingWeightedGrading();
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("Student ID", "Full Name", "Email",
+                weighted ? "Weighted %" : "Raw %",
+                "Grade", "GPA"));
+
+        for (Student s : TeacherController.getStudentsInCourse(courseID)) {
+            double pct   = model.getFinalPercentage(s.getStuID(), courseID);   // ⭐ 直接调用
+            Grade grade  = Grade.fromScore(pct);
+            double gpa   = model.calculateGPA(s.getStuID());
 
             rows.add(List.of(
                     s.getStuID(),
                     s.getFullName(),
                     s.getEmail(),
-                    earned + "/" + total,
-                    String.format("%.1f%%", percent),
+                    String.format("%.1f%%", pct),
                     grade.name(),
                     String.format("%.2f", gpa)
             ));
         }
-
         return rows;
     }
+
+
 }
     /**
 

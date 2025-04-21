@@ -1,5 +1,6 @@
 package org.fp;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ public class Course {
     private String courseDescription;
     private final String teacherID;
     private final Map<String, Assignment> assignments;
-
+    private boolean useWeightedGrading = false;  // true = use category weights
+    private Map<String, Double> categoryWeights = new HashMap<>(); // e.g., "Homework" → 0.4
+    private Map<String, Integer> categoryDropCount = new HashMap<>(); // e.g., "Quiz" → 1
 
     public Course(String courseName, String courseDescription, String teacherID) {
         this.courseID = IDGen.generate("CRS");
@@ -28,14 +31,17 @@ public class Course {
         if (c == null){
             throw new IllegalArgumentException("Cannot copy a null Course.");
         }
-        this.courseID = c.courseID;
-        this.courseName = c.courseName;
+        this.courseID          = c.courseID;
+        this.courseName        = c.courseName;
         this.courseDescription = c.courseDescription;
-        this.teacherID = c.teacherID;
+        this.teacherID         = c.teacherID;
         this.assignments = new HashMap<>();
-        for (Map.Entry<String, Assignment> entry : c.assignments.entrySet()) {
-            this.assignments.put(entry.getKey(), new Assignment(entry.getValue()));
+        for (var e : c.assignments.entrySet()) {
+            this.assignments.put(e.getKey(), new Assignment(e.getValue()));
         }
+        this.useWeightedGrading = c.useWeightedGrading;
+        this.categoryWeights    = new HashMap<>(c.categoryWeights);
+        this.categoryDropCount  = new HashMap<>(c.categoryDropCount);
     }
 
     public String getCourseID() {
@@ -64,6 +70,30 @@ public class Course {
         return assignments.get(assignmentID);
     }
 
+    public void setGradingMode(boolean useWeighted) {
+        this.useWeightedGrading = useWeighted;
+    }
+    public void setCategoryWeight(String category, double weight) {
+        categoryWeights.put(category, weight);
+    }
+    public void setCategoryDropCount(String category, int count) {
+        categoryDropCount.put(category, count);
+    }
+    public boolean isUsingWeightedGrading() {
+        return useWeightedGrading;
+    }
+    public double getCategoryWeight(String category) {
+        return categoryWeights.getOrDefault(category, 0.0);
+    }
+    public int getDropCountForCategory(String category) {
+        return categoryDropCount.getOrDefault(category, 0);
+    }
+    public Map<String, Double> getCategoryWeights() {
+        return Collections.unmodifiableMap(categoryWeights);
+    }
+    public Map<String, Integer> getCategoryDropCounts() {
+        return Collections.unmodifiableMap(categoryDropCount);
+    }
     /**
     public void setAssignmentScore(String assignmentID, int earned, int total) {
         Assignment assignment = assignments.get(assignmentID);

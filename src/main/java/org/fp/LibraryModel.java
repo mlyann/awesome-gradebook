@@ -21,6 +21,7 @@ public class LibraryModel {
     private final Map<String, List<String>> studentAssignments = new HashMap<>();
     private final Map<String, String> assignmentGrades = new HashMap<>();
 
+
     public void addStudent(Student s) {
         studentMap.put(s.getStuID(), s);
     }
@@ -340,6 +341,81 @@ public class LibraryModel {
             }
         }
     }
+
+    public void state3() {
+        // 1) Create teacher
+        Teacher t = new Teacher("Alice", "Zhao", "T001");
+        addTeacher(t);
+
+        // 2) Create one course using category-based grading
+        Course c1 = new Course("CS", "Advanced Programming", t.getTeacherID());
+        c1.setGradingMode(true);  // use category-based weighted grading
+        c1.setCategoryWeight("Homework", 0.3);
+        c1.setCategoryWeight("Project", 0.4);
+        c1.setCategoryWeight("Quiz", 0.3);
+        c1.setCategoryDropCount("Quiz", 1);  // drop lowest quiz
+        addCourse(c1);
+        t.addCourse(c1.getCourseID());
+
+        // 3) Create students
+        List<Student> students = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            String sid = String.format("STU%05d", i);
+            Student s = new Student(sid, "Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
+            students.add(s);
+            addStudent(s);
+            enrollStudentInCourse(sid, c1.getCourseID());
+        }
+
+        // 4) Create assignments per category
+        LocalDate assignDate = LocalDate.of(2025, 4, 1);
+        int hwCount = 4, projCount = 2, quizCount = 3;
+
+        for (int i = 1; i <= hwCount; i++) {
+            for (Student s : students) {
+                String aid = String.format("HW%02d_%s", i, s.getStuID());
+                Assignment a = new Assignment(aid, "HW " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(5));
+                a.setCategory("Homework");
+                addAssignment(a);
+                s.addAssignment(aid);
+                a.submit();
+                a.markGraded("G_" + aid);
+                int earned = 60 + (int)(Math.random() * 41); // 60 ~ 100
+                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+            }
+        }
+
+        for (int i = 1; i <= projCount; i++) {
+            for (Student s : students) {
+                String aid = String.format("PR%02d_%s", i, s.getStuID());
+                Assignment a = new Assignment(aid, "Project " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(10));
+                a.setCategory("Project");
+                addAssignment(a);
+                s.addAssignment(aid);
+                a.submit();
+                a.markGraded("G_" + aid);
+                int earned = 80 + (int)(Math.random() * 41); // 60 ~ 100
+                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+            }
+        }
+
+        for (int i = 1; i <= quizCount; i++) {
+            for (Student s : students) {
+                String aid = String.format("QZ%02d_%s", i, s.getStuID());
+                Assignment a = new Assignment(aid, "Quiz " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(2));
+                a.setCategory("Quiz");
+                addAssignment(a);
+                s.addAssignment(aid);
+                a.submit();
+                a.markGraded("G_" + aid);
+                int score = switch (i) {
+                    case 1 -> 100; case 2 -> 80; default -> 60;
+                };
+                int earned = 70 + (int)(Math.random() * 41); // 60 ~ 100
+                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+            }
+        }
+    }
     public void loadStudentsFromCSV(Path csvPath) throws IOException {
         try (BufferedReader reader = Files.newBufferedReader(csvPath)) {
             String line = reader.readLine();
@@ -384,54 +460,47 @@ public class LibraryModel {
     }
 
     public double calculateClassAverage(String courseID) {
+        Course course = courseMap.get(courseID);
+        if (course == null) return 0.0;
+
         List<String> studentIDs = getStudentIDsInCourse(courseID);
-        int totalEarned = 0;
-        int totalPossible = 0;
+        double total = 0.0;
 
         for (String sid : studentIDs) {
-            for (Assignment a : getAssignmentsForStudentInCourse(sid, courseID)) {
-                Score s = getScoreForAssignment(a.getAssignmentID());
-                if (s != null) {
-                    totalEarned += s.getEarned();
-                    totalPossible += s.getTotal();
-                }
-            }
+            total += course.isUsingWeightedGrading()
+                    ? computeWeightedPercentage(sid, courseID)
+                    : computeTotalPointsPercentage(sid, courseID);
         }
-        return totalPossible == 0 ? 0.0 : (100.0 * totalEarned / totalPossible);
+
+        return studentIDs.isEmpty() ? 0.0 : total / studentIDs.size();
     }
+
     public double calculateGPA(String studentID) {
         List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
-        int totalGradePoints = 0;
-        int countedCourses = 0;
+        int totalPoints = 0;
+        int count = 0;
 
         for (String courseID : courseIDs) {
-            List<Assignment> assignments = getAssignmentsForStudentInCourse(studentID, courseID);
-            int earned = 0, total = 0;
+            Course course = courseMap.get(courseID);
+            if (course == null) continue;
 
-            for (Assignment a : assignments) {
-                Score s = getScoreForAssignment(a.getAssignmentID());
-                if (s != null) {
-                    earned += s.getEarned();
-                    total += s.getTotal();
-                }
-            }
+            double pct = course.isUsingWeightedGrading()
+                    ? computeWeightedPercentage(studentID, courseID)
+                    : computeTotalPointsPercentage(studentID, courseID);
 
-            if (total > 0) {
-                double percent = 100.0 * earned / total;
-                Grade grade = Grade.fromScore(percent);
-                int points = switch (grade) {
-                    case A -> 4;
-                    case B -> 3;
-                    case C -> 2;
-                    case D -> 1;
-                    case F -> 0;
-                };
-                totalGradePoints += points;
-                countedCourses++;
-            }
+            Grade grade = Grade.fromScore(pct);
+            int gpaPoints = switch (grade) {
+                case A -> 4;
+                case B -> 3;
+                case C -> 2;
+                case D -> 1;
+                case F -> 0;
+            };
+            totalPoints += gpaPoints;
+            count++;
         }
 
-        return countedCourses == 0 ? 0.0 : 1.0 * totalGradePoints / countedCourses;
+        return count == 0 ? 0.0 : (1.0 * totalPoints / count);
     }
     public double getOverallClassAverage(String courseID) {
         List<String> studentIDs = getStudentIDsInCourse(courseID);
@@ -452,22 +521,89 @@ public class LibraryModel {
 
     public Map<String, Grade> assignFinalLetterGrades(String courseID) {
         Map<String, Grade> result = new HashMap<>();
+        Course course = courseMap.get(courseID);
+        if (course == null) return result;
+
         for (String sid : getStudentIDsInCourse(courseID)) {
-            List<Assignment> assignments = getAssignmentsForStudentInCourse(sid, courseID);
-            int earned = 0, total = 0;
-            for (Assignment a : assignments) {
-                Score s = getScoreForAssignment(a.getAssignmentID());
-                if (s != null) {
-                    earned += s.getEarned();
-                    total += s.getTotal();
-                }
-            }
-            if (total > 0) {
-                double pct = 100.0 * earned / total;
-                result.put(sid, Grade.fromScore(pct));
-            }
+            double pct = course.isUsingWeightedGrading()
+                    ? computeWeightedPercentage(sid, courseID)
+                    : computeTotalPointsPercentage(sid, courseID);
+            result.put(sid, Grade.fromScore(pct));
         }
         return result;
     }
 
+    private double computeTotalPointsPercentage(String studentID, String courseID) {
+        List<Assignment> assignments = getAssignmentsForStudentInCourse(studentID, courseID);
+        int earned = 0, total = 0;
+
+        for (Assignment a : assignments) {
+            Score s = getScoreForAssignment(a.getAssignmentID());
+            if (s != null) {
+                earned += s.getEarned();
+                total += s.getTotal();
+            }
+        }
+        return total == 0 ? 0.0 : (100.0 * earned / total);
+    }
+
+    private double computeWeightedPercentage(String studentID, String courseID) {
+        Course course = courseMap.get(courseID);
+        if (course == null) return 0.0;
+
+        Map<String, List<Score>> byCategory = new HashMap<>();
+
+        for (Assignment a : getAssignmentsForStudentInCourse(studentID, courseID)) {
+            if (a.getGradeID() == null) continue;
+            Score s = getScoreForAssignment(a.getAssignmentID());
+            if (s == null) continue;
+
+            String cat = a.getCategory();
+            byCategory.putIfAbsent(cat, new ArrayList<>());
+            byCategory.get(cat).add(s);
+        }
+
+        double weightedTotal = 0.0;
+
+        for (String cat : course.getCategoryWeights().keySet()) {
+            List<Score> scores = byCategory.getOrDefault(cat, new ArrayList<>());
+            scores.sort(Comparator.comparingDouble(Score::getPercentage)); // low → high
+            int drop = course.getDropCountForCategory(cat);
+            if (drop >= scores.size()) continue;
+
+            List<Score> used = scores.subList(drop, scores.size());
+            int earned = used.stream().mapToInt(Score::getEarned).sum();
+            int total = used.stream().mapToInt(Score::getTotal).sum();
+            if (total > 0) {
+                double pct = 1.0 * earned / total;
+                double weight = course.getCategoryWeight(cat);
+                weightedTotal += pct * weight;
+            }
+        }
+
+        return weightedTotal * 100.0; // final percent
+    }
+    public double getFinalPercentage(String studentID, String courseID) {
+        Course c = courseMap.get(courseID);
+        if (c == null) return 0.0;
+        return c.isUsingWeightedGrading()
+                ? computeWeightedPercentage(studentID, courseID)
+                : computeTotalPointsPercentage(studentID, courseID);
+    }
+
+    // LibraryModel.java
+    public void setGradingMode(String courseID, boolean weighted) {
+        Course c = courseMap.get(courseID);
+        if (c != null) c.setGradingMode(weighted);
+    }
+
+    public void setCategoryWeight(String courseID, String category, double weight) {
+        Course c = courseMap.get(courseID);
+        if (c != null) c.setCategoryWeight(category, weight);
+    }
+
+    public void setCategoryDrop(String courseID, String category, int drop) {
+        Course c = courseMap.get(courseID);
+        if (c != null) c.setCategoryDropCount(category, drop);
+    }
 }
