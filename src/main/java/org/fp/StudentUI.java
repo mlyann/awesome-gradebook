@@ -122,7 +122,13 @@ public class StudentUI {
 
 
     private static void showGPA(StudentController studentController) {
-        System.out.println("📈 GPA: (Not implemented yet)");
+        Student current = studentController.getCurrentStudent();
+        if (current == null) {
+            System.out.println("❌ No student selected.");
+            return;
+        }
+        double gpa = studentController.getModel().calculateGPA(current.getStuID());
+        System.out.printf("\n🎓 Your cumulative GPA: %.2f\n\n", gpa);
     }
 
 
@@ -165,6 +171,9 @@ public class StudentUI {
             }
 
             String filterLabel = onlyUnsubmitted ? "(filter: UNSUBMITTED)" : "";
+            double classAvg = studentController.getModel().calculateClassAverage(course.getCourseID());
+            System.out.printf("📚 Course: %s (%s)\n", course.getCourseName(), course.getCourseDescription());
+            System.out.printf("📊 Class Average (graded only): %.2f%%\n", classAvg);
             TablePrinter.printDynamicTable("Assignments for " + course.getCourseName() + " (sorted by " + sort.name().toLowerCase() + ") " + filterLabel, rows);
 
             System.out.println("s) 🔀 Change sort    f) 🔎 Toggle filter    0) ⬅️ Back to courses");

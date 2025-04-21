@@ -383,4 +383,91 @@ public class LibraryModel {
         return String.format("STU%05d", next);
     }
 
+    public double calculateClassAverage(String courseID) {
+        List<String> studentIDs = getStudentIDsInCourse(courseID);
+        int totalEarned = 0;
+        int totalPossible = 0;
+
+        for (String sid : studentIDs) {
+            for (Assignment a : getAssignmentsForStudentInCourse(sid, courseID)) {
+                Score s = getScoreForAssignment(a.getAssignmentID());
+                if (s != null) {
+                    totalEarned += s.getEarned();
+                    totalPossible += s.getTotal();
+                }
+            }
+        }
+        return totalPossible == 0 ? 0.0 : (100.0 * totalEarned / totalPossible);
+    }
+    public double calculateGPA(String studentID) {
+        List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
+        int totalGradePoints = 0;
+        int countedCourses = 0;
+
+        for (String courseID : courseIDs) {
+            List<Assignment> assignments = getAssignmentsForStudentInCourse(studentID, courseID);
+            int earned = 0, total = 0;
+
+            for (Assignment a : assignments) {
+                Score s = getScoreForAssignment(a.getAssignmentID());
+                if (s != null) {
+                    earned += s.getEarned();
+                    total += s.getTotal();
+                }
+            }
+
+            if (total > 0) {
+                double percent = 100.0 * earned / total;
+                Grade grade = Grade.fromScore(percent);
+                int points = switch (grade) {
+                    case A -> 4;
+                    case B -> 3;
+                    case C -> 2;
+                    case D -> 1;
+                    case F -> 0;
+                };
+                totalGradePoints += points;
+                countedCourses++;
+            }
+        }
+
+        return countedCourses == 0 ? 0.0 : 1.0 * totalGradePoints / countedCourses;
+    }
+    public double getOverallClassAverage(String courseID) {
+        List<String> studentIDs = getStudentIDsInCourse(courseID);
+        int totalEarned = 0;
+        int totalPossible = 0;
+
+        for (String sid : studentIDs) {
+            for (Assignment a : getAssignmentsForStudentInCourse(sid, courseID)) {
+                Score s = getScoreForAssignment(a.getAssignmentID());
+                if (s != null) {
+                    totalEarned += s.getEarned();
+                    totalPossible += s.getTotal();
+                }
+            }
+        }
+        return totalPossible == 0 ? 0.0 : (100.0 * totalEarned / totalPossible);
+    }
+
+    public Map<String, Grade> assignFinalLetterGrades(String courseID) {
+        Map<String, Grade> result = new HashMap<>();
+        for (String sid : getStudentIDsInCourse(courseID)) {
+            List<Assignment> assignments = getAssignmentsForStudentInCourse(sid, courseID);
+            int earned = 0, total = 0;
+            for (Assignment a : assignments) {
+                Score s = getScoreForAssignment(a.getAssignmentID());
+                if (s != null) {
+                    earned += s.getEarned();
+                    total += s.getTotal();
+                }
+            }
+            if (total > 0) {
+                double pct = 100.0 * earned / total;
+                result.put(sid, Grade.fromScore(pct));
+            }
+        }
+        return result;
+    }
+
 }

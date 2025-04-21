@@ -13,6 +13,10 @@ public abstract class BaseController {
         this.model = model;
     }
 
+    public LibraryModel getModel() {
+        return model;
+    }
+
     public List<Course> getCachedCourses() {
         List<Course> copyCourse = new ArrayList<>();
         for (Course c : cachedCourses){

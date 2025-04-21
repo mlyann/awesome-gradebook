@@ -143,8 +143,7 @@ public class TeacherUI {
             }
 
             System.out.println();
-            System.out.println("a) 📄 Assignments    r) 👥 Roster    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    0) 🔙 Back");
-            System.out.print("👉 Choice: ");
+            System.out.println("a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    0) 🔙 Back");            System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
             if (choice.equals("0")) return;
@@ -179,6 +178,8 @@ public class TeacherUI {
                 } else if (view == ViewMode.ROSTER) {
                     // TO DO: view selected student's assignments
                 }
+            } else if (choice.equalsIgnoreCase("g")) {
+                viewFinalGrades(course.getCourseID());  // 👈 implement this method below
             } else {
                 System.out.println("❌ Invalid input.");
             }
@@ -256,7 +257,6 @@ public class TeacherUI {
         String bar = "[" + "#".repeat(barCount) + "-".repeat(20 - barCount) + "] ";
         return bar + graded + "/" + total;
     }
-
 
 
     private static int extractAssignmentNumber(String name) {
@@ -389,10 +389,48 @@ public class TeacherUI {
         sc.nextLine();
     }
 
+    private static void viewFinalGrades(String courseID) {
+        List<List<String>> table = getFinalGradesForCourse(courseID);
+        TablePrinter.printDynamicTable("📋 Final Grades with GPA", table);
+        System.out.println("⬅️ Press ENTER to return...");
+        sc.nextLine();
+    }
+    public static List<List<String>> getFinalGradesForCourse(String courseID) {
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("Student ID", "Full Name", "Email", "Score", "Percent", "Grade", "GPA"));
 
+        List<Student> students = TeacherController.getStudentsInCourse(courseID); // ✅ from controller
+        for (Student s : students) {
+            List<Assignment> assignments = TeacherController.getModel()
+                    .getAssignmentsForStudentInCourse(s.getStuID(), courseID);
 
+            int earned = 0, total = 0;
+            for (Assignment a : assignments) {
+                Score score = TeacherController.getScoreForAssignment(a.getAssignmentID());
+                if (score != null) {
+                    earned += score.getEarned();
+                    total += score.getTotal();
+                }
+            }
 
+            double percent = total == 0 ? 0.0 : (100.0 * earned / total);
+            Grade grade = Grade.fromScore(percent);
+            double gpa = TeacherController.getModel().calculateGPA(s.getStuID()); // ✅ get GPA from model
 
+            rows.add(List.of(
+                    s.getStuID(),
+                    s.getFullName(),
+                    s.getEmail(),
+                    earned + "/" + total,
+                    String.format("%.1f%%", percent),
+                    grade.name(),
+                    String.format("%.2f", gpa)
+            ));
+        }
+
+        return rows;
+    }
+}
     /**
 
     private enum SortMode { FIRST, LAST, USERNAME, ASSIGN }
@@ -642,4 +680,4 @@ public class TeacherUI {
         System.out.flush();
     }
  **/
-}
+
