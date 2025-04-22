@@ -266,7 +266,7 @@ We deeply appreciate the guidance and support of our instructor Malenie Lotz and
 
 **Mentors**:
  - Instructor: [Malenie Lotz](https://www.cs.arizona.edu/person/melanie-lotz) (CSC 335)
- - Teaching Assistant: Jenny Yu
+ - Teaching Assistant: Paulina
 
 
 ## License
