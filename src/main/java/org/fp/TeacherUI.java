@@ -122,6 +122,7 @@ public class TeacherUI {
 
 
     private static void level_2(TeacherController controller, Course course) {
+        SortMode rosterSort = SortMode.FIRST_NAME;
         ViewMode view = ViewMode.ASSIGNMENTS;
         AssignmentSort sort = AssignmentSort.NONE;
         boolean filterActive = false;
@@ -139,7 +140,7 @@ public class TeacherUI {
 
             switch (view) {
                 case ASSIGNMENTS -> viewAssignments(controller, course, sort, filterActive);
-                // case ROSTER -> viewRoster(controller, course);
+                case ROSTER -> viewRoster(controller, course, rosterSort);
             }
             System.out.println();
             System.out.println("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n" +
@@ -161,7 +162,11 @@ public class TeacherUI {
             } else if (choice.equalsIgnoreCase("f")) {
                 filterActive = !filterActive;
             } else if (choice.equalsIgnoreCase("o")) {
-                sort = nextSort(sort);
+                if (view == ViewMode.ASSIGNMENTS) {
+                    sort = nextSort(sort);
+                } else if (view == ViewMode.ROSTER) {
+                    rosterSort = nextRosterSort(rosterSort);
+                }
             } else if (choice.matches("[1-9][0-9]*")) {
                 int index = Integer.parseInt(choice) - 1;
                 if (view == ViewMode.ASSIGNMENTS) {
@@ -195,6 +200,7 @@ public class TeacherUI {
         ASSIGNMENTS, ROSTER
     }
 
+    private enum SortMode { FIRST_NAME, LAST_NAME, EMAIL }
 
     private static AssignmentSort nextSort(AssignmentSort current) {
         return switch (current) {
@@ -204,6 +210,14 @@ public class TeacherUI {
             case DUE_DATE -> AssignmentSort.SUBMISSION;
             case SUBMISSION -> AssignmentSort.GRADED_PERCENT;
             case GRADED_PERCENT -> AssignmentSort.NONE;
+        };
+    }
+
+    private static SortMode nextRosterSort(SortMode current) {
+        return switch (current) {
+            case FIRST_NAME -> SortMode.LAST_NAME;
+            case LAST_NAME -> SortMode.EMAIL;
+            case EMAIL -> SortMode.FIRST_NAME;
         };
     }
 
@@ -430,13 +444,39 @@ public class TeacherUI {
             String cat = sc.nextLine().trim();
             if (cat.isEmpty()) break;
 
-            System.out.print("  → Weight for " + cat + " (0‑1): ");
-            double weight = Double.parseDouble(sc.nextLine().trim());
-            model.setCategoryWeight(cid, cat, weight);   // use safe setter
+            double weight = -1;
+            while (true) {
+                System.out.print("  → Weight for " + cat + " (0‑1): ");
+                String input = sc.nextLine().trim();
+                try {
+                    weight = Double.parseDouble(input);
+                    if (weight < 0 || weight > 1) {
+                        System.out.println("    Please enter a value between 0 and 1.");
+                    } else {
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("    Invalid input. Please enter a decimal number.");
+                }
+            }
+            model.setCategoryWeight(cid, cat, weight);
 
-            System.out.print("  → Drop how many lowest scores? ");
-            int drop = Integer.parseInt(sc.nextLine().trim());
-            model.setCategoryDrop(cid, cat, drop);       // safe setter
+            int drop = -1;
+            while (true) {
+                System.out.print("  → Drop how many lowest scores? ");
+                String input = sc.nextLine().trim();
+                try {
+                    drop = Integer.parseInt(input);
+                    if (drop < 0) {
+                        System.out.println("    Please enter a non-negative number.");
+                    } else {
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("    Invalid input. Please enter an integer.");
+                }
+            }
+            model.setCategoryDrop(cid, cat, drop);
         }
 
         System.out.println("\n✅ Grading mode set to category‑based. Use analytics to verify.\n");
@@ -491,7 +531,41 @@ public class TeacherUI {
         }
         System.out.println("✅ Mode saved.\n");
     }
+
+    private static void viewRoster(TeacherController controller, Course course, SortMode sortMode) {
+        List<Student> students = controller.getStudentsInCourse(course.getCourseID());
+        if (students.isEmpty()) {
+            System.out.println("❌ No students enrolled in this course.");
+            return;
+        }
+
+        switch (sortMode) {
+            case FIRST_NAME -> students.sort(Student.firstNameAscendingComparator());
+            case LAST_NAME -> students.sort(Student.lastNameAscendingComparator());
+            case EMAIL -> students.sort(Student.userNameAscendingComparator());
+        }
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "Student ID", "First Name", "Last Name", "Email"));
+
+        int index = 1;
+        for (Student s : students) {
+            rows.add(List.of(
+                    String.valueOf(index++),
+                    s.getStuID(),
+                    s.getFirstName(),
+                    s.getLastName(),
+                    s.getEmail()
+            ));
+        }
+
+        String title = "👥 Roster for " + course.getCourseName() + " (sorted by " +
+                sortMode.name().toLowerCase().replace("_", " ") + ")";
+        TablePrinter.printDynamicTable(title, rows);
+    }
 }
+
+
     /**
 
     private enum SortMode { FIRST, LAST, USERNAME, ASSIGN }
