@@ -14,7 +14,7 @@ Welcome to the **Music Library App**! This console-based Java application allows
 4. [Getting Started](#getting-started)
 5. [How to Use](#how-to-use)
 6. [Sample Flow](#sample-flow)
-7. [Author & Acknowledgments](#author--acknowledgments)
+7. [Author & Acknowledgments](#contact)
 8. [License](#license)
 
 ---
