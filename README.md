@@ -1,7 +1,7 @@
 # Gradebook App (CSC 335 Final Project)
 [![Java][Java]][Java-url] [![IntelliJ IDEA][IntelliJ]][IntelliJ-url]
 
-Welcome to the **Music Library App**! This console-based Java application allows you to manage a Gradebook, calculating GPAs, add/remove assignments, grade the assignments, and customize different weights for each quizzes. It is a project for **CSC 335 Final Project**, taught by **Instructor Malenie Lotz** with the assistance of **TA Paulina**. The authors of this project are **[Haocheng Cao](https://github.com/Boldthinkingcat)**, **[Minglai Yang](https://ymingl.com)** and **[Jerry Yu]()**. This project will be open-source after the grades released.
+Welcome to the **Gradebook App**! This console-based Java application allows you to manage a Gradebook, calculating GPAs, add/remove assignments, grade the assignments, and customize different weights for each quizzes. It is a project for **CSC 335 Final Project**, taught by **Instructor Malenie Lotz** with the assistance of **TA Paulina**. The authors of this project are **[Haocheng Cao](https://github.com/Boldthinkingcat)**, **[Minglai Yang](https://ymingl.com)** and **[Jerry Yu]()**. This project will be open-source after the grades released.
 
 ![Gradebook App](REV10-ML+Logo.png)
 
