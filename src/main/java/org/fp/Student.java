@@ -78,6 +78,12 @@ public class Student {
         }
     }
 
+    public void removeAssignment(String assignmentID) {
+        if (assignmentID != null && !assignmentID.isEmpty()) {
+            assignmentIDs.remove(assignmentID);
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("%s (%s): %s", getFullName(), stuID, email);

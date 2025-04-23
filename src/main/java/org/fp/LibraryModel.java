@@ -169,6 +169,26 @@ public class LibraryModel {
     }
 
 
+    public void removeAssignment(String assignmentID) {
+        Assignment a = assignmentMap.remove(assignmentID);
+        if (a == null) return;
+
+        // 移除 student → assignment 映射
+        List<String> saList = studentAssignments.get(a.getStudentID());
+        if (saList != null) saList.remove(assignmentID);
+
+        // 移除 course → assignment 映射
+        List<String> caList = courseAssignments.get(a.getCourseID());
+        if (caList != null) caList.remove(assignmentID);
+
+        // 移除 grade → score 映射
+        if (a.getGradeID() != null) {
+            gradeMap.remove(a.getGradeID());
+            assignmentGrades.remove(assignmentID);
+        }
+    }
+
+
 
     // Seed demo data for UI testing
     public void state() {
@@ -373,31 +393,41 @@ public class LibraryModel {
 
         for (int i = 1; i <= hwCount; i++) {
             for (Student s : students) {
-                String aid = String.format("HW%02d_%s", i, s.getStuID());
-                Assignment a = new Assignment(aid, "HW " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(5));
+                String sid = s.getStuID();
+                String aid = String.format("HW%02d_%s", i, sid);
+                Assignment a = new Assignment(aid, "HW " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(5));
                 a.setCategory("Homework");
                 addAssignment(a);
                 s.addAssignment(aid);
-                a.submit();
-                a.markGraded("G_" + aid);
-                int earned = 60 + (int)(Math.random() * 41); // 60 ~ 100
-                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+
+                if (!sid.equals("STU00004") && !sid.equals("STU00005")) {  // ✅ 只允许部分学生提交
+                    a.submit();
+                    a.markGraded("G_" + aid);
+                    int earned = 60 + (int)(Math.random() * 41);
+                    addScore(new Score("G_" + aid, aid, sid, earned, 100));
+                }
             }
         }
 
+        // 示例：Project 作业
         for (int i = 1; i <= projCount; i++) {
             for (Student s : students) {
-                String aid = String.format("PR%02d_%s", i, s.getStuID());
-                Assignment a = new Assignment(aid, "Project " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(10));
+                String sid = s.getStuID();
+                String aid = String.format("PR%02d_%s", i, sid);
+                Assignment a = new Assignment(aid, "Project " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(10));
                 a.setCategory("Project");
                 addAssignment(a);
                 s.addAssignment(aid);
-                a.submit();
-                a.markGraded("G_" + aid);
-                int earned = 80 + (int)(Math.random() * 41); // 60 ~ 100
-                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+
+                if (!sid.equals("STU00004")) {
+                    a.submit();
+                    a.markGraded("G_" + aid);
+                    int earned = 80 + (int)(Math.random() * 41);
+                    addScore(new Score("G_" + aid, aid, sid, earned, 100));
+                }
             }
         }
+
 
         for (int i = 1; i <= quizCount; i++) {
             for (Student s : students) {
@@ -416,6 +446,7 @@ public class LibraryModel {
             }
         }
     }
+
     public void loadStudentsFromCSV(Path csvPath) throws IOException {
         try (BufferedReader reader = Files.newBufferedReader(csvPath)) {
             String line = reader.readLine();
