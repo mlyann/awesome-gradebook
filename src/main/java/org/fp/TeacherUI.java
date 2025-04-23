@@ -186,7 +186,7 @@ public class TeacherUI {
                         String name = sortedNames.get(index);
                         List<Assignment> group = controller.getAssignmentGroup(name);
                         controller.setSelectedAssignmentGroup(name);
-                        viewAssignmentDetails(controller, name, group);
+                        viewAssignmentDetails(controller, name, group, GradeSort.NONE);
                     }
                 } else if (view == ViewMode.ROSTER) {
                     List<Student> students = controller.getStudentsInCourse(course.getCourseID());
@@ -213,6 +213,8 @@ public class TeacherUI {
     }
 
     private enum SortMode { FIRST_NAME, LAST_NAME, EMAIL }
+
+    private enum GradeSort { NONE, ASCENDING, DESCENDING }
 
     private static AssignmentSort nextSort(AssignmentSort current) {
         return switch (current) {
@@ -367,7 +369,7 @@ public class TeacherUI {
                 System.out.println("📌 Selected assignment group: " + selectedGroup);
                 List<Assignment> selectedGroupList = grouped.get(selectedGroup);
                 if (selectedGroupList != null) {
-                    viewAssignmentDetails(controller, selectedGroup, selectedGroupList);
+                    viewAssignmentDetails(controller, selectedGroup, selectedGroupList, GradeSort.NONE);
                 }
             }
         }
@@ -380,6 +382,69 @@ public class TeacherUI {
             j++;
         }
         return i == pattern.length();
+    }
+
+    private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group, GradeSort gradeSort) {
+        if (group == null || group.isEmpty()) {
+            System.out.println("❌ No assignments found for: " + groupName);
+            return;
+        }
+
+        System.out.println("📄 Assignment Group: " + groupName);
+
+        List<Map.Entry<Assignment, Double>> list = new ArrayList<>();
+        for (Assignment a : group){
+            list.add(new AbstractMap.SimpleEntry<>(a, controller.getScoreForAssignment(a.getAssignmentID()).getPercentage()));
+        }
+
+        switch (gradeSort){
+            case ASCENDING -> list.sort((entry1, entry2) -> Double.compare(entry1.getValue(), entry2.getValue()));
+            case DESCENDING -> list.sort((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()));
+        }
+
+        ArrayList<Assignment> newGroup = new ArrayList<>();
+        for (Map.Entry<Assignment, Double> m : list){
+            newGroup.add(m.getKey());
+        }
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "Student", "Email", "Score", "Grade"));
+
+        int index = 1;
+        for (Assignment a : newGroup) {
+            Student stu = controller.getStudent(a.getStudentID());
+            if (stu == null) continue;
+
+            String name = stu.getFullName();
+            String email = stu.getEmail();
+            Score score = controller.getScoreForAssignment(a.getAssignmentID());
+
+            String scoreStr = (score != null) ? score.getEarned() + "/" + score.getTotal() : "—";
+            String gradeStr = (score != null) ? score.getLetterGrade().name() : "N/A";
+
+            rows.add(List.of(
+                    String.valueOf(index++),
+                    name,
+                    email,
+                    scoreStr,
+                    gradeStr
+            ));
+        }
+
+        TablePrinter.printDynamicTable("🎉 Student Submissions for: " + groupName, rows);
+        System.out.println("s) 🔀 Sort by grade    ENTER to return...");
+        String input = sc.nextLine().trim();
+
+        if (input.equalsIgnoreCase("s")) {
+            GradeSort next = switch (gradeSort) {
+                case NONE -> GradeSort.DESCENDING;
+                case DESCENDING -> GradeSort.ASCENDING;
+                case ASCENDING -> GradeSort.NONE;
+            };
+            viewAssignmentDetails(controller, groupName, group, next);  // recursive call with new sort
+        } else {
+            return;  // any other key goes back
+        }
     }
 
     private static void viewFinalGrades(String courseID) {
