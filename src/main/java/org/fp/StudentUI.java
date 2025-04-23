@@ -303,6 +303,44 @@ public class StudentUI {
     }
 
 
+    private static void viewAssignmentDetailForTeacher(TeacherController controller, Assignment assignment) {
+        Student stu = controller.getStudent(assignment.getStudentID());
+        if (stu == null) {
+            System.out.println("❌ Student not found.");
+            return;
+        }
+
+        Course course = controller.getCourseByAssignment(assignment.getAssignmentID());
+        Score score = controller.getScoreForAssignment(assignment.getAssignmentID());
+        Assignment.SubmissionStatus status = assignment.getStatus();
+
+        System.out.println("📘 Assignment Detail: " + assignment.getAssignmentName());
+        System.out.println("👤 Student: " + stu.getFullName() + " (" + stu.getStuID() + ")");
+        System.out.println("🧾 Course: " + course.getCourseName());
+        System.out.println("🗓️ Assigned: " + assignment.getAssignDate());
+        System.out.println("⏰ Due: " + assignment.getDueDate());
+
+        System.out.println("📌 Status: " + switch (status) {
+            case UNSUBMITTED -> "⛔ Not submitted";
+            case SUBMITTED_UNGRADED -> "✉️ Submitted but not graded";
+            case GRADED -> "✅ Graded";
+        });
+
+        if (score != null) {
+            System.out.println("📊 Score: " + score.getEarned() + "/" + score.getTotal());
+            System.out.println("🎓 Grade: " + score.getLetterGrade());
+        } else {
+            System.out.println("📊 Score: —");
+            System.out.println("🎓 Grade: N/A");
+        }
+
+        System.out.println("⬅️ Press ENTER to return...");
+        sc.nextLine();
+    }
+
+
+
+
 
 }
 
