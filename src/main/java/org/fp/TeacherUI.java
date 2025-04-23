@@ -30,7 +30,7 @@ public class TeacherUI {
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
     private static TeacherController TeacherController;
-    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
+    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 2);
     private static String stuID;
     // GPT client – created lazily
     private static OpenAIClient GPT;
@@ -48,7 +48,8 @@ public class TeacherUI {
         TeacherController = new TeacherController(model);
 
         model.state3();
-        TeacherController.setCurrentTeacher("Alice");
+        String teacherID = model.getRandomTeacherID();
+        TeacherController.setCurrentTeacher(teacherID);
         // Launch UI
         level_1(TeacherController, sc);
     }
@@ -143,8 +144,13 @@ public class TeacherUI {
                 case ROSTER -> viewRoster(controller, course, rosterSort);
             }
             System.out.println();
-            System.out.println("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n" +
-                    "d) 🛠️ Assignments Manage\nw) ⚖\uFE0F Set category weights & drop rules\nm) ⚙\uFE0F Grading Mode\n0) 🔙 Back\n");
+            System.out.print("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n");
+            if (view == ViewMode.ASSIGNMENTS) {
+                System.out.print("d) 🛠️ Assignments Manage\n");
+            } else if (view == ViewMode.ROSTER) {
+                System.out.print("d) 👩‍🏫 Roster Manage\n");
+            }
+            System.out.print("w) ⚖\uFE0F Set category weights & drop rules\nm) ⚙\uFE0F Grading Mode\n0) 🔙 Back\n");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
@@ -172,11 +178,11 @@ public class TeacherUI {
                 if (view == ViewMode.ASSIGNMENTS) {
                     assignmentManage(controller, course);
                 } else if (view == ViewMode.ROSTER) {
-                    // Roster 管理功能暂未开放
-                    System.out.println("⚠️ Assignment management is only available in the Assignments view.");
+                    studentManage(controller, course);
                 }
             } else if (choice.matches("[1-9][0-9]*")) {
                 int index = Integer.parseInt(choice) - 1;
+
                 if (view == ViewMode.ASSIGNMENTS) {
                     controller.refreshGroupedAssignments(course.getCourseID());
                     controller.sortGroupedAssignments(sort, filterActive);
@@ -186,10 +192,11 @@ public class TeacherUI {
                         String name = sortedNames.get(index);
                         List<Assignment> group = controller.getAssignmentGroup(name);
                         controller.setSelectedAssignmentGroup(name);
-                        viewAssignmentDetails(controller, name, group, GradeSort.NONE);
+                        viewAssignmentDetails(controller, name, group);
                     }
+
                 } else if (view == ViewMode.ROSTER) {
-                    List<Student> students = controller.getStudentsInCourse(course.getCourseID());
+                    List<Student> students = viewRoster(controller, course, rosterSort);  // 展示更新过的 Roster 表
                     if (index >= 0 && index < students.size()) {
                         Student s = students.get(index);
                         viewStudentSubmissions(controller, course.getCourseID(), s);
@@ -214,7 +221,6 @@ public class TeacherUI {
 
     private enum SortMode { FIRST_NAME, LAST_NAME, EMAIL }
 
-    private enum GradeSort { NONE, ASCENDING, DESCENDING }
 
     private static AssignmentSort nextSort(AssignmentSort current) {
         return switch (current) {
@@ -369,7 +375,7 @@ public class TeacherUI {
                 System.out.println("📌 Selected assignment group: " + selectedGroup);
                 List<Assignment> selectedGroupList = grouped.get(selectedGroup);
                 if (selectedGroupList != null) {
-                    viewAssignmentDetails(controller, selectedGroup, selectedGroupList, GradeSort.NONE);
+                    viewAssignmentDetails(controller, selectedGroup, selectedGroupList);
                 }
             }
         }
@@ -384,68 +390,106 @@ public class TeacherUI {
         return i == pattern.length();
     }
 
-    private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group, GradeSort gradeSort) {
-        if (group == null || group.isEmpty()) {
-            System.out.println("❌ No assignments found for: " + groupName);
-            return;
-        }
+    private enum GradeSort {
+        NONE, ASCENDING, DESCENDING
+    }
 
-        System.out.println("📄 Assignment Group: " + groupName);
+    private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group) {
+        GradeSort gradeSort = GradeSort.NONE;
 
-        List<Map.Entry<Assignment, Double>> list = new ArrayList<>();
-        for (Assignment a : group){
-            list.add(new AbstractMap.SimpleEntry<>(a, controller.getScoreForAssignment(a.getAssignmentID()).getPercentage()));
-        }
+        while (true) {
+            if (group == null || group.isEmpty()) {
+                System.out.println("❌ No assignments found for: " + groupName);
+                return;
+            }
 
-        switch (gradeSort){
-            case ASCENDING -> list.sort((entry1, entry2) -> Double.compare(entry1.getValue(), entry2.getValue()));
-            case DESCENDING -> list.sort((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()));
-        }
+            // ⏳ 排序（如果启用）
+            List<Assignment> displayGroup;
+            if (gradeSort == GradeSort.NONE) {
+                displayGroup = new ArrayList<>(group);
+            } else {
+                List<Map.Entry<Assignment, Double>> list = new ArrayList<>();
+                for (Assignment a : group) {
+                    Score s = controller.getScoreForAssignment(a.getAssignmentID());
+                    double percent = (s != null) ? s.getPercentage() : -1.0;
+                    list.add(new AbstractMap.SimpleEntry<>(a, percent));
+                }
 
-        ArrayList<Assignment> newGroup = new ArrayList<>();
-        for (Map.Entry<Assignment, Double> m : list){
-            newGroup.add(m.getKey());
-        }
+                Comparator<Map.Entry<Assignment, Double>> comparator = Comparator.comparingDouble(Map.Entry::getValue);
+                if (gradeSort == GradeSort.DESCENDING) comparator = comparator.reversed();
+                list.sort(comparator);
 
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "Student", "Email", "Score", "Grade"));
+                displayGroup = list.stream().map(Map.Entry::getKey).toList();
+            }
 
-        int index = 1;
-        for (Assignment a : newGroup) {
-            Student stu = controller.getStudent(a.getStudentID());
-            if (stu == null) continue;
+            // ✅ 缓存当前 group 用于后续选择操作
+            controller.setCurrentAssignmentGroupList(displayGroup);
 
-            String name = stu.getFullName();
-            String email = stu.getEmail();
-            Score score = controller.getScoreForAssignment(a.getAssignmentID());
+            // 📋 表格展示
+            List<List<String>> rows = new ArrayList<>();
+            rows.add(List.of("No.", "Student", "Email", "Status", "Score", "Grade"));
 
-            String scoreStr = (score != null) ? score.getEarned() + "/" + score.getTotal() : "—";
-            String gradeStr = (score != null) ? score.getLetterGrade().name() : "N/A";
+            int index = 1;
+            for (Assignment a : displayGroup) {
+                Student stu = controller.getStudent(a.getStudentID());
+                if (stu == null) continue;
 
-            rows.add(List.of(
-                    String.valueOf(index++),
-                    name,
-                    email,
-                    scoreStr,
-                    gradeStr
-            ));
-        }
+                String name = stu.getFullName();
+                String email = stu.getEmail();
+                String status = switch (a.getStatus()) {
+                    case UNSUBMITTED -> "⛔ Not submitted";
+                    case SUBMITTED_UNGRADED -> "✉️ Submitted";
+                    case GRADED -> "✅ Graded";
+                };
 
-        TablePrinter.printDynamicTable("🎉 Student Submissions for: " + groupName, rows);
-        System.out.println("s) 🔀 Sort by grade    ENTER to return...");
-        String input = sc.nextLine().trim();
+                Score score = controller.getScoreForAssignment(a.getAssignmentID());
+                String scoreStr = (score != null) ? score.getEarned() + "/" + score.getTotal() : "—";
+                String gradeStr = (score != null) ? score.getLetterGrade().name() : "N/A";
 
-        if (input.equalsIgnoreCase("s")) {
-            GradeSort next = switch (gradeSort) {
-                case NONE -> GradeSort.DESCENDING;
-                case DESCENDING -> GradeSort.ASCENDING;
-                case ASCENDING -> GradeSort.NONE;
+                rows.add(List.of(
+                        String.valueOf(index++),
+                        name,
+                        email,
+                        status,
+                        scoreStr,
+                        gradeStr
+                ));
+            }
+
+            String sortLabel = switch (gradeSort) {
+                case NONE -> "NONE";
+                case ASCENDING -> "ASCENDING";
+                case DESCENDING -> "DESCENDING";
             };
-            viewAssignmentDetails(controller, groupName, group, next);  // recursive call with new sort
-        } else {
-            return;  // any other key goes back
+
+            TablePrinter.printDynamicTable("🎉 Student Submissions for: " + groupName + " (Sorted: " + sortLabel + ")", rows);
+
+            System.out.println("0) 🔙 Back\n[number] View submission    s) 🔀 Sort by score");
+            System.out.print("👉 Choice: ");
+            String input = sc.nextLine().trim();
+
+            if (input.equals("0")) return;
+
+            if (input.equalsIgnoreCase("s")) {
+                gradeSort = switch (gradeSort) {
+                    case NONE -> GradeSort.DESCENDING;
+                    case DESCENDING -> GradeSort.ASCENDING;
+                    case ASCENDING -> GradeSort.NONE;
+                };
+            } else if (input.matches("[1-9][0-9]*")) {
+                int pos = Integer.parseInt(input) - 1;
+                if (pos >= 0 && pos < displayGroup.size()) {
+                    Assignment selected = displayGroup.get(pos);
+                    viewAssignmentDetailForTeacher(controller, selected);
+                } else {
+                    System.out.println("❌ Invalid selection.");
+                }
+            } else {
+                System.out.println("❌ Invalid input.");
+            }
         }
     }
+
 
     private static void viewFinalGrades(String courseID) {
         List<List<String>> table = getFinalGradesForCourse(courseID);
@@ -572,11 +616,11 @@ public class TeacherUI {
         System.out.println("✅ Mode saved.\n");
     }
 
-    private static void viewRoster(TeacherController controller, Course course, SortMode sortMode) {
+    private static List<Student> viewRoster(TeacherController controller, Course course, SortMode sortMode) {
         List<Student> students = controller.getStudentsInCourse(course.getCourseID());
         if (students.isEmpty()) {
             System.out.println("❌ No students enrolled in this course.");
-            return;
+            return List.of();
         }
 
         switch (sortMode) {
@@ -586,14 +630,13 @@ public class TeacherUI {
         }
 
         List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "Student ID", "First Name", "Last Name", "Email", "Submissions"));
+        rows.add(List.of("No.", "First Name", "Last Name", "Email", "Submissions"));
 
         int index = 1;
         for (Student s : students) {
             String stat = controller.getSubmissionStatsForStudent(s.getStuID(), course.getCourseID());
             rows.add(List.of(
                     String.valueOf(index++),
-                    s.getStuID(),
                     s.getFirstName(),
                     s.getLastName(),
                     s.getEmail(),
@@ -601,11 +644,14 @@ public class TeacherUI {
             ));
         }
 
-
         String title = "👥 Roster for " + course.getCourseName() + " (sorted by " +
                 sortMode.name().toLowerCase().replace("_", " ") + ")";
         TablePrinter.printDynamicTable(title, rows);
+
+        return students; // ✅ 返回排序后的列表
     }
+
+
 
     // 👇 教师 UI：在 Roster 视角下选择某位学生后，查看该学生的所有作业提交记录
     private static void viewStudentSubmissions(TeacherController controller, String courseID, Student student) {
@@ -653,72 +699,6 @@ public class TeacherUI {
             }
         }
     }
-
-    private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group) {
-        while (true) {
-            if (group == null || group.isEmpty()) {
-                System.out.println("❌ No assignments found for: " + groupName);
-                return;
-            }
-
-            System.out.println("📄 Assignment Group: " + groupName);
-
-            List<List<String>> rows = new ArrayList<>();
-            rows.add(List.of("No.", "Student", "Email", "Status", "Score", "Grade"));
-
-            // 缓存当前展示的 group
-            controller.setCurrentAssignmentGroupList(group);
-
-            int index = 1;
-            for (Assignment a : group) {
-                Student stu = controller.getStudent(a.getStudentID());
-                if (stu == null) continue;
-
-                String name = stu.getFullName();
-                String email = stu.getEmail();
-                String status = switch (a.getStatus()) {
-                    case UNSUBMITTED -> "⛔ Not submitted";
-                    case SUBMITTED_UNGRADED -> "✉️ Submitted";
-                    case GRADED -> "✅ Graded";
-                };
-
-                Score score = controller.getScoreForAssignment(a.getAssignmentID());
-                String scoreStr = (score != null) ? score.getEarned() + "/" + score.getTotal() : "—";
-                String gradeStr = (score != null) ? score.getLetterGrade().name() : "N/A";
-
-                rows.add(List.of(
-                        String.valueOf(index++),
-                        name,
-                        email,
-                        status,
-                        scoreStr,
-                        gradeStr
-                ));
-            }
-
-            TablePrinter.printDynamicTable("🎉 Student Submissions for: " + groupName, rows);
-
-            System.out.println("0) 🔙 Back     \n[number] View submission");
-            System.out.print("👉 Choice: ");
-            String input = sc.nextLine().trim();
-
-            if (input.equals("0")) return;
-            if (input.matches("[1-9][0-9]*")) {
-                int pos = Integer.parseInt(input) - 1;
-                List<Assignment> cached = controller.getCurrentAssignmentGroupList();
-                if (pos >= 0 && pos < cached.size()) {
-                    Assignment selected = cached.get(pos);
-                    viewAssignmentDetailForTeacher(controller, selected);
-                } else {
-                    System.out.println("❌ Invalid selection.");
-                }
-            } else {
-                System.out.println("❌ Invalid selection.");
-            }
-        }
-    }
-
-
 
     private static void viewAssignmentDetailForTeacher(TeacherController controller, Assignment assignment) {
         Student stu = controller.getStudent(assignment.getStudentID());
@@ -820,8 +800,7 @@ public class TeacherUI {
 
         List<Student> students = controller.getStudentsInCourse(course.getCourseID());
         for (Student s : students) {
-            String aid = UUID.randomUUID().toString();
-            Assignment a = new Assignment(aid, title, s.getStuID(), course.getCourseID(), assignDate, dueDate);
+            Assignment a = new Assignment(title, s.getStuID(), course.getCourseID(), assignDate, dueDate);
             controller.addAssignmentToCache(a);
         }
         controller.setAssignmentCacheDirty(true);
@@ -870,14 +849,13 @@ public class TeacherUI {
         }
 
         List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "Student ID", "First Name", "Last Name", "Email", "Submissions"));
+        rows.add(List.of("No.", "First Name", "Last Name", "Email", "Submissions"));
 
         int index = 1;
         for (Student s : matched) {
             String stat = controller.getSubmissionStatsForStudent(s.getStuID(), course.getCourseID());
             rows.add(List.of(
                     String.valueOf(index++),
-                    s.getStuID(),
                     s.getFirstName(),
                     s.getLastName(),
                     s.getEmail(),
@@ -899,6 +877,96 @@ public class TeacherUI {
         }
     }
 
+    private static void studentManage(TeacherController controller, Course course) {
+        controller.refreshStudentCache(course.getCourseID());
+        boolean exit = false;
+
+        while (!exit) {
+            clear();
+            List<Student> cached = controller.getCachedStudents();
+
+            System.out.println("👥 Students in Course (Manage Mode)");
+            for (int i = 0; i < cached.size(); i++) {
+                Student s = cached.get(i);
+                System.out.printf("%d) %s (%s)\n", i + 1, s.getFullName(), s.getStuID());
+            }
+            System.out.println("a) ➕ Add new student");
+            System.out.println("d) 🗑️ Delete existing student");
+            System.out.println(controller.isStudentCacheDirty() ? "s) 💾 Save changes" : "s) ✅ No changes to save");
+            System.out.println("0) 🔙 Back");
+
+            System.out.print("👉 Choice: ");
+            String input = sc.nextLine().trim();
+
+            switch (input.toLowerCase()) {
+                case "0" -> {
+                    if (controller.isStudentCacheDirty()) {
+                        System.out.print("⚠️ Unsaved changes. Save now? (y/n): ");
+                        String confirm = sc.nextLine().trim().toLowerCase();
+                        if (confirm.equals("y")) controller.commitStudentChanges();
+                        else controller.discardStudentChanges();
+                    }
+                    exit = true;
+                }
+                case "a" -> addNewStudent(controller, course);
+                case "d" -> deleteStudent(controller);
+                case "s" -> controller.commitStudentChanges();
+                default -> {
+                    if (input.matches("[1-9][0-9]*")) {
+                        int idx = Integer.parseInt(input) - 1;
+                        if (idx >= 0 && idx < cached.size()) {
+                            Student s = cached.get(idx);
+                            System.out.println("⚠️ No edit mode yet for: " + s.getFullName());
+                            System.out.print("⬅️ Press ENTER to return...");
+                            sc.nextLine();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void addNewStudent(TeacherController controller, Course course) {
+        System.out.print("🧍 First Name: ");
+        String fname = sc.nextLine().trim();
+        System.out.print("🧍 Last Name: ");
+        String lname = sc.nextLine().trim();
+        System.out.print("📧 Email: ");
+        String email = sc.nextLine().trim();
+
+        Student s = new Student(fname, lname, email);
+        controller.addStudentToCache(s);
+
+        // 加入课程
+        controller.addCourseToStudentCache(s.getStuID(), course.getCourseID());
+
+        // 添加所有现有作业（一个副本）
+        for (Assignment a : controller.getAllAssignmentsInCourse(course.getCourseID())) {
+            Assignment newA = new Assignment(a.getAssignmentName(), s.getStuID(), course.getCourseID(), a.getAssignDate(), a.getDueDate());
+            controller.addAssignmentToCache(newA);
+        }
+        controller.setStudentCacheDirty(true);
+        System.out.println("✅ Student added (not yet saved).\n");
+    }
+
+    private static void deleteStudent(TeacherController controller) {
+        List<Student> cached = controller.getCachedStudents();
+        if (cached.isEmpty()) {
+            System.out.println("❌ No students to delete.");
+            return;
+        }
+        System.out.print("🔢 Student number to delete: ");
+        String input = sc.nextLine().trim();
+        if (!input.matches("[1-9][0-9]*")) return;
+
+        int idx = Integer.parseInt(input) - 1;
+        if (idx >= 0 && idx < cached.size()) {
+            Student s = cached.get(idx);
+            controller.removeStudentFromCache(s.getStuID());
+            controller.setStudentCacheDirty(true);
+            System.out.println("🗑️ Deleted student: " + s.getFullName());
+        }
+    }
 
 
 

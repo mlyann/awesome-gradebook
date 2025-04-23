@@ -38,11 +38,11 @@ public class StudentUI {
         LibraryModel model = new LibraryModel();
         try {
             model.loadStudentsFromDirectory(Paths.get("src/main/DataBase/Students"));
-            model.state2();
         } catch (IOException e) {
             System.err.println("❌ 无法加载学生列表：" + e.getMessage());
             return;
         }
+        model.stateStudent();
 
         StudentController controller = new StudentController(model);
         String firstId = model.getFirstStudentID();
@@ -240,14 +240,14 @@ public class StudentUI {
         }
         System.out.println("===============================================");
 
-// Show GPT option only if graded
+        // Show GPT option only if graded
         if (score != null && assignment.getStatus() == Assignment.SubmissionStatus.GRADED) {
             System.out.println("g) 🤖 Get GPT feedback for this assignment");
         }
         System.out.println("⬅️ Press ENTER to return...");
         String input = sc.nextLine().trim();
 
-// Only trigger GPT feedback if available
+        // Only trigger GPT feedback if available
         if (input.equalsIgnoreCase("g")) {
             if (score == null || assignment.getStatus() != Assignment.SubmissionStatus.GRADED) {
                 System.out.println("⛔ Feedback is only available for graded assignments.");
@@ -284,7 +284,6 @@ public class StudentUI {
             System.out.print("⬅️ Press ENTER to return...");
             sc.nextLine();
         }
-        sc.nextLine();
     }
 
     private static void ensureGPT() {

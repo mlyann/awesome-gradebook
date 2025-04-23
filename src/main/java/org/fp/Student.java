@@ -11,32 +11,29 @@ public class Student {
     private Set<String> enrolledCourseIDs = new HashSet<>();
     private Set<String> assignmentIDs = new HashSet<>();
 
-    public Student(String stuID, String firstName, String lastName, String email) {
-        if (stuID == null || stuID.isEmpty()) {
-            throw new IllegalArgumentException("Student ID cannot be null or empty.");
-        }
+    public Student(String firstName, String lastName, String email) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
         }
-
-        this.stuID = stuID;
+        this.stuID = IDGen.generate("STU"); // 🆕 使用 Flyweight 生成 ID
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    // Copy constructor
+
+        // Copy constructor
     public Student(Student other) {
-        if (other == null) {
-            throw new IllegalArgumentException("Cannot copy a null Student.");
+            if (other == null) {
+                throw new IllegalArgumentException("Cannot copy a null Student.");
+            }
+            this.stuID = other.stuID;
+            this.firstName = other.firstName;
+            this.lastName = other.lastName;
+            this.email = other.email;
+            this.enrolledCourseIDs = new HashSet<>(other.enrolledCourseIDs);
+            this.assignmentIDs = new HashSet<>(other.assignmentIDs);
         }
-        this.stuID = other.stuID;
-        this.firstName = other.firstName;
-        this.lastName = other.lastName;
-        this.email = other.email;
-        this.enrolledCourseIDs = new HashSet<>(other.enrolledCourseIDs);
-        this.assignmentIDs = new HashSet<>(other.assignmentIDs);
-    }
 
     public String getStuID() {
         return stuID;
@@ -69,6 +66,12 @@ public class Student {
     public void enrollInCourse(String courseID) {
         if (courseID != null && !courseID.isEmpty()) {
             enrolledCourseIDs.add(courseID);
+        }
+    }
+
+    public void dropCourse(String courseID) {
+        if (courseID != null && !courseID.isEmpty()) {
+            enrolledCourseIDs.remove(courseID);
         }
     }
 

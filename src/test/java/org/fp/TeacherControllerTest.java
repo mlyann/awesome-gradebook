@@ -19,11 +19,10 @@ class TeacherControllerTest {
     void setUp() {
         model = new LibraryModel();
         tc = new TeacherController(model);
-
+        Teacher t = new Teacher("Anna", "Lee");
         // create teacher and set current
-        teacherId = "T1";
-        model.addTeacher(new Teacher(teacherId, "Anna", "Lee"));
-        tc.setCurrentTeacher(teacherId);
+        model.addTeacher(t);
+        tc.setCurrentTeacher(t.getTeacherID());
 
         // create course and enroll teacher
         Course c = new Course("History", "Desc", teacherId);
@@ -31,22 +30,21 @@ class TeacherControllerTest {
         model.getTeacher(teacherId).addCourse(c.getCourseID());
         courseId = c.getCourseID();
 
-        // create two students and enroll
-        stu1 = IDGen.generate("STU");
-        stu2 = IDGen.generate("STU");
-        model.addStudent(new Student(stu1, "S", "One", "s1@x.com"));
-        model.addStudent(new Student(stu2, "S", "Two", "s2@x.com"));
-        model.enrollStudentInCourse(stu1, courseId);
-        model.enrollStudentInCourse(stu2, courseId);
+        Student s1 = new Student("S", "One", "s1@x.com");
+        Student s2 = new Student("S", "Two", "s2@x.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+        model.enrollStudentInCourse(s1.getStuID(), courseId);
+        model.enrollStudentInCourse(s2.getStuID(), courseId);
 
         // create two assignments for each student
         LocalDate now = LocalDate.of(2025, 4, 1);
-        a1 = new Assignment("A1", "Asg", stu1, courseId, now, now.plusDays(1));
-        a2 = new Assignment("A2", "Asg", stu2, courseId, now, now.plusDays(2));
+        a1 = new Assignment("Asg", stu1, courseId, now, now.plusDays(1));
+        a2 = new Assignment("Asg", stu2, courseId, now, now.plusDays(2));
         model.addAssignment(a1);
         model.addAssignment(a2);
-        model.getStudent(stu1).addAssignment("A1");
-        model.getStudent(stu2).addAssignment("A2");
+        model.getStudent(stu1).addAssignment(a1.getAssignmentID());
+        model.getStudent(stu2).addAssignment(a2.getAssignmentID());
     }
 
     @Test
@@ -129,13 +127,13 @@ class TeacherControllerTest {
     void sortGroupedAssignmentsAllModesAndFilter() {
         // create additional assignments with distinct names/dates
         LocalDate now = LocalDate.of(2025, 4, 1);
-        Assignment b1 = new Assignment("B1", "A 2", stu1, courseId, now, now.plusDays(2));
-        Assignment b2 = new Assignment("B2", "A 10", stu1, courseId, now, now.plusDays(1));
-        Assignment b3 = new Assignment("B3", "A 1", stu1, courseId, now, now.plusDays(3));
+        Assignment b1 = new Assignment("A 2", stu1, courseId, now, now.plusDays(2));
+        Assignment b2 = new Assignment("A 10", stu1, courseId, now, now.plusDays(1));
+        Assignment b3 = new Assignment("A 1", stu1, courseId, now, now.plusDays(3));
         model.addAssignment(b1); model.addAssignment(b2); model.addAssignment(b3);
-        model.getStudent(stu1).addAssignment("B1");
-        model.getStudent(stu1).addAssignment("B2");
-        model.getStudent(stu1).addAssignment("B3");
+        model.getStudent(stu1).addAssignment(b1.getAssignmentID());
+        model.getStudent(stu1).addAssignment(b2.getAssignmentID());
+        model.getStudent(stu1).addAssignment(b3.getAssignmentID());
 
         // submit all to include in groupedAssignments
         b1.submit(); b2.submit(); b3.submit();

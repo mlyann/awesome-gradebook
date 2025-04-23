@@ -76,7 +76,7 @@ class BaseControllerTest {
 
     @Test
     void getScoreForAssignment() {
-        Assignment a = new Assignment("A2", "HW2", "S2", "C2",
+        Assignment a = new Assignment("HW2", "S2", "C2",
                 LocalDate.now(), LocalDate.now().plusDays(1));
         model.addAssignment(a);
         a.submit();
@@ -88,9 +88,9 @@ class BaseControllerTest {
     }
     @Test
     void testGetCachedAssignments() {
-        Assignment a1 = new Assignment("A1", "HW1", "S1", "C1",
+        Assignment a1 = new Assignment("HW1", "S1", "C1",
                 LocalDate.now(), LocalDate.now().plusDays(1));
-        Assignment a2 = new Assignment("A2", "HW2", "S2", "C2",
+        Assignment a2 = new Assignment("HW2", "S2", "C2",
                 LocalDate.now(), LocalDate.now().plusDays(2));
         ctrl.cachedAssignments = List.of(a1, a2);
         List<Assignment> fetched = ctrl.getCachedAssignments();

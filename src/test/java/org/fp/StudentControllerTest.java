@@ -26,7 +26,7 @@ class StudentControllerTest {
         ctrl.setCurrentStudent(stuId);
 
         // prepare teacher, course, enroll student
-        model.addTeacher(new Teacher("T1","Teacher","One"));
+        model.addTeacher(new Teacher("Teacher","One"));
         ctrl.createCourse("Math","Desc","T1");
         courseId = model.getAllCourses().iterator().next().getCourseID();
         model.enrollStudentInCourse(stuId, courseId);

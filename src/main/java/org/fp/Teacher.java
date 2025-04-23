@@ -12,11 +12,8 @@ public class Teacher {
     private Set<String> teachingCourseIDs = new HashSet<>();
 
 
-    public Teacher(String teacherID, String firstName, String lastName) {
-        if (teacherID == null || teacherID.isEmpty()) {
-            throw new IllegalArgumentException("Teacher ID cannot be null or empty.");
-        }
-        this.teacherID = teacherID;
+    public Teacher(String firstName, String lastName) {
+        this.teacherID = IDGen.generate("TCH");  // 使用 Flyweight ID 生成器
         this.firstName = firstName;
         this.lastName = lastName;
     }

@@ -17,6 +17,10 @@ public class TeacherController extends BaseController {
     private String currentCourseID;
     private final Set<String> deletedAssignmentIDs = new HashSet<>();
 
+    private List<Student> cachedStudents = new ArrayList<>();
+    private boolean studentCacheDirty = false;
+    private final Set<String> deletedStudentIDs = new HashSet<>();
+
 
     public TeacherController(LibraryModel model) {
         super(model);
@@ -307,6 +311,97 @@ public class TeacherController extends BaseController {
     public String getCurrentCourseID() {
         return currentCourseID;
     }
+
+    public void refreshStudentCache(String courseID) {
+        cachedStudents = getStudentsInCourse(courseID);
+        currentCourseID = courseID;
+        studentCacheDirty = false;
+    }
+
+    public List<Student> getCachedStudents() {
+        return cachedStudents;
+    }
+
+    public boolean isStudentCacheDirty() {
+        return studentCacheDirty;
+    }
+
+    public void setStudentCacheDirty(boolean dirty) {
+        studentCacheDirty = dirty;
+    }
+
+    public void addStudentToCache(Student student) {
+        cachedStudents.add(student);
+        studentCacheDirty = true;
+    }
+
+    public void removeStudentFromCache(String studentID) {
+        cachedStudents.removeIf(s -> s.getStuID().equals(studentID));
+        deletedStudentIDs.add(studentID);
+        studentCacheDirty = true;
+    }
+
+    public void addCourseToStudentCache(String studentID, String courseID) {
+        for (Student s : cachedStudents) {
+            if (s.getStuID().equals(studentID)) {
+                s.enrollInCourse(courseID);
+                return;
+            }
+        }
+        Student s = model.getStudent(studentID);
+        if (s != null) s.enrollInCourse(courseID);
+    }
+
+    public List<Assignment> getAllAssignmentsInCourse(String courseID) {
+        return model.getAssignmentsInCourse(courseID);
+    }
+
+    public void commitStudentChanges() {
+
+        // 获取当前课程的所有 assignment 分组
+        List<Assignment> allAssignments = model.getAssignmentsInCourse(currentCourseID);
+        Map<String, List<Assignment>> assignmentGroups = allAssignments.stream()
+                .collect(Collectors.groupingBy(Assignment::getAssignmentName));
+
+        // 添加新的学生并生成作业
+        for (Student s : cachedStudents) {
+            if (model.getStudent(s.getStuID()) != null) continue;
+
+            model.addStudent(s);
+            model.enrollStudentInCourse(s.getStuID(), currentCourseID);
+
+            for (Map.Entry<String, List<Assignment>> entry : assignmentGroups.entrySet()) {
+                Assignment sample = entry.getValue().get(0);
+
+                Assignment newAssignment = new Assignment(
+                        entry.getKey(), s.getStuID(), currentCourseID,
+                        sample.getAssignDate(), sample.getDueDate()
+                );
+
+                model.addAssignment(newAssignment);
+                s.addAssignment(newAssignment.getAssignmentID());
+            }
+        }
+
+        // 删除学生及其相关作业
+        for (String sid : deletedStudentIDs) {
+            model.removeStudentFromCourse(sid, currentCourseID);
+            model.getAssignmentsForStudentInCourse(sid, currentCourseID)
+                    .forEach(a -> model.removeAssignment(a.getAssignmentID()));
+            model.removeStudent(sid);  // ✅ 彻底删除学生
+        }
+
+        studentCacheDirty = false;
+        deletedStudentIDs.clear();
+
+        System.out.println("💾 Student changes saved to model.");
+    }
+
+    public void discardStudentChanges() {
+        refreshStudentCache(currentCourseID);
+        System.out.println("❌ Changes discarded.");
+    }
+
 
 
 

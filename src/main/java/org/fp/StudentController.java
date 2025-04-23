@@ -26,8 +26,7 @@ public class StudentController extends BaseController {
 
 
     public void createStudent(String first, String last, String email) {
-        String id = IDGen.generate("STU");
-        Student s = new Student(id, first, last, email);
+        Student s = new Student(first, last, email);
         model.addStudent(s);
     }
 

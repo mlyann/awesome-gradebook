@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class LibraryModel {
     private final Map<String, Student> studentMap = new HashMap<>();
@@ -20,15 +21,31 @@ public class LibraryModel {
     private final Map<String, List<String>> courseAssignments = new HashMap<>();
     private final Map<String, List<String>> studentAssignments = new HashMap<>();
     private final Map<String, String> assignmentGrades = new HashMap<>();
+    private final Map<String, List<String>> courseToStudentIDs = new HashMap<>();
+
+    public String getRandomTeacherID() {
+        List<String> keys = new ArrayList<>(teacherMap.keySet());
+        if (keys.isEmpty()) return null;
+        return keys.get(new Random().nextInt(keys.size()));
+    }
+
 
 
     public void addStudent(Student s) {
         studentMap.put(s.getStuID(), s);
     }
 
-    public Student getStudent(String id) {
-        return new Student(studentMap.get(id));
+    public void removeStudent(String studentID) {
+        studentMap.remove(studentID);
     }
+
+
+    public Student getStudent(String id) {
+        Student original = studentMap.get(id);
+        return (original != null) ? new Student(original) : null;
+    }
+
+
 
     public boolean studentExists(String id) {
         return studentMap.containsKey(id);
@@ -188,183 +205,27 @@ public class LibraryModel {
         }
     }
 
+    // ❗ Remove student from a specific course
+    public void removeStudentFromCourse(String studentID, String courseID) {
+        List<String> studentList = courseToStudentIDs.get(courseID);
+        if (studentList != null) {
+            studentList.remove(studentID);
+        }
 
-
-    // Seed demo data for UI testing
-    public void state() {
-        Student s = new Student("20250001", "Ming", "Yang", "ming@example.com");
-        Teacher t = new Teacher("Alice", "Zhao", "T001");
-
-        Course c1 = new Course("Math", "Basic Algebra", "T001");
-        Course c2 = new Course("Physics", "Newtonian Mechanics", "T001");
-        Course c3 = new Course("Biology", "Molecular Biology", "T001");
-        Course c4 = new Course("History", "World History", "T001");
-        Course c5 = new Course("CS", "Data Structures", "T001");
-
-        addStudent(s);
-        addTeacher(t);
-        addCourse(c1);
-        addCourse(c2);
-        addCourse(c3);
-        addCourse(c4);
-        addCourse(c5);
-
-        s.enrollInCourse(c1.getCourseID());
-        s.enrollInCourse(c2.getCourseID());
-        s.enrollInCourse(c3.getCourseID());
-        s.enrollInCourse(c4.getCourseID());
-        s.enrollInCourse(c5.getCourseID());
-
-        t.addCourse(c1.getCourseID());
-        t.addCourse(c2.getCourseID());
-        t.addCourse(c3.getCourseID());
-        t.addCourse(c4.getCourseID());
-        t.addCourse(c5.getCourseID());
-
-        int assignmentCount = 20;
-        LocalDate assignDate = LocalDate.of(2025, 4, 1);
-        for (int i = 1; i <= assignmentCount; i++) {
-            String aid = String.format("A%03d", i);
-            String gid = String.format("G%03d", i);
-            String title = "Assignment " + i;
-            LocalDate due = LocalDate.of(2025, 4, 10 + i);
-
-            Assignment a = new Assignment(aid, title, s.getStuID(), c1.getCourseID(), assignDate, due);
-            addAssignment(a);
-            s.addAssignment(aid);
-
-            if (i % 3 == 0 || i % 5 == 0) {
-                a.submit();
-                if (i % 5 == 0) {
-                    a.markGraded(gid);
-                    addScore(new Score(gid, aid, s.getStuID(), 60 + (i % 40), 100));
-                }
-            }
+        Student student = studentMap.get(studentID);
+        if (student != null) {
+            student.dropCourse(courseID); // Student object should update its internal list
         }
     }
 
-    public void state1() {
-        // 单个老师
-        Teacher t = new Teacher("Alice", "Zhao", "T001");
-        addTeacher(t);
-
-        // 创建 5 门课程
-        Course c1 = new Course("Math", "Basic Algebra", "T001");
-        Course c2 = new Course("Physics", "Newtonian Mechanics", "T001");
-        Course c3 = new Course("Biology", "Molecular Biology", "T001");
-        Course c4 = new Course("History", "World History", "T001");
-        Course c5 = new Course("CS", "Data Structures", "T001");
-        addCourse(c1); addCourse(c2); addCourse(c3); addCourse(c4); addCourse(c5);
-
-        // 老师加入课程
-        t.addCourse(c1.getCourseID());
-        t.addCourse(c2.getCourseID());
-        t.addCourse(c3.getCourseID());
-        t.addCourse(c4.getCourseID());
-        t.addCourse(c5.getCourseID());
-
-        // 创建 10 个学生
-        List<Student> students = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            String sid = String.format("STU%05d", i);
-            Student s = new Student(sid, "Stu" + i, "Test", "stu" + i + "@test.com");
-            students.add(s);
-            addStudent(s);
-
-            enrollStudentInCourse(sid, c1.getCourseID());  // ✅ 正确添加到 model
-        }
 
 
-        // 创建 20 个作业，所有学生共享
-        LocalDate assignDate = LocalDate.of(2025, 4, 1);
-        for (int i = 1; i <= 20; i++) {
-            String aid = String.format("A%03d", i);
-            LocalDate due = LocalDate.of(2025, 4, 10 + i);
-            for (Student s : students) {
-                Assignment a = new Assignment(aid + "_" + s.getStuID(), "Assignment " + i,
-                        s.getStuID(), c1.getCourseID(), assignDate, due);
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
 
-                if (Math.random() < 0.6) {
-                    a = new Assignment(aid + "_" + s.getStuID(), "Assignment " + i,
-                            s.getStuID(), c1.getCourseID(), assignDate, due);
-                    a.submit();
 
-                    if (Math.random() < 0.5) {
-                        String gid = "G" + UUID.randomUUID().toString().substring(0, 6);
-                        int earned = 60 + (i % 40);
-                        a.markGraded(gid);
-                        addScore(new Score(gid, a.getAssignmentID(), s.getStuID(), earned, 100));
-                    }
-
-                    addAssignment(a);         //
-                    s.addAssignment(a.getAssignmentID());
-                }
-
-            }
-        }
-    }
-    public void state2() {
-        // 1) 单个老师
-        Teacher t = new Teacher("Alice", "Zhao", "T001");
-        addTeacher(t);
-
-        // 2) 创建 5 门课程，并关联到老师
-        Course c1 = new Course("Math", "Basic Algebra", t.getTeacherID());
-        Course c2 = new Course("Physics", "Newtonian Mechanics", t.getTeacherID());
-        Course c3 = new Course("Biology", "Molecular Biology", t.getTeacherID());
-        Course c4 = new Course("History", "World History", t.getTeacherID());
-        Course c5 = new Course("CS", "Data Structures", t.getTeacherID());
-        addCourse(c1); addCourse(c2); addCourse(c3); addCourse(c4); addCourse(c5);
-        t.addCourse(c1.getCourseID());
-        t.addCourse(c2.getCourseID());
-        t.addCourse(c3.getCourseID());
-        t.addCourse(c4.getCourseID());
-        t.addCourse(c5.getCourseID());
-
-        // 3) 把所有从 CSV 加载进来的学生，选到第一门课
-        for (Student s : getAllStudents()) {
-            enrollStudentInCourse(s.getStuID(), c1.getCourseID());
-        }
-
-        // 4) 给每位学生生成 20 个作业，并随机提交 & 批改
-        LocalDate assignDate = LocalDate.of(2025, 4, 1);
-        for (int i = 1; i <= 20; i++) {
-            String aid = String.format("A%03d", i);
-            LocalDate due = LocalDate.of(2025, 4, 10 + i);
-
-            for (Student s : getAllStudents()) {
-                // 新作业
-                Assignment a = new Assignment(
-                        aid + "_" + s.getStuID(),
-                        "Assignment " + i,
-                        s.getStuID(),
-                        c1.getCourseID(),
-                        assignDate,
-                        due
-                );
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
-
-                // 随机提交
-                if (Math.random() < 0.6) {
-                    a.submit();
-                    // 随机批改
-                    if (Math.random() < 0.5) {
-                        String gid = "G" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-                        int earned = 60 + (i % 40);
-                        a.markGraded(gid);
-                        addScore(new Score(gid, a.getAssignmentID(), s.getStuID(), earned, 100));
-                    }
-                }
-            }
-        }
-    }
 
     public void state3() {
         // 1) Create teacher
-        Teacher t = new Teacher("Alice", "Zhao", "T001");
+        Teacher t = new Teacher("Zhao", "T001");
         addTeacher(t);
 
         // 2) Create one course using category-based grading
@@ -380,11 +241,10 @@ public class LibraryModel {
         // 3) Create students
         List<Student> students = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            String sid = String.format("STU%05d", i);
-            Student s = new Student(sid, "Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
+            Student s = new Student("Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
             students.add(s);
             addStudent(s);
-            enrollStudentInCourse(sid, c1.getCourseID());
+            enrollStudentInCourse(s.getStuID(), c1.getCourseID());
         }
 
         // 4) Create assignments per category
@@ -394,17 +254,16 @@ public class LibraryModel {
         for (int i = 1; i <= hwCount; i++) {
             for (Student s : students) {
                 String sid = s.getStuID();
-                String aid = String.format("HW%02d_%s", i, sid);
-                Assignment a = new Assignment(aid, "HW " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(5));
+                Assignment a = new Assignment("HW " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(5));
                 a.setCategory("Homework");
                 addAssignment(a);
-                s.addAssignment(aid);
+                s.addAssignment(a.getAssignmentID());
 
-                if (!sid.equals("STU00004") && !sid.equals("STU00005")) {  // ✅ 只允许部分学生提交
+                if ( i != 4 && i != 5 ) {  // ✅ 只允许部分学生提交
                     a.submit();
-                    a.markGraded("G_" + aid);
+                    a.markGraded("G_" + a.getAssignmentID());
                     int earned = 60 + (int)(Math.random() * 41);
-                    addScore(new Score("G_" + aid, aid, sid, earned, 100));
+                    addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), sid, earned, 100));
                 }
             }
         }
@@ -413,17 +272,16 @@ public class LibraryModel {
         for (int i = 1; i <= projCount; i++) {
             for (Student s : students) {
                 String sid = s.getStuID();
-                String aid = String.format("PR%02d_%s", i, sid);
-                Assignment a = new Assignment(aid, "Project " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(10));
+                Assignment a = new Assignment("Project " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(10));
                 a.setCategory("Project");
                 addAssignment(a);
-                s.addAssignment(aid);
+                s.addAssignment(a.getAssignmentID());
 
-                if (!sid.equals("STU00004")) {
+                if (i != 4) {
                     a.submit();
-                    a.markGraded("G_" + aid);
+                    a.markGraded("G_" + a.getAssignmentID());
                     int earned = 80 + (int)(Math.random() * 41);
-                    addScore(new Score("G_" + aid, aid, sid, earned, 100));
+                    addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), sid, earned, 100));
                 }
             }
         }
@@ -431,18 +289,61 @@ public class LibraryModel {
 
         for (int i = 1; i <= quizCount; i++) {
             for (Student s : students) {
-                String aid = String.format("QZ%02d_%s", i, s.getStuID());
-                Assignment a = new Assignment(aid, "Quiz " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(2));
+                Assignment a = new Assignment("Quiz " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(2));
                 a.setCategory("Quiz");
                 addAssignment(a);
-                s.addAssignment(aid);
+                s.addAssignment(a.getAssignmentID());
                 a.submit();
-                a.markGraded("G_" + aid);
+                a.markGraded("G_" + a.getAssignmentID());
                 int score = switch (i) {
                     case 1 -> 100; case 2 -> 80; default -> 60;
                 };
                 int earned = 70 + (int)(Math.random() * 41); // 60 ~ 100
-                addScore(new Score("G_" + aid, aid, s.getStuID(), earned, 100));
+                addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), s.getStuID(), earned, 100));
+            }
+        }
+    }
+
+    public void stateStudent() {
+        // 假设 CSV 已经加载了 30+ 学生对象到 model
+
+        // 1) 创建老师与课程
+        Teacher t = new Teacher("Zhao", "Chang");
+        addTeacher(t);
+
+        Course c = new Course("CS", "Intro to Programming", t.getTeacherID());
+        addCourse(c);
+        t.addCourse(c.getCourseID());
+
+        // 2) 让所有已加载的学生加入该课程
+        for (Student s : getAllStudents()) {
+            enrollStudentInCourse(s.getStuID(), c.getCourseID());
+        }
+
+        // 3) 创建多个作业，并分发给所有学生
+        LocalDate assignDate = LocalDate.of(2025, 4, 20);
+        for (int i = 1; i <= 3; i++) {
+            String name = "HW " + i;
+            for (Student s : getAllStudents()) {
+                Assignment a = new Assignment(
+                        name,
+                        s.getStuID(),
+                        c.getCourseID(),
+                        assignDate,
+                        assignDate.plusDays(5)
+                );
+                addAssignment(a);
+                s.addAssignment(a.getAssignmentID());
+
+                // 模拟部分提交与评分
+                if (Math.random() < 0.8) {
+                    a.submit();
+                    if (Math.random() < 0.7) {
+                        a.markGraded("G_" + a.getAssignmentID());
+                        int earned = 70 + (int)(Math.random() * 31);  // 70~100
+                        addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), s.getStuID(), earned, 100));
+                    }
+                }
             }
         }
     }
@@ -453,11 +354,10 @@ public class LibraryModel {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",", -1);
                 if (parts.length >= 3) {
-                    String sid   = generateStudentID();
                     String first = parts[0].trim();
                     String last  = parts[1].trim();
                     String email = parts[2].trim();
-                    Student s = new Student(sid, first, last, email);
+                    Student s = new Student(first, last, email);
                     addStudent(s);
                 }
             }
@@ -485,10 +385,6 @@ public class LibraryModel {
         }
     }
 
-    private String generateStudentID() {
-        int next = studentMap.size() + 1;
-        return String.format("STU%05d", next);
-    }
 
     public double calculateClassAverage(String courseID) {
         Course course = courseMap.get(courseID);

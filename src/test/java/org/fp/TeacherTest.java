@@ -11,18 +11,18 @@ class TeacherTest {
     @Test
     void constructorRejectsNullID() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Teacher(null, "First", "Last"));
+                () -> new Teacher("First", "Last"));
     }
 
     @Test
     void constructorRejectsEmptyID() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Teacher("", "First", "Last"));
+                () -> new Teacher("First", "Last"));
     }
 
     @Test
     void gettersAndFullName() {
-        Teacher t = new Teacher("T1", "Jane", "Smith");
+        Teacher t = new Teacher("Jane", "Smith");
         assertEquals("T1", t.getTeacherID());
         assertEquals("Jane", t.getFirstName());
         assertEquals("Smith", t.getLastName());
@@ -31,7 +31,7 @@ class TeacherTest {
 
     @Test
     void addCourseAddsNonNullNonEmpty() {
-        Teacher t = new Teacher("T1", "A", "B");
+        Teacher t = new Teacher("A", "B");
         t.addCourse("C1");
         t.addCourse("");
         t.addCourse(null);
@@ -42,7 +42,7 @@ class TeacherTest {
 
     @Test
     void unmodifiableTeachingCoursesCannotBeAltered() {
-        Teacher t = new Teacher("T1", "A", "B");
+        Teacher t = new Teacher("A", "B");
         t.addCourse("C1");
         Set<String> courses = t.getTeachingCourseIDs();
         assertThrows(UnsupportedOperationException.class, () -> courses.add("X"));
@@ -50,7 +50,7 @@ class TeacherTest {
 
     @Test
     void toStringFormat() {
-        Teacher t = new Teacher("T1", "Jane", "Doe");
+        Teacher t = new Teacher("Jane", "Doe");
         String str = t.toString();
         assertTrue(str.contains("Jane Doe"));
         assertTrue(str.contains("T1"));

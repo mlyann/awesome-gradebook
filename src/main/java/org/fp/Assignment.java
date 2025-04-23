@@ -19,13 +19,13 @@ public class Assignment {
     private SubmissionStatus status = SubmissionStatus.UNSUBMITTED;
     private boolean published = false; // 是否公布成绩
 
-    public Assignment(String assignmentID, String assignmentName,
+    public Assignment(String assignmentName,
                       String studentID, String courseID,
                       LocalDate assignDate, LocalDate dueDate) {
-        if (assignmentID == null || studentID == null || courseID == null || dueDate == null || assignDate == null) {
+        if (studentID == null || courseID == null || dueDate == null || assignDate == null) {
             throw new IllegalArgumentException("Assignment requires all fields.");
         }
-        this.assignmentID = assignmentID;
+        this.assignmentID = IDGen.generate("ASG");
         this.assignmentName = assignmentName;
         this.studentID = studentID;
         this.courseID = courseID;
