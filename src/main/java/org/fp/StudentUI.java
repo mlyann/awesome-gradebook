@@ -24,31 +24,39 @@ public class StudentUI {
      *  Runtime state
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
-    private static StudentController StudentController;
+    private static StudentController studentController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
-    private static String stuID;
+    private static LibraryModel model;    // ← 共享的 model
     // GPT client – created lazily
     private static OpenAIClient gpt;
-
     /* =============================================================
      *  Entry
      * ============================================================= */
 
-    public static void main(String[] args) {
-        LibraryModel model = new LibraryModel();
-        try {
-            model.loadStudentsFromDirectory(Paths.get("src/main/DataBase/Students"));
-        } catch (IOException e) {
-            System.err.println("❌ 无法加载学生列表：" + e.getMessage());
+    public static void start(LibraryModel modelInstance, String studentID) {
+        // 1) 保存传入的 model
+        StudentUI.model = modelInstance;
+
+        // 2) 用这个 model 构造 Controller
+        studentController = new StudentController(StudentUI.model);
+
+        // 3) 校验并设置当前学生
+        if (!StudentUI.model.studentExists(studentID)) {
+            System.out.println("❌ 学生 ID 不存在: " + studentID);
             return;
         }
-        model.stateStudent();
+        studentController.setCurrentStudent(studentID);
 
-        StudentController controller = new StudentController(model);
-        String firstId = model.getFirstStudentID();
-        controller.setCurrentStudent(firstId);
+        // 4) 可选：清屏
+        clear();
 
-        level_1(controller, sc);
+        // 5) 启动主菜单
+        level_1(studentController, sc);
+    }
+
+    public static void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
 
@@ -73,10 +81,6 @@ public class StudentUI {
             studentController.sortCachedCourses(sort);                  // 排序
             List<List<String>> courseData = studentController.getFormattedCourseListForDisplayRows();
 
-            if (courseData.isEmpty()) {
-                System.out.println("❌ No courses found.");
-                return;
-            }
 
             printCourseTable(stuName, new ArrayList<>(courseData), sort);
 

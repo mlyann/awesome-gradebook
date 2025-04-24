@@ -8,6 +8,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 
@@ -31,9 +32,11 @@ public class TeacherUI {
     private static final Scanner sc = new Scanner(System.in);
     private static TeacherController TeacherController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 2);
-    private static String stuID;
     // GPT client – created lazily
     private static OpenAIClient GPT;
+    private static LibraryModel model;
+
+
 
     /* =============================================================
      *  Entry
@@ -42,16 +45,19 @@ public class TeacherUI {
     /* =============================================================
      *  Entry point – simple username prompt for now
      * ============================================================= */
-    public static void main(String[] args) {
-        // Initialize model and controller
-        LibraryModel model = new LibraryModel();
-        TeacherController = new TeacherController(model);
+    public static void start(LibraryModel modelInstance, String teacherID) {
+        // 1. 将传入的 model 保存在静态字段
+        TeacherUI.model = modelInstance;
 
-        model.state3();
-        String teacherID = model.getRandomTeacherID();
-        TeacherController.setCurrentTeacher(teacherID);
-        // Launch UI
-        level_1(TeacherController, sc);
+        // 2. 用这个 model 创建一个新的 Controller
+        TeacherController teacherController = new TeacherController(TeacherUI.model);
+
+        // 3. 设置当前教师为登录时传入的 ID
+        //    （你也可以在这里做一次校验：model.containsTeacher(teacherID)）
+        teacherController.setCurrentTeacher(teacherID);
+
+        // 4. 进入主菜单
+        level_1(teacherController, sc);
     }
 
     public static void clear() {
@@ -66,7 +72,6 @@ public class TeacherUI {
     private static void level_1(TeacherController controller, Scanner sc) {
         TeacherController.CourseSort sort = BaseController.CourseSort.NONE;
 
-
         while (true) {
             Teacher teacher = controller.getCurrentTeacher();
             if (teacher == null) {
@@ -79,31 +84,85 @@ public class TeacherUI {
             controller.sortCachedCourses(sort);                  // 排序
             List<List<String>> courseData = controller.getFormattedCourseListForDisplayRows();
 
-            if (courseData.isEmpty()) {
-                System.out.println("❌ No courses found.");
-                return;
-            }
-
             printCourseTable(teacherName, new ArrayList<>(courseData), sort);
 
-            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    0) 🚪 Exit");
+            System.out.println("1) 🔍 Select a course");
+            System.out.println("m) 🛠️ Course Management");
+            System.out.println("s) 🔀 Change sort");
+            System.out.println("0) 🚪 Exit");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
-            if (choice.equals("0")) return;
-            if (choice.equalsIgnoreCase("s")) {
-                sort = BaseController.nextCourseSort(sort);
-                continue;
-            }
-            if (choice.matches("[1-" + courseData.size() + "]")) {
-                int index = Integer.parseInt(choice) - 1;
-                Course selected = controller.getCachedCourse(index);
-                level_2(controller, selected); // 👈 进入教师视角的课程管理菜单
-            } else {
-                System.out.println("❌ Invalid choice. Enter again.");
+            switch (choice.toLowerCase()) {
+                case "0" -> {
+                    return;
+                }
+                case "s" -> {
+                    sort = BaseController.nextCourseSort(sort);
+                }
+                case "m" -> {
+                    manageNewCourses(controller, sc);
+                }
+                default -> {
+                    if (choice.matches("[1-9][0-9]*") && Integer.parseInt(choice) <= courseData.size()) {
+                        int index = Integer.parseInt(choice) - 1;
+                        Course selected = controller.getCachedCourse(index);
+                        level_2(controller, selected);
+                    } else {
+                        System.out.println("❌ Invalid choice. Enter again.");
+                    }
+                }
             }
         }
     }
+
+    private static void manageNewCourses(TeacherController controller, Scanner sc) {
+        controller.initCourseManagementCache();
+
+        boolean exit = false;
+        while (!exit) {
+            clear();
+            List<List<String>> data = controller.getNewCourseDisplayRows();
+            printCourseTable("[Unsaved]", data, BaseController.CourseSort.NONE);
+
+            System.out.println("a) ➕ Add new course");
+            System.out.println(controller.isCourseCacheDirty() ? "s) 💾 Save changes" : "s) ✅ No changes to save");
+            System.out.println("0) 🔙 Back");
+            System.out.print("👉 Choice: ");
+            String input = sc.nextLine().trim();
+
+            switch (input.toLowerCase()) {
+                case "0" -> {
+                    if (controller.isCourseCacheDirty()) {
+                        System.out.print("⚠️ Unsaved changes. Save now? (y/n): ");
+                        String confirm = sc.nextLine().trim().toLowerCase();
+                        if (confirm.equals("y")) {
+                            controller.commitCourseChanges();
+                            System.out.println("\uD83D\uDCBE Course changes saved to model.");
+                        }
+                        else controller.discardCourseChanges();
+                    }
+                    exit = true;
+                }
+                case "a" -> {
+                    System.out.print("📘 Course Name: ");
+                    String name = sc.nextLine().trim();
+                    System.out.print("📝 Description: ");
+                    String desc = sc.nextLine().trim();
+                    Course course = new Course(name, desc, controller.getCurrentTeacher().getTeacherID());
+                    controller.addCourseToCache(course);
+                    controller.setCourseCacheDirty(true);
+                    System.out.println("✅ Course added (not yet saved).");
+                }
+                case "s" -> {
+                    controller.commitCourseChanges();
+                }
+                default -> System.out.println("❌ Invalid input.");
+            }
+        }
+    }
+
+
 
 
     private static void printCourseTable(String teacherName, List<List<String>> data, TeacherController.CourseSort mode) {
@@ -141,77 +200,57 @@ public class TeacherUI {
 
             switch (view) {
                 case ASSIGNMENTS -> viewAssignments(controller, course, sort, filterActive);
-                case ROSTER -> viewRoster(controller, course, rosterSort);
+                case ROSTER      -> viewRoster(controller, course, rosterSort);
             }
+
             System.out.println();
-            System.out.print("a) 📄 Assignments\nr) 👥 Roster\ng) 🏁 Final Grades\ns) 🔍 Search\nf) 🧮 Filter\no) 🔀 Sort\n");
-            if (view == ViewMode.ASSIGNMENTS) {
-                System.out.print("d) 🛠️ Assignments Manage\n");
-            } else if (view == ViewMode.ROSTER) {
-                System.out.print("d) 👩‍🏫 Roster Manage\n");
-            }
-            System.out.print("w) ⚖\uFE0F Set category weights & drop rules\nm) ⚙\uFE0F Grading Mode\n0) 🔙 Back\n");
+            System.out.print(
+                    view == ViewMode.ASSIGNMENTS
+                            ? "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    d) 🛠️ Assignments Manage    0) 🔙 Back\n"
+                            : "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    f) 🧮 Filter    o) 🔀 Sort    d) 👩‍🏫 Roster Manage    0) 🔙 Back\n"
+            );
             System.out.print("👉 Choice: ");
-            String choice = sc.nextLine().trim();
+            String choice = sc.nextLine().trim().toLowerCase();
 
             if (choice.equals("0")) return;
+            if (choice.equals("a")) { view = ViewMode.ASSIGNMENTS; continue; }
+            if (choice.equals("r")) { view = ViewMode.ROSTER; continue; }
+            if (choice.equals("s") && view == ViewMode.ASSIGNMENTS) { searchAssignments(controller, course); continue; }
+            if (choice.equals("f")) { filterActive = !filterActive; continue; }
+            if (choice.equals("o")) {
+                if (view == ViewMode.ASSIGNMENTS) sort = nextSort(sort);
+                else rosterSort = nextRosterSort(rosterSort);
+                continue;
+            }
+            if (choice.equals("d")) {
+                if (view == ViewMode.ASSIGNMENTS) assignmentManage(controller, course);
+                else studentManage(controller, course);
+                continue;
+            }
+            if (choice.equals("g")) { viewFinalGrades(course.getCourseID()); continue; }
 
-            if (choice.equalsIgnoreCase("a")) {
-                view = ViewMode.ASSIGNMENTS;
-            } else if (choice.equalsIgnoreCase("r")) {
-                view = ViewMode.ROSTER;
-            } else if (choice.equalsIgnoreCase("s")) {
-                if (view == ViewMode.ASSIGNMENTS) {
-                    searchAssignments(controller, course);
-                } else if (view == ViewMode.ROSTER) {
-                    searchStudents(controller, course);
-                }
-            } else if (choice.equalsIgnoreCase("f")) {
-                filterActive = !filterActive;
-            } else if (choice.equalsIgnoreCase("o")) {
-                if (view == ViewMode.ASSIGNMENTS) {
-                    sort = nextSort(sort);
-                } else if (view == ViewMode.ROSTER) {
-                    rosterSort = nextRosterSort(rosterSort);
-                }
-            } else if (choice.equalsIgnoreCase("d")) {
-                if (view == ViewMode.ASSIGNMENTS) {
-                    assignmentManage(controller, course);
-                } else if (view == ViewMode.ROSTER) {
-                    studentManage(controller, course);
-                }
-            } else if (choice.matches("[1-9][0-9]*")) {
-                int index = Integer.parseInt(choice) - 1;
-
+            if (choice.matches("\\d+")) {
+                int idx = Integer.parseInt(choice) - 1;
                 if (view == ViewMode.ASSIGNMENTS) {
                     controller.refreshGroupedAssignments(course.getCourseID());
                     controller.sortGroupedAssignments(sort, filterActive);
-
-                    List<String> sortedNames = controller.getSortedAssignmentNames();
-                    if (index >= 0 && index < sortedNames.size()) {
-                        String name = sortedNames.get(index);
+                    List<String> names = controller.getSortedAssignmentNames();
+                    if (idx >= 0 && idx < names.size()) {
+                        String name = names.get(idx);
                         List<Assignment> group = controller.getAssignmentGroup(name);
                         controller.setSelectedAssignmentGroup(name);
                         viewAssignmentDetails(controller, name, group);
                     }
-
-                } else if (view == ViewMode.ROSTER) {
-                    List<Student> students = viewRoster(controller, course, rosterSort);  // 展示更新过的 Roster 表
-                    if (index >= 0 && index < students.size()) {
-                        Student s = students.get(index);
-                        viewStudentSubmissions(controller, course.getCourseID(), s);
+                } else {
+                    List<Student> students = viewRoster(controller, course, rosterSort);
+                    if (idx >= 0 && idx < students.size()) {
+                        viewStudentSubmissions(controller, course.getCourseID(), students.get(idx));
                     }
                 }
-            } else if (choice.equalsIgnoreCase("g")) {
-                viewFinalGrades(course.getCourseID());  // 👈 implement this method below
-            } else if (choice.equalsIgnoreCase("w")) {
-                setCategoryWeightsAndDrops(course);  // ➕ new method
-            }    else if (choice.equalsIgnoreCase("m")) {        // ★ 新增分支
-                chooseGradingMode(course);                  // ↓ 方法见下一节
-            } else {
-                System.out.println("❌ Invalid input.");
+                continue;
             }
 
+            System.out.println("❌ Invalid input.");
         }
     }
 
@@ -788,24 +827,55 @@ public class TeacherUI {
         String title = sc.nextLine().trim();
         if (title.isEmpty()) return;
 
-        System.out.print("📆 Assigned Date (YYYY-MM-DD): ");
-        LocalDate assignDate = LocalDate.parse(sc.nextLine().trim());
-        System.out.print("📆 Due Date (YYYY-MM-DD): ");
-        LocalDate dueDate = LocalDate.parse(sc.nextLine().trim());
+        LocalDate assignDate;
+        while (true) {
+            System.out.print("📆 Assigned Date (YYYY-MM-DD): ");
+            String asn = sc.nextLine().trim();
+            try {
+                assignDate = LocalDate.parse(asn);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("❌ Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
 
-        if (!dueDate.isAfter(assignDate)) {
-            System.out.println("❌ Due date must be after assigned date.");
-            return;
+        LocalDate dueDate;
+        while (true) {
+            System.out.print("📆 Due Date (YYYY-MM-DD): ");
+            String due = sc.nextLine().trim();
+            try {
+                dueDate = LocalDate.parse(due);
+            } catch (DateTimeParseException e) {
+                System.out.println("❌ Invalid date format. Please use YYYY-MM-DD.");
+                continue;
+            }
+            if (!dueDate.isAfter(assignDate)) {
+                System.out.println("❌ Due date must be after assigned date.");
+                continue;
+            }
+            break;
         }
 
         List<Student> students = controller.getStudentsInCourse(course.getCourseID());
+        if (students.isEmpty()) {
+            System.out.println("❌ No students in this course to assign.");
+            return;
+        }
+
         for (Student s : students) {
-            Assignment a = new Assignment(title, s.getStuID(), course.getCourseID(), assignDate, dueDate);
+            Assignment a = new Assignment(
+                    title,
+                    s.getStuID(),
+                    course.getCourseID(),
+                    assignDate,
+                    dueDate
+            );
             controller.addAssignmentToCache(a);
         }
         controller.setAssignmentCacheDirty(true);
         System.out.println("✅ Assignment group added (not yet saved).");
     }
+
 
     private static void deleteAssignmentGroup(TeacherController controller) {
         List<String> names = controller.getSortedAssignmentNames();
@@ -828,77 +898,59 @@ public class TeacherUI {
 
     private static void searchStudents(TeacherController controller, Course course) {
         System.out.print("🔍 Enter letters to match (name or email): ");
-        String pattern = sc.nextLine().trim().toLowerCase();
-
+        String pattern = sc.nextLine().trim();
         if (pattern.isEmpty()) {
             System.out.println("⚠️ Empty input. Returning...");
             return;
         }
 
-        List<Student> students = controller.getStudentsInCourse(course.getCourseID());
-        List<Student> matched = students.stream()
-                .filter(s ->
-                        isSubsequence(pattern, s.getFirstName().toLowerCase()) ||
-                                isSubsequence(pattern, s.getLastName().toLowerCase()) ||
-                                isSubsequence(pattern, s.getEmail().toLowerCase()))
-                .toList();
-
+        List<Student> matched = controller.searchAvailableStudents(course.getCourseID(), pattern);
         if (matched.isEmpty()) {
             System.out.println("❌ No matching students found.");
+            System.out.print("⬅️ Press ENTER to return...");
+            sc.nextLine();
             return;
         }
 
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "First Name", "Last Name", "Email", "Submissions"));
-
-        int index = 1;
-        for (Student s : matched) {
-            String stat = controller.getSubmissionStatsForStudent(s.getStuID(), course.getCourseID());
-            rows.add(List.of(
-                    String.valueOf(index++),
-                    s.getFirstName(),
-                    s.getLastName(),
-                    s.getEmail(),
-                    stat
-            ));
+        System.out.println("📋 Search Results:");
+        for (int i = 0; i < matched.size(); i++) {
+            Student s = matched.get(i);
+            System.out.printf("%d) %s (%s) - %s%n",
+                    i + 1, s.getFullName(), s.getStuID(), s.getEmail());
         }
-
-        TablePrinter.printDynamicTable("🔎 Search Results (students): \"" + pattern + "\"", rows);
-
-        System.out.println("0) 🔙 Back");
-        System.out.print("👉 Choice: ");
+        System.out.print("🔢 Enter number to add (0 to cancel): ");
         String input = sc.nextLine().trim();
-        if (input.matches("[1-9][0-9]*")) {
-            int idx = Integer.parseInt(input) - 1;
-            if (idx >= 0 && idx < matched.size()) {
-                Student selected = matched.get(idx);
-                viewStudentSubmissions(controller, course.getCourseID(), selected);
-            }
-        }
+        if (!input.matches("\\d+")) return;
+        int idx = Integer.parseInt(input);
+        if (idx <= 0 || idx > matched.size()) return;
+
+        Student chosen = matched.get(idx - 1);
+        controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
+        System.out.println("✅ Added " + chosen.getFullName() + " to course.");
+        System.out.print("⬅️ Press ENTER to return...");
+        sc.nextLine();
     }
+
 
     private static void studentManage(TeacherController controller, Course course) {
         controller.refreshStudentCache(course.getCourseID());
         boolean exit = false;
-
         while (!exit) {
             clear();
             List<Student> cached = controller.getCachedStudents();
-
             System.out.println("👥 Students in Course (Manage Mode)");
             for (int i = 0; i < cached.size(); i++) {
                 Student s = cached.get(i);
-                System.out.printf("%d) %s (%s)\n", i + 1, s.getFullName(), s.getStuID());
+                System.out.printf("%d) %s (%s)\n", i+1, s.getFullName(), s.getStuID());
             }
-            System.out.println("a) ➕ Add new student");
+            System.out.println("a) ➕ Add existing student");
             System.out.println("d) 🗑️ Delete existing student");
-            System.out.println(controller.isStudentCacheDirty() ? "s) 💾 Save changes" : "s) ✅ No changes to save");
+            System.out.println(controller.isStudentCacheDirty() ? "v) 💾 Save changes" : "v) ✅ No changes to save");
             System.out.println("0) 🔙 Back");
-
             System.out.print("👉 Choice: ");
-            String input = sc.nextLine().trim();
+            String input = sc.nextLine().trim().toLowerCase();
 
-            switch (input.toLowerCase()) {
+            switch (input) {
                 case "0" -> {
                     if (controller.isStudentCacheDirty()) {
                         System.out.print("⚠️ Unsaved changes. Save now? (y/n): ");
@@ -908,17 +960,15 @@ public class TeacherUI {
                     }
                     exit = true;
                 }
-                case "a" -> addNewStudent(controller, course);
+                case "a" -> selectExistingStudent(controller, course);
                 case "d" -> deleteStudent(controller);
-                case "s" -> controller.commitStudentChanges();
+                case "v" -> controller.commitStudentChanges();
                 default -> {
-                    if (input.matches("[1-9][0-9]*")) {
+                    if (input.matches("\\d+")) {
                         int idx = Integer.parseInt(input) - 1;
                         if (idx >= 0 && idx < cached.size()) {
-                            Student s = cached.get(idx);
-                            System.out.println("⚠️ No edit mode yet for: " + s.getFullName());
-                            System.out.print("⬅️ Press ENTER to return...");
-                            sc.nextLine();
+                            System.out.println("⚠️ No edit mode for: " + cached.get(idx).getFullName());
+                            System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
                         }
                     }
                 }
@@ -965,6 +1015,76 @@ public class TeacherUI {
             controller.removeStudentFromCache(s.getStuID());
             controller.setStudentCacheDirty(true);
             System.out.println("🗑️ Deleted student: " + s.getFullName());
+        }
+    }
+
+
+    private static void selectExistingStudent(TeacherController controller, Course course) {
+        while (true) {
+            List<Student> available = controller.getAvailableStudents(course.getCourseID());
+            clear();
+            if (available.isEmpty()) {
+                System.out.println("❌ No available students to add.");
+                System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                return;
+            }
+            List<List<String>> rows = new ArrayList<>();
+            rows.add(List.of("No.", "First Name", "Last Name", "Email"));
+            for (int i=0; i<available.size(); i++) {
+                Student s = available.get(i);
+                rows.add(List.of(
+                        String.valueOf(i+1), s.getFirstName(), s.getLastName(), s.getEmail()
+                ));
+            }
+            TablePrinter.printDynamicTable("📋 Available Students for " + course.getCourseName(), rows);
+
+            System.out.println("f) 🔍 Search by keyword    0) 🔙 Back");
+            System.out.print("👉 Choice or Student No.: ");
+            String input = sc.nextLine().trim().toLowerCase();
+
+            if (input.equals("0")) return;
+            if (input.equals("f")) {
+                System.out.print("🔍 Enter keyword: ");
+                String kw = sc.nextLine().trim();
+                List<Student> matched = controller.searchAvailableStudents(course.getCourseID(), kw);
+                if (matched.isEmpty()) {
+                    System.out.println("❌ No matching students.");
+                    System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                    continue;
+                }
+                rows.clear();
+                rows.add(List.of("No.", "First Name", "Last Name", "Email"));
+                for (int i=0; i<matched.size(); i++) {
+                    Student s = matched.get(i);
+                    rows.add(List.of(
+                            String.valueOf(i+1), s.getFirstName(), s.getLastName(), s.getEmail()
+                    ));
+                }
+                TablePrinter.printDynamicTable("🔎 Search Results for '"+kw+"'", rows);
+                System.out.print("🔢 Enter number to add or 0 to cancel: ");
+                String sel = sc.nextLine().trim();
+                if (sel.matches("\\d+")) {
+                    int idx = Integer.parseInt(sel);
+                    if (idx>0 && idx<=matched.size()) {
+                        Student chosen = matched.get(idx-1);
+                        controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
+                        System.out.println("✅ Added " + chosen.getFullName());
+                        System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                    }
+                }
+                continue;
+            }
+            if (input.matches("\\d+")) {
+                int idx = Integer.parseInt(input);
+                if (idx>0 && idx<=available.size()) {
+                    Student chosen = available.get(idx-1);
+                    controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
+                    System.out.println("✅ Added " + chosen.getFullName());
+                    System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                }
+                return;
+            }
+            System.out.println("❌ Invalid input, enter number, 'f', or '0'");
         }
     }
 

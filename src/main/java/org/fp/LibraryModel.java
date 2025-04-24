@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LibraryModel {
     private final Map<String, Student> studentMap = new HashMap<>();
@@ -23,12 +24,12 @@ public class LibraryModel {
     private final Map<String, String> assignmentGrades = new HashMap<>();
     private final Map<String, List<String>> courseToStudentIDs = new HashMap<>();
 
-    public String getRandomTeacherID() {
-        List<String> keys = new ArrayList<>(teacherMap.keySet());
-        if (keys.isEmpty()) return null;
-        return keys.get(new Random().nextInt(keys.size()));
-    }
 
+
+
+    public int getCourseCount() {
+        return courseMap.size();
+    }
 
 
     public void addStudent(Student s) {
@@ -64,7 +65,7 @@ public class LibraryModel {
     }
 
     public Teacher getTeacher(String id) {
-        return new Teacher(teacherMap.get(id));
+        return teacherMap.get(id);
     }
 
     public boolean teacherExists(String id) {
@@ -218,6 +219,79 @@ public class LibraryModel {
         }
     }
 
+
+    public void removeCourse(String courseID) {
+        // 1. Remove all assignments associated with the course
+        List<String> assignments = courseAssignments.getOrDefault(courseID, List.of());
+        for (String aid : assignments) {
+            Assignment a = assignmentMap.get(aid);
+            if (a != null) {
+                // Remove from student's assignment list
+                String studentID = a.getStudentID();
+                studentAssignments.getOrDefault(studentID, new ArrayList<>()).remove(aid);
+
+                // Remove associated grade if exists
+                String gradeID = assignmentGrades.remove(aid);
+                if (gradeID != null) {
+                    gradeMap.remove(gradeID);
+                }
+
+                // Remove assignment
+                assignmentMap.remove(aid);
+            }
+        }
+        courseAssignments.remove(courseID);
+
+        // 2. Remove course from students' enrolled course list
+        List<String> students = courseStudents.getOrDefault(courseID, List.of());
+        for (String sid : students) {
+            studentCourses.getOrDefault(sid, new ArrayList<>()).remove(courseID);
+        }
+        courseStudents.remove(courseID);
+        courseToStudentIDs.remove(courseID);
+
+        // 3. Remove course from teacher
+        Course c = courseMap.get(courseID);
+        if (c != null) {
+            String teacherID = c.getTeacherID();
+            Teacher t = teacherMap.get(teacherID);
+            if (t != null) {
+                t.removeCourse(courseID);
+            }
+        }
+
+        // 4. Finally, remove the course itself
+        courseMap.remove(courseID);
+    }
+
+    public void removeScore(String scoreID) {
+        gradeMap.remove(scoreID);
+    } // Simple removal for scores by ID
+
+    public void initializeIDGen() {
+        // 针对每一种前缀，扫描该 Map 的 keySet()
+        initPrefix("STU", studentMap.keySet());
+        initPrefix("TCH", teacherMap.keySet());
+        initPrefix("CRS", courseMap.keySet());
+        initPrefix("ASG", assignmentMap.keySet());
+        // 如果你有其他前缀，也一并加上…
+    }
+
+    private void initPrefix(String prefix, Set<String> ids) {
+        int max = ids.stream()
+                .flatMap(id -> {
+                    if (id.startsWith(prefix)) {
+                        return Stream.of(id.substring(prefix.length()));
+                    } else {
+                        return Stream.empty();
+                    }
+                })
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(-1);
+        // 下一个就从 max+1 开始
+        IDGen.initialize(prefix, max + 1);
+    }
 
 
 

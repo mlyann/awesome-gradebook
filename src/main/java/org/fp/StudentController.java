@@ -13,7 +13,7 @@ public class StudentController extends BaseController {
     public void setCurrentStudent(String id) {
         if (model.studentExists(id)) {
             currentStudentID = id;
-            System.out.println("✅ Current student set: " + id);
+            System.out.println("✅ Current student set: " + model.getStudent(id).getFullName());
         } else {
             System.out.println("❌ Tried to set non-existent student: " + id);
         }
