@@ -12,8 +12,9 @@ public class Teacher {
     private Set<String> teachingCourseIDs = new HashSet<>();
 
 
+    // Constructor
     public Teacher(String firstName, String lastName) {
-        this.teacherID = IDGen.generate("TCH");  // 使用 Flyweight ID 生成器
+        this.teacherID = IDGen.generate("TCH");
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -45,12 +46,14 @@ public class Teacher {
         return firstName + " " + lastName;
     }
 
+    // Add a course to the teacher's list of courses
     public void addCourse(String courseID) {
         if (courseID != null && !courseID.isEmpty()) {
             teachingCourseIDs.add(courseID);
         }
     }
 
+    // Remove a course from the teacher's list of courses
     public Set<String> getTeachingCourseIDs() {
         return Collections.unmodifiableSet(teachingCourseIDs);
     }

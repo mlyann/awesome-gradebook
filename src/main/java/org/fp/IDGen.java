@@ -8,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * IDGen uses the Flyweight Pattern to manage unique ID generators
  * for different object types (prefixes).
- * 增加 initialize(...) 方法，可在程序重启后从已有 ID 恢复计数器。
+ * The IDGen class is thread-safe and uses ConcurrentHashMap
  */
 public final class IDGen {
 
-    // Flyweight pool: prefix -> counter generator
+    // Flyweight pool (Course Content: Small, Unique, Immutable and Reusable)
     private static final Map<String, SequentialIDFlyweight> flyweightPool =
             new ConcurrentHashMap<>();
 
@@ -44,24 +44,24 @@ public final class IDGen {
         private final String prefix;
         private final AtomicInteger counter;
 
-        /** 初始计数器从 0 开始 */
+        /** Initial counter starts from 0 */
         public SequentialIDFlyweight(String prefix) {
             this(prefix, 0);
         }
 
-        /** 指定初始计数器值 */
+        /** Initial counter starts from the given value */
         public SequentialIDFlyweight(String prefix, int initialValue) {
             this.prefix = prefix;
             this.counter = new AtomicInteger(initialValue);
         }
 
-        /** 生成格式化后的 ID，并自增计数器 */
+        /** Generates a formatted ID and increments the counter */
         public String generateID() {
             return prefix + String.format("%05d", counter.getAndIncrement());
         }
     }
 
-    /** 获取或新建指定前缀的 Flyweight 对象 */
+    /** Returns the flyweight for the given ID prefix */
     private static SequentialIDFlyweight getFlyweight(String prefix) {
         return flyweightPool.computeIfAbsent(
                 prefix,

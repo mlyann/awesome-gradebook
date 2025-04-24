@@ -15,7 +15,7 @@ public class VICData {
         this.message = message;
     }
 
-    // 提供无参构造，灵活使用
+    // Default constructor
     public VICData() {
     }
 }

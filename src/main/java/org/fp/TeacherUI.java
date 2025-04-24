@@ -1,15 +1,16 @@
 package org.fp;
-import org.fp.TeacherController.AssignmentSort;
-import com.openai.client.OpenAIClient;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.models.ChatModel;
-import com.openai.models.chat.completions.ChatCompletion;
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import org.fp.TeacherController.AssignmentSort;
+
+import com.openai.client.OpenAIClient;
 
 
 /**
@@ -22,7 +23,6 @@ import java.util.*;
  *  • GPT‑powered feedback and class summaries
  *
  * Every function name used here matches (or suggests) a helper in {@link LibraryModel}.
- * Where a helper does not yet exist we mark it with a TODO comment so you can add it.
  */
 public class TeacherUI {
 
@@ -32,31 +32,17 @@ public class TeacherUI {
     private static final Scanner sc = new Scanner(System.in);
     private static TeacherController TeacherController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 2);
-    // GPT client – created lazily
+    // GPT client
     private static OpenAIClient GPT;
     private static LibraryModel model;
 
-
-
-    /* =============================================================
-     *  Entry
-     * ============================================================= */
-
-    /* =============================================================
-     *  Entry point – simple username prompt for now
-     * ============================================================= */
     public static void start(LibraryModel modelInstance, String teacherID) {
-        // 1. 将传入的 model 保存在静态字段
+        // put the model in a static variable
         TeacherUI.model = modelInstance;
 
-        // 2. 用这个 model 创建一个新的 Controller
+        // use this controller to access the model
         TeacherController teacherController = new TeacherController(TeacherUI.model);
-
-        // 3. 设置当前教师为登录时传入的 ID
-        //    （你也可以在这里做一次校验：model.containsTeacher(teacherID)）
         teacherController.setCurrentTeacher(teacherID);
-
-        // 4. 进入主菜单
         level_1(teacherController, sc);
     }
 
@@ -80,8 +66,8 @@ public class TeacherUI {
             }
 
             String teacherName = teacher.getFullName();
-            controller.loadTeacherCourses();                     // 加载课程
-            controller.sortCachedCourses(sort);                  // 排序
+            controller.loadTeacherCourses();
+            controller.sortCachedCourses(sort);
             List<List<String>> courseData = controller.getFormattedCourseListForDisplayRows();
 
             printCourseTable(teacherName, new ArrayList<>(courseData), sort);
@@ -126,7 +112,7 @@ public class TeacherUI {
             printCourseTable("[Unsaved]", data, BaseController.CourseSort.NONE);
 
             System.out.println("a) ➕ Add new course");
-            System.out.println(controller.isCourseCacheDirty() ? "s) 💾 Save changes" : "s) ✅ No changes to save");
+            System.out.println(controller.isCourseCacheDirty() ? "s) 💾 Save changes" : "s)  No changes to save");
             System.out.println("0) 🔙 Back");
             System.out.print("👉 Choice: ");
             String input = sc.nextLine().trim();
@@ -152,7 +138,7 @@ public class TeacherUI {
                     Course course = new Course(name, desc, controller.getCurrentTeacher().getTeacherID());
                     controller.addCourseToCache(course);
                     controller.setCourseCacheDirty(true);
-                    System.out.println("✅ Course added (not yet saved).");
+                    System.out.println(" Course added (not yet saved).");
                 }
                 case "s" -> {
                     controller.commitCourseChanges();
@@ -180,7 +166,9 @@ public class TeacherUI {
         TablePrinter.printDynamicTable(title, rows);
     }
 
-
+    /* 
+    * level 2UI
+    */
     private static void level_2(TeacherController controller, Course course) {
         SortMode rosterSort = SortMode.FIRST_NAME;
         ViewMode view = ViewMode.ASSIGNMENTS;
@@ -320,7 +308,7 @@ public class TeacherUI {
                     progress,
                     submitted + "/" + totalStudents,
                     gradedBar,
-                    allPublished ? "✅ Yes" : "❌ No"
+                    allPublished ? " Yes" : "❌ No"
             ));
         }
 
@@ -345,6 +333,9 @@ public class TeacherUI {
         }
     }
 
+    /* 
+     *  View a single assignment detail for a teacher
+     */
     private static void searchAssignments(TeacherController controller, Course course) {
         System.out.print("🔍 Enter letters to match: ");
         String pattern = sc.nextLine().trim().toLowerCase();
@@ -395,7 +386,7 @@ public class TeacherUI {
                     progress,
                     submitted + "/" + totalStudents,
                     gradedBar,
-                    allPublished ? "✅ Yes" : "❌ No"
+                    allPublished ? " Yes" : "❌ No"
             ));
         }
 
@@ -420,6 +411,9 @@ public class TeacherUI {
         }
     }
 
+    /* 
+     *  Check if pattern is a subsequence of target
+     */
     private static boolean isSubsequence(String pattern, String target) {
         int i = 0, j = 0;
         while (i < pattern.length() && j < target.length()) {
@@ -433,6 +427,9 @@ public class TeacherUI {
         NONE, ASCENDING, DESCENDING
     }
 
+    /*
+     *  View a single assignment detail for a teacher
+     */
     private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group) {
         GradeSort gradeSort = GradeSort.NONE;
 
@@ -442,7 +439,7 @@ public class TeacherUI {
                 return;
             }
 
-            // ⏳ 排序（如果启用）
+            //  sorting!!
             List<Assignment> displayGroup;
             if (gradeSort == GradeSort.NONE) {
                 displayGroup = new ArrayList<>(group);
@@ -461,7 +458,7 @@ public class TeacherUI {
                 displayGroup = list.stream().map(Map.Entry::getKey).toList();
             }
 
-            // ✅ 缓存当前 group 用于后续选择操作
+            //  缓存当前 group 用于后续选择操作
             controller.setCurrentAssignmentGroupList(displayGroup);
 
             // 📋 表格展示
@@ -478,7 +475,7 @@ public class TeacherUI {
                 String status = switch (a.getStatus()) {
                     case UNSUBMITTED -> "⛔ Not submitted";
                     case SUBMITTED_UNGRADED -> "✉️ Submitted";
-                    case GRADED -> "✅ Graded";
+                    case GRADED -> " Graded";
                 };
 
                 Score score = controller.getScoreForAssignment(a.getAssignmentID());
@@ -529,7 +526,9 @@ public class TeacherUI {
         }
     }
 
-
+    /* 
+     *  View a single assignment detail for a teacher
+     */
     private static void viewFinalGrades(String courseID) {
         List<List<String>> table = getFinalGradesForCourse(courseID);
         TablePrinter.printDynamicTable("📋 Final Grades with GPA", table);
@@ -537,13 +536,14 @@ public class TeacherUI {
         sc.nextLine();
     }
 
+    /*
+     *  View a single assignment detail for a teacher
+     */
     private static void setCategoryWeightsAndDrops(Course viewCopy) {
         String cid   = viewCopy.getCourseID();
         LibraryModel model = TeacherController.getModel();
-        model.setGradingMode(cid, true);                 // keep as is
-
-        /* ---------- NEW BLOCK ① : show existing table ---------- */
-        Course snap = model.getCourse(cid);              // safe copy
+        model.setGradingMode(cid, true);
+        Course snap = model.getCourse(cid);// DEEP COPY
         Map<String, Double> w = snap.getCategoryWeights();
         Map<String, Integer> d = snap.getCategoryDropCounts();
         int count = w.size();
@@ -602,12 +602,15 @@ public class TeacherUI {
             model.setCategoryDrop(cid, cat, drop);
         }
 
-        System.out.println("\n✅ Grading mode set to category‑based. Use analytics to verify.\n");
+        System.out.println("\n Grading mode set to category‑based. Use analytics to verify.\n");
     }
 
+    /*
+     *  Get final grades for a course
+     */
     private static List<List<String>> getFinalGradesForCourse(String courseID) {
         LibraryModel model = TeacherController.getModel();
-        Course course = model.getCourse(courseID);          // 拿到课程，看它是不是加权
+        Course course = model.getCourse(courseID);
         boolean weighted = course.isUsingWeightedGrading();
 
         List<List<String>> rows = new ArrayList<>();
@@ -632,6 +635,7 @@ public class TeacherUI {
         return rows;
     }
 
+    /* View all students in a course  */
     private static void chooseGradingMode(Course viewCopy){
         String cid   = viewCopy.getCourseID();
         LibraryModel model = TeacherController.getModel();
@@ -652,7 +656,7 @@ public class TeacherUI {
             case "2" -> model.setGradingMode(cid, true);
             default  -> { System.out.println("❌ Cancelled."); return; }
         }
-        System.out.println("✅ Mode saved.\n");
+        System.out.println(" Mode saved.\n");
     }
 
     private static List<Student> viewRoster(TeacherController controller, Course course, SortMode sortMode) {
@@ -687,12 +691,10 @@ public class TeacherUI {
                 sortMode.name().toLowerCase().replace("_", " ") + ")";
         TablePrinter.printDynamicTable(title, rows);
 
-        return students; // ✅ 返回排序后的列表
+        return students;
     }
 
-
-
-    // 👇 教师 UI：在 Roster 视角下选择某位学生后，查看该学生的所有作业提交记录
+//  teacher UI
     private static void viewStudentSubmissions(TeacherController controller, String courseID, Student student) {
         List<Assignment> assignments = controller.getAssignmentsForStudentInCourse(courseID, student.getStuID());
 
@@ -701,7 +703,7 @@ public class TeacherUI {
             return;
         }
 
-        // ✅ 缓存到 controller 以支持后续按序号选择
+        //  Cache to controller to support subsequent selection by number
         controller.setCurrentStudentAssignmentList(assignments);
 
         while (true) {
@@ -739,6 +741,12 @@ public class TeacherUI {
         }
     }
 
+    /**
+     * View assignment detail for teacher.
+     *
+     * @param controller the controller
+     * @param assignment the assignment
+     */
     private static void viewAssignmentDetailForTeacher(TeacherController controller, Assignment assignment) {
         Student stu = controller.getStudent(assignment.getStudentID());
         if (stu == null) {
@@ -759,7 +767,7 @@ public class TeacherUI {
         System.out.println("📌 Status: " + switch (status) {
             case UNSUBMITTED -> "⛔ Not submitted";
             case SUBMITTED_UNGRADED -> "✉️ Submitted but not graded";
-            case GRADED -> "✅ Graded";
+            case GRADED -> " Graded";
         });
 
         if (score != null) {
@@ -775,6 +783,9 @@ public class TeacherUI {
     }
 
 
+    /*
+     * Manage assignment groups for a course.
+     */
     private static void assignmentManage(TeacherController controller, Course course) {
         controller.refreshGroupedAssignments(course.getCourseID());
         boolean exit = false;
@@ -789,7 +800,7 @@ public class TeacherUI {
             }
             System.out.println("a) ➕ Add new assignment group");
             System.out.println("d) 🗑️ Delete existing assignment group");
-            System.out.println(controller.isAssignmentCacheDirty() ? "s) 💾 Save changes" : "s) ✅ No changes to save");
+            System.out.println(controller.isAssignmentCacheDirty() ? "s) 💾 Save changes" : "s)  No changes to save");
             System.out.println("0) 🔙 Back");
 
             System.out.print("👉 Choice: ");
@@ -822,6 +833,11 @@ public class TeacherUI {
         }
     }
 
+    /**
+     * Add a new assignment group to the course.
+     * @param controller The TeacherController instance.
+     * @param course The Course instance.
+     */
     private static void addNewAssignmentGroup(TeacherController controller, Course course) {
         System.out.print("📝 Title: ");
         String title = sc.nextLine().trim();
@@ -873,10 +889,14 @@ public class TeacherUI {
             controller.addAssignmentToCache(a);
         }
         controller.setAssignmentCacheDirty(true);
-        System.out.println("✅ Assignment group added (not yet saved).");
+        System.out.println(" Assignment group added (not yet saved).");
     }
 
 
+    /**
+     * Delete an existing assignment group.
+     * @param controller The TeacherController instance.
+     */
     private static void deleteAssignmentGroup(TeacherController controller) {
         List<String> names = controller.getSortedAssignmentNames();
         if (names.isEmpty()) {
@@ -896,6 +916,11 @@ public class TeacherUI {
         }
     }
 
+    /**
+     * Select an existing student to add to the course.
+     * @param controller The TeacherController instance.
+     * @param course The Course instance.
+     */
     private static void searchStudents(TeacherController controller, Course course) {
         System.out.print("🔍 Enter letters to match (name or email): ");
         String pattern = sc.nextLine().trim();
@@ -926,12 +951,17 @@ public class TeacherUI {
 
         Student chosen = matched.get(idx - 1);
         controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-        System.out.println("✅ Added " + chosen.getFullName() + " to course.");
+        System.out.println(" Added " + chosen.getFullName() + " to course.");
         System.out.print("⬅️ Press ENTER to return...");
         sc.nextLine();
     }
 
 
+    /**
+     * Manage students in the course.
+     * @param controller The TeacherController instance.
+     * @param course The Course instance.
+     */
     private static void studentManage(TeacherController controller, Course course) {
         controller.refreshStudentCache(course.getCourseID());
         boolean exit = false;
@@ -945,7 +975,7 @@ public class TeacherUI {
             }
             System.out.println("a) ➕ Add existing student");
             System.out.println("d) 🗑️ Delete existing student");
-            System.out.println(controller.isStudentCacheDirty() ? "v) 💾 Save changes" : "v) ✅ No changes to save");
+            System.out.println(controller.isStudentCacheDirty() ? "v) 💾 Save changes" : "v)  No changes to save");
             System.out.println("0) 🔙 Back");
             System.out.print("👉 Choice: ");
             String input = sc.nextLine().trim().toLowerCase();
@@ -976,6 +1006,11 @@ public class TeacherUI {
         }
     }
 
+    /**
+     * Add a new student to the course.
+     * @param controller The TeacherController instance.
+     * @param course The Course instance.
+     */
     private static void addNewStudent(TeacherController controller, Course course) {
         System.out.print("🧍 First Name: ");
         String fname = sc.nextLine().trim();
@@ -986,17 +1021,13 @@ public class TeacherUI {
 
         Student s = new Student(fname, lname, email);
         controller.addStudentToCache(s);
-
-        // 加入课程
         controller.addCourseToStudentCache(s.getStuID(), course.getCourseID());
-
-        // 添加所有现有作业（一个副本）
         for (Assignment a : controller.getAllAssignmentsInCourse(course.getCourseID())) {
             Assignment newA = new Assignment(a.getAssignmentName(), s.getStuID(), course.getCourseID(), a.getAssignDate(), a.getDueDate());
             controller.addAssignmentToCache(newA);
         }
         controller.setStudentCacheDirty(true);
-        System.out.println("✅ Student added (not yet saved).\n");
+        System.out.println(" Student added (not yet saved).\n");
     }
 
     private static void deleteStudent(TeacherController controller) {
@@ -1019,6 +1050,11 @@ public class TeacherUI {
     }
 
 
+    /**
+     * Select an existing student to add to the course.
+     * @param controller The TeacherController instance.
+     * @param course The Course instance.
+     */
     private static void selectExistingStudent(TeacherController controller, Course course) {
         while (true) {
             List<Student> available = controller.getAvailableStudents(course.getCourseID());
@@ -1068,7 +1104,7 @@ public class TeacherUI {
                     if (idx>0 && idx<=matched.size()) {
                         Student chosen = matched.get(idx-1);
                         controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-                        System.out.println("✅ Added " + chosen.getFullName());
+                        System.out.println(" Added " + chosen.getFullName());
                         System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
                     }
                 }
@@ -1079,7 +1115,7 @@ public class TeacherUI {
                 if (idx>0 && idx<=available.size()) {
                     Student chosen = available.get(idx-1);
                     controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-                    System.out.println("✅ Added " + chosen.getFullName());
+                    System.out.println(" Added " + chosen.getFullName());
                     System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
                 }
                 return;
@@ -1177,7 +1213,7 @@ public class TeacherUI {
         System.out.print("Max points: ");
         int max = Integer.parseInt(SC.nextLine().trim());
         MODEL.createAssignment(cid, id, desc, max); // TODO add helper (wraps addAssignmentToCourse)
-        pause("✅ Assignment added.");
+        pause(" Assignment added.");
     }
 
     private static void removeAssignment(String cid) {
@@ -1185,7 +1221,7 @@ public class TeacherUI {
         String aid = SC.nextLine().trim();
         if (!MODEL.assignmentExists(cid, aid)) { pause("❌ Not found."); return; }
         MODEL.removeAssignmentFromCourse(aid, cid);
-        pause("✅ Removed.");
+        pause(" Removed.");
     }
 
 
@@ -1193,21 +1229,21 @@ public class TeacherUI {
         System.out.print("Student ID: ");
         String sid = SC.nextLine().trim();
         MODEL.addStudentToCourse(sid, cid);
-        pause("✅ Student added.");
+        pause(" Student added.");
     }
 
     private static void removeStudent(String cid) {
         System.out.print("Student ID: ");
         String sid = SC.nextLine().trim();
         MODEL.removeStudentFromCourse(sid, cid);
-        pause("✅ Student removed.");
+        pause(" Student removed.");
     }
 
     private static void importStudents(String cid) {
         System.out.print("Path to CSV: ");
         String path = SC.nextLine().trim();
         MODEL.importStudentAddToCourse(path, cid);
-        pause("✅ Students imported.");
+        pause(" Students imported.");
     }
 
 
@@ -1224,7 +1260,7 @@ public class TeacherUI {
             int earned = Integer.parseInt(in);
             MODEL.addGradeForStudent(sid, aid, earned, total);
         }
-        pause("✅ Grades saved.");
+        pause(" Grades saved.");
     }
 
 
@@ -1269,7 +1305,7 @@ public class TeacherUI {
 
     private static void assignFinalGrades(String cid) {
         MODEL.assignFinalLetterGrades(cid); // TODO helper
-        pause("✅ Final grades assigned.");
+        pause(" Final grades assigned.");
     }
 
 

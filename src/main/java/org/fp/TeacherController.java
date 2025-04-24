@@ -1,6 +1,13 @@
 package org.fp;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.fp.Assignment.SubmissionStatus.GRADED;
@@ -34,7 +41,7 @@ public class TeacherController extends BaseController {
     public void setCurrentTeacher(String id) {
         if (model.teacherExists(id)) {
             currentTeacherID = id;
-            System.out.println("✅ Current student set: " + model.getTeacher(id).getFullName());
+            System.out.println(" Current student set: " + model.getTeacher(id).getFullName());
         } else  {
             System.out.println("❌ Tried to set non-existent student: " + id);
         }
@@ -62,7 +69,7 @@ public class TeacherController extends BaseController {
 
 
     public void loadAssignmentsForCourse(String courseID) {
-        this.currentCourseID = courseID;  // ✅ 同步缓存当前操作的课程
+        this.currentCourseID = courseID;  //  同步缓存当前操作的课程
         this.cachedAssignments = model.getAssignmentsInCourse(courseID);
         this.cacheValid = false; // ⚠️ 如果需要更新 groupedAssignments，可一并刷新缓存
     }
@@ -245,7 +252,7 @@ public class TeacherController extends BaseController {
         if (list != null) {
             for (Assignment a : list) {
                 assignmentIDMap.remove(a.getAssignmentID());
-                deletedAssignmentIDs.add(a.getAssignmentID());  // ✅ 标记待删除
+                deletedAssignmentIDs.add(a.getAssignmentID());  //  标记待删除
             }
             cacheValid = false;
             assignmentCacheDirty = true;
@@ -262,7 +269,7 @@ public class TeacherController extends BaseController {
     }
 
     public void commitAssignmentChanges() {
-        // ✅ 删除阶段
+        //  删除阶段
         for (String id : deletedAssignmentIDs) {
             Assignment a = model.getAssignment(id);
             if (a != null) {
@@ -272,7 +279,7 @@ public class TeacherController extends BaseController {
             }
         }
 
-        // ✅ 添加/更新阶段
+        //  添加/更新阶段
         for (List<Assignment> group : groupedAssignments.values()) {
             for (Assignment a : group) {
                 model.addAssignment(a);  // 添加或覆盖
@@ -425,12 +432,12 @@ public class TeacherController extends BaseController {
         return courseCacheDirty;
     }
 
-    // ✅ 设置缓存状态
+    //  setCourseCacheDirty
     public void setCourseCacheDirty(boolean dirty) {
         courseCacheDirty = dirty;
     }
 
-    // ✅ 添加新课程到缓存
+    //  addCourseToCache, add a new course to the cache
     public void addCourseToCache(Course course) {
         if (course != null) {
             cachedCoursesManagement.add(course);
@@ -440,9 +447,9 @@ public class TeacherController extends BaseController {
     }
 
 
-    // ✅ 放弃未保存更改
+    //  removeCourseFromCache, remove a course from the cache
     public void discardCourseChanges() {
-        loadTeacherCourses();  // 从 model 重新加载
+        loadTeacherCourses();  // load the original courses
         addedCourseIDs.clear();
         cachedCoursesManagement.clear();
         courseCacheDirty = false;
@@ -465,7 +472,7 @@ public class TeacherController extends BaseController {
     }
 
     public void commitCourseChanges() {
-        // ✅ 添加新课程
+        // add new courses
         for (Course course : cachedCoursesManagement) {
             if (addedCourseIDs.contains(course.getCourseID())) {
                 model.addCourse(course);
@@ -477,7 +484,7 @@ public class TeacherController extends BaseController {
         }
 
 
-        // ✅ 清理缓存
+        // delete courses
         deletedCourseIDs.clear();
         addedCourseIDs.clear();
         courseCacheDirty = false;
@@ -485,19 +492,19 @@ public class TeacherController extends BaseController {
     }
 
     public void initCourseManagementCache() {
-        // ✅ 正确复制，避免不可变引用
+        // Correctly copy to avoid immutable references
         cachedCoursesManagement = new ArrayList<>(cachedCourses);
     }
 
 
     public List<Student> getAvailableStudents(String courseID) {
-        // 已选学生 ID
+        // get students in course
         Set<String> enrolled = getStudentsInCourse(courseID)
                 .stream()
                 .map(Student::getStuID)
                 .collect(Collectors.toSet());
-        // 全部学生，过滤掉已选
-        return model.getAllStudents()                // 需要你的 LibraryModel 提供此方法
+        // All students, filter out enrolled ones
+        return model.getAllStudents()
                 .stream()
                 .filter(s -> !enrolled.contains(s.getStuID()))
                 .sorted(Comparator.comparing(Student::getFullName))
@@ -505,7 +512,7 @@ public class TeacherController extends BaseController {
     }
 
     /**
-     * 根据关键字搜索可选学生
+     * Search available students by keyword
      */
     public List<Student> searchAvailableStudents(String courseID, String keyword) {
         String kw = keyword.toLowerCase();
@@ -519,7 +526,7 @@ public class TeacherController extends BaseController {
     }
 
     /**
-     * 将指定学生加入缓存（不直接修改 Model），并设置为脏
+     * Add an existing student to the cache
      */
     public void addExistingStudentToCache(String studentID, String courseID) {
         Student s = model.getStudent(studentID);
@@ -529,8 +536,4 @@ public class TeacherController extends BaseController {
             studentCacheDirty = true;
         }
     }
-
-
-
-
 }

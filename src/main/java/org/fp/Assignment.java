@@ -11,13 +11,13 @@ public class Assignment {
 
     private final String assignmentID;
     private final String assignmentName;
-    private final String studentID;   // 属于哪个学生
-    private final String courseID;    // 属于哪个课程
-    private String gradeID = null;    // 可选，评分时设置
+    private final String studentID;
+    private final String courseID;
+    private String gradeID = null;
     private final LocalDate assignDate;
     private final LocalDate dueDate;
     private SubmissionStatus status = SubmissionStatus.UNSUBMITTED;
-    private boolean published = false; // 是否公布成绩
+    private boolean published = false;
 
     public Assignment(String assignmentName,
                       String studentID, String courseID,

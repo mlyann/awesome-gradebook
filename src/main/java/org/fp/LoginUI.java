@@ -1,36 +1,46 @@
 // File: LoginUI.java
 package org.fp;
 
-import com.google.gson.*;
-import io.github.cdimascio.dotenv.Dotenv;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.file.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Scanner;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class LoginUI {
     private static final Scanner sc = new Scanner(System.in);
 
-    // 使用一个顶层 DataStore 包含 users 和 model
+    // Singleton DataStore
     private static DataStore ds = new DataStore();
     private static final Path STORE_PATH = Paths.get("data/datastore.json");
 
     public static void main(String[] args) {
-        // 1) 确保 data 目录存在
+        // Ensure the data directory exists
         try {
             Files.createDirectories(STORE_PATH.getParent());
         } catch (IOException e) {
-            System.err.println("❌ 无法创建 data 目录: " + e.getMessage());
+            System.err.println("❌ Failed to create data directory: " + e.getMessage());
             return;
         }
 
-        // 2) 加载或初始化 DataStore
-        ds = loadDataStore();  // 确保 ds 不为 null
+        // Ensure the data directory exists
+        ds = loadDataStore();  // load or create a new DataStore
         ds.model.initializeIDGen();
 
-        // 3) 初始化 VICData
+        // Load environment variables
         Dotenv env = Dotenv.configure().ignoreIfMissing().load();
         VICData vic = new VICData(
                 env.get("VIC_KEY",    "12345"),
@@ -40,10 +50,10 @@ public class LoginUI {
                 ""
         );
 
-        // 4) 主循环
+        // 4) Main loop
         boolean running = true;
         while (running) {
-            System.out.println("1) 注册  2) 登录  3) 退出");
+            System.out.println("1) Register  2) Login  3) Exit");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
             switch (choice) {
@@ -53,67 +63,67 @@ public class LoginUI {
                     saveDataStore();
                     running = false;
                 }
-                default  -> System.out.println("❌ 无效选项");
+                default  -> System.out.println("❌ Invalid option, please enter '1', '2', or '3'");
             }
         }
     }
 
     private static void doRegister(VICData vic) {
-        System.out.print("用户名：");
+        System.out.print("Username: ");
         String u = sc.nextLine().trim();
         if (ds.users.userExists(u)) {
-            System.out.println("⚠️ 用户已存在");
+            System.out.println("⚠️ User already exists");
             return;
         }
-        System.out.print("密码：");
+        System.out.print("Password: ");
         String p = sc.nextLine().trim();
 
-        System.out.print("名 (First Name)：");
+        System.out.print("First Name：");
         String fn = sc.nextLine().trim();
-        System.out.print("姓 (Last Name)：");
+        System.out.print("Last Name：");
         String ln = sc.nextLine().trim();
-        System.out.print("邮箱 (Email)：");
+        System.out.print("Email：");
         String em = sc.nextLine().trim();
         if (!em.contains("@")) {
-            System.out.println("❌ 无效邮箱");
+            System.out.println("❌ Invalid email");
             return;
         }
 
-        // 首位注册成 SUPERADMIN，否则 UNASSIGNED
+        // Check if the user is a super admin
         LibraryUsers.UserType type =
                 ds.users.superAdminExists()
                         ? LibraryUsers.UserType.UNASSIGNED
                         : LibraryUsers.UserType.SUPERADMIN;
 
         if (ds.users.registerUser(u, p, fn, ln, em, type, vic)) {
-            System.out.println("✅ 注册成功，角色：" + type);
+            System.out.println("✅ register success：" + type);
             saveDataStore();
             if (type == LibraryUsers.UserType.SUPERADMIN) {
                 AdminUI.start(ds.users, vic, ds.model);
             }
         } else {
-            System.out.println("❌ 注册失败");
+            System.out.println("❌ Registration failed");
         }
     }
 
     private static void doLogin(VICData vic) {
-        System.out.print("用户名：");
+        System.out.print("Username：");
         String username = sc.nextLine().trim();
-        System.out.print("密码：");
+        System.out.print("Password：");
         String password = sc.nextLine().trim();
 
         if (!ds.users.authenticate(username, password, vic)) {
-            System.out.println("密码错误或不存在该账户");
+            System.out.println("❌ Invalid username or password");
             return;
         }
 
         LibraryUsers.UserType role = ds.users.getUserType(username);
         String objectID = ds.users.getObjectID(username);
 
-        System.out.println("✅ 登录成功");
+        System.out.println("✅ Login success：" + role);
 
         if (role == LibraryUsers.UserType.UNASSIGNED) {
-            System.out.println("❌ 该账号尚未被超级管理员分配角色，请联系管理员。");
+            System.out.println("❌ This account has not been assigned a role by a super admin, please contact the administrator.");
             return;
         }
 
@@ -128,7 +138,7 @@ public class LoginUI {
         }
     }
 
-    /** 加载或创建 DataStore */
+    /** load or create DataStore */
     private static DataStore loadDataStore() {
         if (Files.exists(STORE_PATH)) {
             try (Reader r = new FileReader(STORE_PATH.toFile())) {
@@ -138,27 +148,27 @@ public class LoginUI {
                     return loaded;
                 }
             } catch (IOException e) {
-                System.err.println("⚠️ 加载 datastore.json 失败，使用新实例: " + e.getMessage());
+                System.err.println("⚠️ Loading datastore.json failed, using new instance: " + e.getMessage());
             }
         }
-        // 文件不存在或解析失败，返回一个全新的
+        // File does not exist or parsing failed, returning a new one
         return new DataStore();
     }
 
-    /** 保存当前 DataStore 到 JSON */
+    /** Save the current DataStore to JSON */
     private static void saveDataStore() {
         try (Writer w = new FileWriter(STORE_PATH.toFile())) {
             Gson gson = createGson();
             gson.toJson(ds, w);
         } catch (IOException e) {
-            System.err.println("❌ 保存 datastore.json 失败: " + e.getMessage());
+            System.err.println("❌ Saving datastore.json failed: " + e.getMessage());
         }
     }
 
-    /** 构造支持 LocalDate 的 Gson */
+    /** Construct Gson that supports LocalDate */
     private static Gson createGson() {
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
-        // LocalDate 序列化/反序列化
+        // LocalDate serialization/deserialization
         builder.registerTypeAdapter(LocalDate.class,
                 (JsonSerializer<LocalDate>) (src, typeOfSrc, ctx) -> new JsonPrimitive(src.toString()));
         builder.registerTypeAdapter(LocalDate.class,

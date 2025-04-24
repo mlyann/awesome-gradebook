@@ -3,7 +3,10 @@ package org.fp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,7 @@ public class AdminUI {
     public static void start(LibraryUsers users, VICData vic, LibraryModel model) {
         while (true) {
             System.out.println("──── SuperAdmin Interface ────");
-            // 列出所有用户
+            // list all users
             for (Map.Entry<String, LibraryUsers.UserType> e : users.listAllUsers().entrySet()) {
                 System.out.printf("  %s → %s%n", e.getKey(), e.getValue());
             }
@@ -174,7 +177,7 @@ public class AdminUI {
     }
 
     private static void clearAllUsersUI(LibraryUsers users, VICData vic) {
-        // 1) 找到当前超级管理员的用户名
+        // 1) find SUPERADMIN
         String superadmin = users.listAllUsers().entrySet().stream()
                 .filter(e -> e.getValue() == LibraryUsers.UserType.SUPERADMIN)
                 .map(Map.Entry::getKey)
@@ -186,7 +189,7 @@ public class AdminUI {
             return;
         }
 
-        // 2) 重输密码验证
+        // 2) redo the password check
         System.out.print("Re-enter SUPERADMIN password: ");
         String pwd = sc.nextLine().trim();
         if (!users.authenticate(superadmin, pwd, vic)) {
@@ -194,7 +197,7 @@ public class AdminUI {
             return;
         }
 
-        // 3) 二次确认
+        // 3) double check
         System.out.print("Type 'DELETE' to confirm clearing all user data: ");
         String confirm = sc.nextLine().trim();
         if (!"DELETE".equals(confirm)) {
@@ -202,7 +205,7 @@ public class AdminUI {
             return;
         }
 
-        // 4) 执行清空
+        // 4) clear all users
         users.clearAllUsers();
         users.saveToJSON("data/users.json");
         System.out.println("✅ All user data cleared. Returning to main menu.");

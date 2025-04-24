@@ -3,16 +3,17 @@ package org.fp;
 public class EncryptVIC {
 
 	/**
-	 * 对给定的明文密码进行VIC加密
-	 * @param password 明文密码
-	 * @param vicData 其他VIC加密数据 (agentID, date, phrase, anagram)
-	 * @return 加密后的密码字符串
+	 * Encrypts the given password using the provided VIC data.
+	 * 
+	 * @param password The password to be encrypted.
+	 * @param vicData  The VIC data used for encryption.
+	 * @return The encrypted password.
 	 */
 	public static String encrypt(String password, VICData vicData) {
-		// 设置VICData对象中的message为密码
+		// VIC data validation
 		vicData.message = password;
 
-		// VIC加密步骤
+		// VIC encoding
 		String step1 = VICOperations.noCarryAddition(vicData.agentID, vicData.date.substring(0, 5));
 		String step2 = VICOperations.chainAddition(step1, 10);
 		String step3 = VICOperations.digitPermutation(vicData.phrase);

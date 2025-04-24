@@ -37,8 +37,7 @@ class CourseTest {
     void addAndGetAssignmentByID() {
         Course c = new Course("CS", "Data Structures", "T004");
         // 新建一个 Assignment
-        Assignment a1 = new Assignment(
-                "A100", "Homework 1", "STU01", c.getCourseID(),
+        Assignment a1 = new Assignment("Homework 1", "STU01", c.getCourseID(),
                 LocalDate.of(2025,4,1), LocalDate.of(2025,4,10)
         );
         // 调用 addAssignment

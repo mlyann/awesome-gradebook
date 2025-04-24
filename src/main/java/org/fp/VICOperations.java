@@ -374,7 +374,7 @@ public class VICOperations {
 		return encoded.toString();
 	}
 
-	// 新增解码函数
+	// Decode the message using the straddling checkerboard
 	public static String checkerboardDecode(String numberPermutation, String anagram, String encodedMessage) {
 		LinkedHashMap<Character, String> board = get2DTable(numberPermutation, anagram);
 		String label = getLabel(numberPermutation, anagram);
@@ -402,19 +402,19 @@ public class VICOperations {
 		return decoded.toString();
 	}
 
-	// 插入agentID到加密消息中
+	// insert agentID
 	public static String insertID(String input, String agentID, String date) {
 		int index = Integer.parseInt(date.substring(5));
 		return input.substring(0, index) + agentID + input.substring(index);
 	}
 
-	// 从加密消息中提取agentID
+	// get agentID
 	public static String extractID(String encodedMessage, String date) {
 		int index = Integer.parseInt(date.substring(5));
 		return encodedMessage.substring(index, index + 5);
 	}
 
-	// 提取除去agentID后的真实加密信息
+	// extract encoded message
 	public static String extractEncodedMessage(String encodedMessage, String date) {
 		int index = Integer.parseInt(date.substring(5));
 		return encodedMessage.substring(0, index) + encodedMessage.substring(index + 5);

@@ -8,6 +8,7 @@ public class GradeCalculator {
         this.scores = scores;
     }
 
+    // Copy constructor
     public double getTotalScore() {
         double total = 0;
         for (double s : scores) {
@@ -16,20 +17,14 @@ public class GradeCalculator {
         return total;
     }
 
+    // Method to calculate the average score
     public double getAverageScore() {
         if (scores.length == 0) return 0;
         return getTotalScore() / scores.length;
     }
 
+    // Method to calculate the final grade based on average score
     public Grade getFinalGrade() {
         return Grade.fromScore(getAverageScore());
     }
-
-//    Testing the GradeCalculator class
-//    public static void main(String[] args) {
-//        GradeCalculator gc = new GradeCalculator(85, 90, 78, 92);
-//        System.out.println("Total Score: " + gc.getTotalScore());
-//        System.out.println("Average Score: " + gc.getAverageScore());
-//        System.out.println("Final Grade: " + gc.getFinalGrade());
-//    }
 }

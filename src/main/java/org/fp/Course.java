@@ -20,10 +20,6 @@ public class Course {
         this.teacherID = teacherID;
         this.courseDescription = courseDescription;
         this.assignments = new HashMap<>();
-
-//        if (courseID == null || courseID.isEmpty()) {
-//            throw new IllegalArgumentException("Course ID cannot be null or empty.");
-//        } TODO: I remove them for test coverage.
     }
 
     // Copy constructor
@@ -94,19 +90,4 @@ public class Course {
     public Map<String, Integer> getCategoryDropCounts() {
         return Collections.unmodifiableMap(categoryDropCount);
     }
-
-    /**
-    public void setAssignmentScore(String assignmentID, int earned, int total) {
-        Assignment assignment = assignments.get(assignmentID);
-        if (assignment == null) {
-            throw new IllegalArgumentException("Assignment ID not found: " + assignmentID);
-        }
-        assignment.setScore(earned, total);
-    }
-
-    public Map<String, Assignment> getAllAssignments() {
-        return assignments;
-    }
-
-     **/
 }

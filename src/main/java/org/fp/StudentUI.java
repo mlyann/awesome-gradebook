@@ -1,19 +1,16 @@
 package org.fp;
 
-import com.openai.client.OpenAIClient;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.*;
-import java.time.LocalDate;
-import java.util.UUID;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+
 import io.github.cdimascio.dotenv.Dotenv;
 /**
 * REQUIRED FUNCTIONS NOT CHECKED YET.
@@ -34,23 +31,23 @@ public class StudentUI {
      * ============================================================= */
 
     public static void start(LibraryModel modelInstance, String studentID) {
-        // 1) 保存传入的 model
+        // 1) use this model instance
         StudentUI.model = modelInstance;
 
-        // 2) 用这个 model 构造 Controller
+        // 2) StudentController
         studentController = new StudentController(StudentUI.model);
 
-        // 3) 校验并设置当前学生
+        // 3) Check if student exists
         if (!StudentUI.model.studentExists(studentID)) {
             System.out.println("❌ 学生 ID 不存在: " + studentID);
             return;
         }
         studentController.setCurrentStudent(studentID);
 
-        // 4) 可选：清屏
+        // 4) Clear the console
         clear();
 
-        // 5) 启动主菜单
+        // 5) Start the main menu
         level_1(studentController, sc);
     }
 
@@ -77,8 +74,8 @@ public class StudentUI {
             }
 
             String stuName = currentStudent.getFullName();
-            studentController.loadStudentCourses();                     // 加载数据
-            studentController.sortCachedCourses(sort);                  // 排序
+            studentController.loadStudentCourses();
+            studentController.sortCachedCourses(sort);
             List<List<String>> courseData = studentController.getFormattedCourseListForDisplayRows();
 
 
@@ -101,7 +98,7 @@ public class StudentUI {
             if (choice.matches("[1-" + courseData.size() + "]")) {
                 int index = Integer.parseInt(choice) - 1;
                 Course selected = studentController.getCachedCourse(index);
-                level_2(studentController, selected); // 进入下一级
+                level_2(studentController, selected);
             } else {
                 System.out.println("❌ Invalid choice. Enter again.");
             }
@@ -341,136 +338,4 @@ public class StudentUI {
         sc.nextLine();
     }
 
-
-
-
-
 }
-
-
-
-
-/**
-
-
-    private static void level_2(int courseIndex, ArrayList<ArrayList<String>> courses) {
-        String courseID = courses.get(courseIndex).get(2); // third column assumed id
-        while (true) {
-            System.out.println("\n📘 Course: " + courses.get(courseIndex).get(0));
-            System.out.println("1) 📊 View my current average & class average");
-            System.out.println("2) 👥 View everyone's grade sheet");
-            System.out.println("3) 📝 View my assignment grades");
-            System.out.println("4) 🤖 Get GPT feedback for this course");
-            System.out.println("0) 🔙 Back to course list");
-            System.out.print("👉 Enter choice: ");
-            String choice = sc.nextLine();
-            switch (choice) {
-                case "1" -> viewMyCurrentGrade(courseID);
-                case "2" -> viewAllGrades(courseID);
-                case "3" -> viewMyAssignmentGrades(courseID);
-                case "4" -> gptFeedbackCourse(courseID);
-                case "0" -> {
-                    return; // back to level_1
-                }
-                default -> System.out.println("❌ Invalid choice. Try again.");
-            }
-        }
-    }
- **/
-    /* ----------------  analytics  ---------------- */
-
-/**
-    private static void viewMyCurrentGrade(String courseID) {
-        String grade = model.getStudentCourseGrade(stuID, courseID);
-        double classAvg = model.getClassAverage(courseID);
-        System.out.printf("📈 Your current grade: %s | Class average: %.2f %%\n", grade, classAvg);
-    }
-
-    private static void showGPA() {
-        double gpa = model.calculateGPA(stuID);
-        System.out.printf("\n🎓 Your cumulative GPA (completed courses): %.2f\n\n", gpa);
-    }
-
-    /* ----------------  GPT System Prompts  ---------------- */
-/**
-    private static void gptFeedbackCourse(String courseID) {
-        ensureGPT();
-        String courseName = model.getCourseTitle(courseID);
-        String grade = model.getStudentCourseGrade(stuID, courseID);
-        String prompt = "As a TA, give the student concise advice (4 bullets) to improve in " + courseName +
-                ". Current grade: " + grade + ".";
-        String reply = callGPT(prompt);
-        System.out.println("\n================ GPT Feedback ================\n" + reply + "\n=============================================\n");
-    }
-
-    private static String callGPT(String prompt) {
-        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model(ChatModel.GPT_4O_MINI)
-                .addUserMessage(prompt)
-                .build();
-        ChatCompletion cp = gpt.chat().completions().create(params);
-        return cp.choices().get(0).message().content().orElse("No response");
-    }
-
-    private static void ensureGPT() {
-        if (gpt != null) return;
-        Dotenv env = Dotenv.configure().ignoreIfMissing().load();
-        gpt = OpenAIOkHttpClient.builder().apiKey(env.get("OPENAI_API_KEY", "")).build();
-    }
-
-    /* =============================================================
-     *  Mccann Table Printer
-     * ============================================================= */
-
-/**
-    private static void viewAllGrades(String courseID) {
-        // unchanged – relies on existing model helpers and TablePrinter
-        String courseTitle = model.getCourseTitle(courseID);
-        List<String> identifiers = model.getAssignmentIdentifiers(courseID);
-        List<String> weights = model.getAssignmentWeights(courseID);
-        List<String> maxPoints = model.getAssignmentMaxPoints(courseID);
-        List<String> submissionDates = model.getAssignmentSubmissions(courseID);
-        List<String> resubmits = model.getAssignmentResubmitDates(courseID);
-        ArrayList<ArrayList<String>> studentGrades = model.getGradeRows(courseID);
-
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(prependRow("       Weight", weights));
-        rows.add(prependRow("       Points", maxPoints));
-        rows.add(prependRow("    Submitted", submissionDates));
-        rows.add(prependRow("Resubmit Date", resubmits));
-        rows.add(List.of("###SEPARATOR###"));
-        rows.add(prependRow("   Identifier", identifiers));
-        rows.add(List.of("###SEPARATOR###"));
-        for (ArrayList<String> row : studentGrades) {
-            ArrayList<String> r = new ArrayList<>(row);
-            r.set(0, "   " + r.get(0));
-            rows.add(r);
-        }
-        TablePrinter.printDynamicTable("Full Grade Sheet: " + courseTitle, rows);
-    }
-
-    private static void viewMyAssignmentGrades(String courseID) {
-        ArrayList<ArrayList<String>> assgGrades = model.getStudentAssignmentGrades(stuID, courseID);
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("Assignment", "Grade"));
-        rows.addAll(assgGrades);
-        TablePrinter.printDynamicTable("Your Assignment Grades", rows);
-    }
-
-    private static List<String> prependRow(String label, List<String> items) {
-        List<String> row = new ArrayList<>();
-        row.add(label);
-        row.addAll(items);
-        return row;
-    }
-
-    private static void printCourseTable(String stuName, ArrayList<ArrayList<String>> data, CourseSort mode) {
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "Course Name", "Description"));
-        int idx = 1;
-        for (ArrayList<String> r : data) rows.add(List.of(String.valueOf(idx++), r.get(0), r.get(1)));
-        TablePrinter.printDynamicTable("Courses of " + stuName + " (sorted by " + mode.name().toLowerCase() + ")", rows);
-    }
-}
-
- **/

@@ -1,13 +1,19 @@
 package org.fp;
 
-import java.time.LocalDate;
-import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class LibraryModel {
@@ -298,13 +304,10 @@ public class LibraryModel {
 
 
     public void state3() {
-        // 1) Create teacher
         Teacher t = new Teacher("Zhao", "T001");
         addTeacher(t);
-
-        // 2) Create one course using category-based grading
         Course c1 = new Course("CS", "Advanced Programming", t.getTeacherID());
-        c1.setGradingMode(true);  // use category-based weighted grading
+        c1.setGradingMode(true);
         c1.setCategoryWeight("Homework", 0.3);
         c1.setCategoryWeight("Project", 0.4);
         c1.setCategoryWeight("Quiz", 0.3);
@@ -321,7 +324,6 @@ public class LibraryModel {
             enrollStudentInCourse(s.getStuID(), c1.getCourseID());
         }
 
-        // 4) Create assignments per category
         LocalDate assignDate = LocalDate.of(2025, 4, 1);
         int hwCount = 4, projCount = 2, quizCount = 3;
 
@@ -333,7 +335,7 @@ public class LibraryModel {
                 addAssignment(a);
                 s.addAssignment(a.getAssignmentID());
 
-                if ( i != 4 && i != 5 ) {  // ✅ 只允许部分学生提交
+                if ( i != 4 && i != 5 ) {
                     a.submit();
                     a.markGraded("G_" + a.getAssignmentID());
                     int earned = 60 + (int)(Math.random() * 41);
@@ -379,22 +381,18 @@ public class LibraryModel {
     }
 
     public void stateStudent() {
-        // 假设 CSV 已经加载了 30+ 学生对象到 model
-
-        // 1) 创建老师与课程
+        // create a new course and assign it to a teacher
         Teacher t = new Teacher("Zhao", "Chang");
         addTeacher(t);
 
         Course c = new Course("CS", "Intro to Programming", t.getTeacherID());
         addCourse(c);
         t.addCourse(c.getCourseID());
-
-        // 2) 让所有已加载的学生加入该课程
         for (Student s : getAllStudents()) {
             enrollStudentInCourse(s.getStuID(), c.getCourseID());
         }
 
-        // 3) 创建多个作业，并分发给所有学生
+        // create assignments
         LocalDate assignDate = LocalDate.of(2025, 4, 20);
         for (int i = 1; i <= 3; i++) {
             String name = "HW " + i;
@@ -409,7 +407,7 @@ public class LibraryModel {
                 addAssignment(a);
                 s.addAssignment(a.getAssignmentID());
 
-                // 模拟部分提交与评分
+                // simulate partial submission and grading
                 if (Math.random() < 0.8) {
                     a.submit();
                     if (Math.random() < 0.7) {

@@ -1,13 +1,16 @@
 package org.fp;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StudentController extends BaseController {
     private String currentStudentID;
 
     public StudentController(LibraryModel model) {
-        super(model); // ✅ 使用 super() 初始化 model
+        super(model); // ✅ Call the constructor of the superclass
     }
 
     public void setCurrentStudent(String id) {
@@ -31,7 +34,7 @@ public class StudentController extends BaseController {
     }
 
     public void createCourse(String name, String desc, String teacherID) {
-        Course c = new Course(name, desc, teacherID); // 由 Course 自己生成 ID
+        Course c = new Course(name, desc, teacherID); // Course generates its own ID
         model.addCourse(c);
     }
 
@@ -91,9 +94,8 @@ public class StudentController extends BaseController {
     public void sortCachedAssignmentsByName() {
         cachedAssignments.sort(Comparator.comparingInt(a -> extractAssignmentNumber(a.getAssignmentName())));
     }
-//TODO: Change it to public it's fine? @Haocheng
+
     public int extractAssignmentNumber(String name) {
-        // 假设格式为 "Assignment N"，提取 N 的整数
         String[] parts = name.trim().split(" ");
         try {
             return Integer.parseInt(parts[parts.length - 1]);

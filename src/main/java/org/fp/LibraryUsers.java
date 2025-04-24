@@ -1,23 +1,30 @@
 // File: LibraryUsers.java
 package org.fp;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 public class LibraryUsers {
 
     public enum UserType { SUPERADMIN, UNASSIGNED, STUDENT, TEACHER }
 
-    // key: 登录用的 username，value: 对应的用户信息
+    // key: username
     private final Map<String, LibraryUser> users = new HashMap<>();
 
     /**
-     * 内部类：存储一个用户所有信息
+     * instance of LibraryUser
      */
     private static class LibraryUser {
         String username;
@@ -26,7 +33,7 @@ public class LibraryUsers {
         String lastName;
         String email;
         UserType type;
-        String objectID;  // 在 assignRole 时设置
+        String objectID;
 
         // no-arg ctor for Gson
         LibraryUser() {}
@@ -51,7 +58,9 @@ public class LibraryUsers {
         users.clear();
     }
 
-    /** 注册：只保存登录信息和基本资料，不创建实体 */
+    /** 
+     * Registers a user by saving login information and basic details without creating an entity 
+     */
     public boolean registerUser(String username,
                                 String password,
                                 String firstName,
@@ -66,13 +75,17 @@ public class LibraryUsers {
         return true;
     }
 
-    /** 验证登录 */
+    /** 
+     * Authenticates a user by checking the username and password
+     */
     public boolean authenticate(String username, String inputPassword, VICData vic) {
         LibraryUser u = users.get(username);
         return u != null && EncryptVIC.encrypt(inputPassword, vic).equals(u.encryptedPassword);
     }
 
-    /** 获取角色 */
+    /** 
+     * Retrieves the user role based on the username 
+     */
     public UserType getUserType(String username) {
         LibraryUser u = users.get(username);
         return u != null ? u.type : null;
@@ -88,7 +101,7 @@ public class LibraryUsers {
     }
 
     /**
-     * 超管分配角色时，创建实体并记录 objectID
+     * Assigns a role to a user and creates an entity if necessary, recording the objectID
      */
     public boolean assignRole(String username,
                               UserType newType,
@@ -113,13 +126,17 @@ public class LibraryUsers {
         return true;
     }
 
-    /** 登录时取出真实的 objectID */
+    /** 
+     * Retrieves the objectID of a user during login 
+     */
     public String getObjectID(String username) {
         LibraryUser u = users.get(username);
         return u == null ? null : u.objectID;
     }
 
-    /** 列出所有用户和角色，用于 AdminUI 展示 */
+    /** 
+     * Lists all users and their roles for AdminUI display 
+     */
     public Map<String, UserType> listAllUsers() {
         return users.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -128,21 +145,27 @@ public class LibraryUsers {
                 ));
     }
 
-    /** 保存到 JSON 文件 */
+    /** 
+     * Saves user data to a JSON file 
+     * @param path the file path where user data will be saved
+     */
     public void saveToJSON(String path) {
         try (Writer writer = new FileWriter(path)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(users, writer);
         } catch (IOException e) {
-            System.err.println("❌ 保存用户数据失败: " + e.getMessage());
+            System.err.println("❌ Failed to save user info: " + e.getMessage());
         }
     }
 
-    /** 从 JSON 加载 */
+    /** 
+     * Loads user data from a JSON file 
+     * @param path the file path from which user data will be loaded
+     */
     public void loadFromJSON(String path) {
         File file = new File(path);
         if (!file.exists()) {
-            System.out.println("⚠️ 用户数据文件不存在，跳过加载");
+            System.out.println("⚠️ User data file not found, stop loading.");
             return;
         }
         try (Reader reader = new FileReader(file)) {
@@ -154,7 +177,7 @@ public class LibraryUsers {
                 users.putAll(loaded);
             }
         } catch (IOException e) {
-            System.err.println("❌ 加载用户数据失败: " + e.getMessage());
+            System.err.println("❌ Failed to load user data: " + e.getMessage());
         }
     }
 }
