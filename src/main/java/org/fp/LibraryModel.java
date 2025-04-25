@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+import java.util.*;
 
 public class LibraryModel {
     private final Map<String, Student> studentMap = new HashMap<>();
@@ -200,23 +201,17 @@ public class LibraryModel {
     public void removeAssignment(String assignmentID) {
         Assignment a = assignmentMap.remove(assignmentID);
         if (a == null) return;
-
-        // 移除 student → assignment 映射
         List<String> saList = studentAssignments.get(a.getStudentID());
         if (saList != null) saList.remove(assignmentID);
-
-        // 移除 course → assignment 映射
         List<String> caList = courseAssignments.get(a.getCourseID());
         if (caList != null) caList.remove(assignmentID);
-
-        // 移除 grade → score 映射
         if (a.getGradeID() != null) {
             gradeMap.remove(a.getGradeID());
             assignmentGrades.remove(assignmentID);
         }
     }
 
-    // ❗ Remove student from a specific course
+    // Remove student from a specific course
     public void removeStudentFromCourse(String studentID, String courseID) {
         List<String> studentList = courseToStudentIDs.get(courseID);
         if (studentList != null) {
@@ -239,20 +234,16 @@ public class LibraryModel {
                 // Remove from student's assignment list
                 String studentID = a.getStudentID();
                 studentAssignments.getOrDefault(studentID, new ArrayList<>()).remove(aid);
-
-                // Remove associated grade if exists
                 String gradeID = assignmentGrades.remove(aid);
                 if (gradeID != null) {
                     gradeMap.remove(gradeID);
                 }
-
-                // Remove assignment
                 assignmentMap.remove(aid);
             }
         }
         courseAssignments.remove(courseID);
 
-        // 2. Remove course from students' enrolled course list
+        // Remove course from students' enrolled course list
         List<String> students = courseStudents.getOrDefault(courseID, List.of());
         for (String sid : students) {
             studentCourses.getOrDefault(sid, new ArrayList<>()).remove(courseID);
@@ -260,7 +251,7 @@ public class LibraryModel {
         courseStudents.remove(courseID);
         courseToStudentIDs.remove(courseID);
 
-        // 3. Remove course from teacher
+        // Remove course from teacher
         Course c = courseMap.get(courseID);
         if (c != null) {
             String teacherID = c.getTeacherID();
@@ -270,7 +261,7 @@ public class LibraryModel {
             }
         }
 
-        // 4. Finally, remove the course itself
+        // remove the course itself
         courseMap.remove(courseID);
     }
 
@@ -279,12 +270,10 @@ public class LibraryModel {
     } // Simple removal for scores by ID
 
     public void initializeIDGen() {
-        // 针对每一种前缀，扫描该 Map 的 keySet()
         initPrefix("STU", studentMap.keySet());
         initPrefix("TCH", teacherMap.keySet());
         initPrefix("CRS", courseMap.keySet());
         initPrefix("ASG", assignmentMap.keySet());
-        // 如果你有其他前缀，也一并加上…
     }
 
     private void initPrefix(String prefix, Set<String> ids) {
@@ -299,12 +288,8 @@ public class LibraryModel {
                 .mapToInt(Integer::parseInt)
                 .max()
                 .orElse(-1);
-        // 下一个就从 max+1 开始
         IDGen.initialize(prefix, max + 1);
     }
-
-
-
 
 
     public void state3() {
@@ -319,7 +304,7 @@ public class LibraryModel {
         addCourse(c1);
         t.addCourse(c1.getCourseID());
 
-        // 3) Create students
+        // Create students
         List<Student> students = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             Student s = new Student("Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
@@ -380,6 +365,87 @@ public class LibraryModel {
                 };
                 int earned = 70 + (int)(Math.random() * 41); // 60 ~ 100
                 addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), s.getStuID(), earned, 100));
+            }
+        }
+    }
+
+    /**
+     * Populate a course with demo data (5 students + HW/Project/Quiz assignments).
+     * All objects are created inside <code>courseID</code>;
+     * existing teacher / course信息保持不变。
+     *
+     * @param courseID the course to populate
+     */
+    public void populateDemoData(String courseID) {
+        /* ---------- 基本检查 ---------- */
+        Course c = courseMap.get(courseID);
+        if (c == null) {
+            throw new IllegalArgumentException("Course " + courseID + " not found.");
+        }
+        // 可选：确保其教师持有该课程
+        Teacher tch = teacherMap.get(c.getTeacherID());
+        if (tch != null) tch.addCourse(courseID);
+
+        /* ---------- 课程权重与丢弃规则 ---------- */
+        c.setGradingMode(true);                 // Option 2 - category weights
+        c.setCategoryWeight("Homework", 0.3);
+        c.setCategoryWeight("Project",  0.4);
+        c.setCategoryWeight("Quiz",     0.3);
+        c.setCategoryDropCount("Quiz", 1);      // drop lowest quiz
+
+        /* ---------- 创建学生 ---------- */
+        List<Student> studs = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Student s = new Student("Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
+            addStudent(s);
+            enrollStudentInCourse(s.getStuID(), courseID);
+            studs.add(s);
+        }
+
+        /* ---------- 生成作业 ---------- */
+        LocalDate base = LocalDate.of(2025, 4, 1);
+
+        // Homework ×4
+        createGroup("HW", 4, "Homework", 5, base, studs, courseID, 60, 100);
+
+        // Project ×2
+        createGroup("Project", 2, "Project", 10, base, studs, courseID, 80, 120);
+
+        // Quiz ×3
+        createGroup("Quiz", 3, "Quiz", 2, base, studs, courseID, 70, 100);
+    }
+
+    /* ========== helper ========== */
+    private void createGroup(String prefix, int count, String cat, int span,
+                             LocalDate base, List<Student> studs, String cid,
+                             int minEarned, int maxEarned) {
+
+        for (int i = 1; i <= count; i++) {
+            for (Student s : studs) {
+                Assignment a = new Assignment(
+                        prefix + " " + i,
+                        s.getStuID(),
+                        cid,
+                        base,
+                        base.plusDays(span)
+                );
+                a.setCategory(cat);
+                addAssignment(a);
+                s.addAssignment(a.getAssignmentID());
+
+                /* 随机决定是否提交并评分（作演示） */
+                if (Math.random() < 0.85) {          // ≈15 % 未提交
+                    a.submit();
+                    if (Math.random() < 0.75) {      // ≈25 % 已交未评
+                        a.markGraded("G_" + a.getAssignmentID());
+                        int earned = minEarned + (int) (Math.random() * (maxEarned - minEarned + 1));
+                        addScore(new Score("G_" + a.getAssignmentID(),
+                                a.getAssignmentID(),
+                                s.getStuID(),
+                                earned,
+                                maxEarned));
+                    }
+                }
             }
         }
     }
@@ -609,4 +675,39 @@ public class LibraryModel {
         Course c = courseMap.get(courseID);
         if (c != null) c.setCategoryDropCount(category, drop);
     }
+
+    public double getAveragePercentageForGroup(String courseID, String assignmentName) {
+        List<Assignment> all = getAssignmentsInCourse(courseID);
+        List<Double> percentages = all.stream()
+                .filter(a -> assignmentName.equals(a.getAssignmentName()))
+                .map(a -> {
+                    Score s = getScoreForAssignment(a.getAssignmentID());
+                    return (s == null) ? null : s.getPercentage();
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (percentages.isEmpty()) return 0.0;
+        return percentages.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+    }
+
+    public double getMedianPercentageForGroup(String courseID, String assignmentName) {
+        List<Assignment> all = getAssignmentsInCourse(courseID);
+        List<Double> sorted = all.stream()
+                .filter(a -> assignmentName.equals(a.getAssignmentName()))
+                .map(a -> {
+                    Score s = getScoreForAssignment(a.getAssignmentID());
+                    return (s == null) ? null : s.getPercentage();
+                })
+                .filter(Objects::nonNull)
+                .sorted()
+                .toList();
+
+        if (sorted.isEmpty()) return 0.0;
+        int mid = sorted.size() / 2;
+        return (sorted.size() % 2 == 1)
+                ? sorted.get(mid)
+                : (sorted.get(mid - 1) + sorted.get(mid)) / 2.0;
+    }
+
 }

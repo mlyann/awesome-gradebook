@@ -536,4 +536,12 @@ public class TeacherController extends BaseController {
             studentCacheDirty = true;
         }
     }
+
+    public List<String> getUngradedAssignmentIDs(String courseID) {
+        List<Assignment> all = model.getAssignmentsInCourse(courseID);
+        return all.stream()
+                .filter(a -> a.getStatus() == Assignment.SubmissionStatus.SUBMITTED_UNGRADED)
+                .map(Assignment::getAssignmentID)
+                .collect(Collectors.toList());
+    }
 }

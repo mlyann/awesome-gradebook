@@ -37,13 +37,14 @@ public class TeacherUI {
     private static LibraryModel model;
 
     public static void start(LibraryModel modelInstance, String teacherID) {
-        // put the model in a static variable
         TeacherUI.model = modelInstance;
 
-        // use this controller to access the model
-        TeacherController teacherController = new TeacherController(TeacherUI.model);
-        teacherController.setCurrentTeacher(teacherID);
-        level_1(teacherController, sc);
+        // construct the controller
+        TeacherController tc = new TeacherController(model);   // ← 用局部名 tc
+        tc.setCurrentTeacher(teacherID);
+        TeacherUI.TeacherController = tc;
+
+        level_1(tc, sc);
     }
 
     public static void clear() {
@@ -166,24 +167,23 @@ public class TeacherUI {
         TablePrinter.printDynamicTable(title, rows);
     }
 
-    /* 
-    * level 2UI
-    */
     private static void level_2(TeacherController controller, Course course) {
+        LibraryModel lib = TeacherController.getModel();
+        lib.populateDemoData(course.getCourseID());
         SortMode rosterSort = SortMode.FIRST_NAME;
         ViewMode view = ViewMode.ASSIGNMENTS;
         AssignmentSort sort = AssignmentSort.NONE;
         boolean filterActive = false;
         Teacher teacher = controller.getCurrentTeacher();
         if (teacher == null) {
-            System.out.println("❌ No teacher logged in.");
+            System.out.println("\u274c No teacher logged in.");
             return;
         }
 
         while (true) {
             clear();
-            System.out.println("📘 Course: " + course.getCourseName());
-            System.out.println("👩‍🏫 Instructor: " + teacher.getFullName());
+            System.out.println("\ud83d\udcd8 Course: " + course.getCourseName());
+            System.out.println("\ud83d\udc69\u200d\ud83c\udfeb Instructor: " + teacher.getFullName());
             System.out.println("==============================");
 
             switch (view) {
@@ -194,10 +194,14 @@ public class TeacherUI {
             System.out.println();
             System.out.print(
                     view == ViewMode.ASSIGNMENTS
-                            ? "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    s) 🔍 Search    f) 🧮 Filter    o) 🔀 Sort    d) 🛠️ Assignments Manage    0) 🔙 Back\n"
-                            : "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    f) 🧮 Filter    o) 🔀 Sort    d) 👩‍🏫 Roster Manage    0) 🔙 Back\n"
+                            ? "a) \ud83d\udcc4 Assignments    r) \ud83d\udc65 Roster    g) \ud83c\udfc1 Final Grades    "
+                            + "c) \u2699\ufe0f Grading setup    s) \ud83d\udd0d Search    f) \ud83e\uddf2 Filter    "
+                            + "o) \ud83d\udd00 Sort    d) \ud83d\udcaa Assignments Manage    n) \ud83d\udcca Analytics    0) \ud83d\udd19 Back\n"
+                            : "a) \ud83d\udcc4 Assignments    r) \ud83d\udc65 Roster    g) \ud83c\udfc1 Final Grades    "
+                            + "c) \u2699\ufe0f Grading setup    f) \ud83e\uddf2 Filter    o) \ud83d\udd00 Sort    "
+                            + "d) \ud83d\udc69\u200d\ud83c\udfeb Roster Manage    n) \ud83d\udcca Analytics    0) \ud83d\udd19 Back\n"
             );
-            System.out.print("👉 Choice: ");
+            System.out.print("\ud83d\udd0a Choice: ");
             String choice = sc.nextLine().trim().toLowerCase();
 
             if (choice.equals("0")) return;
@@ -216,6 +220,16 @@ public class TeacherUI {
                 continue;
             }
             if (choice.equals("g")) { viewFinalGrades(course.getCourseID()); continue; }
+            if (choice.equals("c")) {
+                chooseGradingMode(course);
+                if (course.isUsingWeightedGrading())
+                    setCategoryWeightsAndDrops(course);
+                continue;
+            }
+            if (choice.equals("n")) {
+                analyticsMenu(controller, course);
+                continue;
+            }
 
             if (choice.matches("\\d+")) {
                 int idx = Integer.parseInt(choice) - 1;
@@ -238,7 +252,7 @@ public class TeacherUI {
                 continue;
             }
 
-            System.out.println("❌ Invalid input.");
+            System.out.println("\u274c Invalid input.");
         }
     }
 
@@ -1006,30 +1020,6 @@ public class TeacherUI {
         }
     }
 
-    /**
-     * Add a new student to the course.
-     * @param controller The TeacherController instance.
-     * @param course The Course instance.
-     */
-    private static void addNewStudent(TeacherController controller, Course course) {
-        System.out.print("🧍 First Name: ");
-        String fname = sc.nextLine().trim();
-        System.out.print("🧍 Last Name: ");
-        String lname = sc.nextLine().trim();
-        System.out.print("📧 Email: ");
-        String email = sc.nextLine().trim();
-
-        Student s = new Student(fname, lname, email);
-        controller.addStudentToCache(s);
-        controller.addCourseToStudentCache(s.getStuID(), course.getCourseID());
-        for (Assignment a : controller.getAllAssignmentsInCourse(course.getCourseID())) {
-            Assignment newA = new Assignment(a.getAssignmentName(), s.getStuID(), course.getCourseID(), a.getAssignDate(), a.getDueDate());
-            controller.addAssignmentToCache(newA);
-        }
-        controller.setStudentCacheDirty(true);
-        System.out.println(" Student added (not yet saved).\n");
-    }
-
     private static void deleteStudent(TeacherController controller) {
         List<Student> cached = controller.getCachedStudents();
         if (cached.isEmpty()) {
@@ -1124,261 +1114,76 @@ public class TeacherUI {
         }
     }
 
+    private static void showClassAverages(TeacherController ctl, Course course) {
+        List<String> groups = ctl.getSortedAssignmentNames();   // Uses current sort order
+        LibraryModel m = TeacherController.getModel();
 
-
-
-
-
-}
-
-
-    /**
-
-    private enum SortMode { FIRST, LAST, USERNAME, ASSIGN }
-
-    private static void courseMenu(String teacherUser, Course course) {
-        String cid = course.getCourseID();
-        while (true) {
-            clear();
-            System.out.println("📘  " + course.getCourseName());
-            System.out.println("1) 👥  View / sort roster & grades");
-            System.out.println("2) ➕  Add assignment      3) ❌ Remove assignment");
-            System.out.println("4) ➕  Add student         5) ❌ Remove student");
-            System.out.println("6) ⬆️  Import students (CSV)   7) ✏️  Enter / update grades");
-            System.out.println("8) 📊  Analytics & final grades");
-            System.out.println("9) 🤖  GPT tools");
-            System.out.println("0) 🔙  Back");
-            System.out.print("👉  Choice: ");
-            switch (SC.nextLine().trim()) {
-                case "1" -> rosterMenu(cid, SortMode.FIRST);
-                case "2" -> addAssignment(cid);
-                case "3" -> removeAssignment(cid);
-                case "4" -> addStudent(cid);
-                case "5" -> removeStudent(cid);
-                case "6" -> importStudents(cid);
-                case "7" -> gradeEntryWizard(cid);
-                case "8" -> analyticsMenu(cid);
-                case "9" -> gptMenu(cid);
-                case "0" -> {return;}
-                default  -> pause("Invalid option");
-            }
-        }
-    }
-
-    private static void rosterMenu(String cid, SortMode mode) {
-        while (true) {
-            clear();
-            ArrayList<ArrayList<String>> rows = MODEL.getGradeRows(cid); // each [stuID, g1, g2, ..., avg]
-            if (rows.isEmpty()) { pause("No students enrolled."); return; }
-            sortRoster(rows, mode, cid);
-            PRINTER.printDynamicTable("Roster (sorted by " + mode.name().toLowerCase() + ")", rows);
-            System.out.println("s) 🔀  Change sort    0) 🔙  Back");
-            System.out.print("👉  Choice: ");
-            String in = SC.nextLine().trim();
-            if (in.equals("0")) return;
-            if (in.equalsIgnoreCase("s")) mode = next(mode);
-        }
-    }
-
-    private static SortMode next(SortMode m) {
-        return switch (m) {
-            case FIRST -> SortMode.LAST;
-            case LAST  -> SortMode.USERNAME;
-            case USERNAME -> SortMode.ASSIGN;
-            case ASSIGN -> SortMode.FIRST;
-        };
-    }
-
-    private static void sortRoster(List<ArrayList<String>> rows, SortMode mode, String cid) {
-        // the first row is header – skip sorting it
-        List<ArrayList<String>> body = rows.subList(1, rows.size());
-        switch (mode) {
-            case FIRST -> body.sort(Comparator.comparing(r -> MODEL.getStudentFirstName(r.get(0)))); // TODO add helper
-            case LAST  -> body.sort(Comparator.comparing(r -> MODEL.getStudentLastName(r.get(0))));  // TODO
-            case USERNAME -> body.sort(Comparator.comparing(r -> r.get(0)));
-            case ASSIGN -> {
-                // sort descending by average column (last col)
-                int avgCol = rows.get(0).size() - 1;
-                body.sort(Comparator.comparingDouble((ArrayList<String> r) -> Double.parseDouble(r.get(avgCol))).reversed());
-            }
-        }
-    }
-
-
-    private static void addAssignment(String cid) {
-        System.out.print("Identifier: ");
-        String id = SC.nextLine().trim();
-        System.out.print("Description: ");
-        String desc = SC.nextLine().trim();
-        System.out.print("Max points: ");
-        int max = Integer.parseInt(SC.nextLine().trim());
-        MODEL.createAssignment(cid, id, desc, max); // TODO add helper (wraps addAssignmentToCourse)
-        pause(" Assignment added.");
-    }
-
-    private static void removeAssignment(String cid) {
-        System.out.print("Assignment ID to remove: ");
-        String aid = SC.nextLine().trim();
-        if (!MODEL.assignmentExists(cid, aid)) { pause("❌ Not found."); return; }
-        MODEL.removeAssignmentFromCourse(aid, cid);
-        pause(" Removed.");
-    }
-
-
-    private static void addStudent(String cid) {
-        System.out.print("Student ID: ");
-        String sid = SC.nextLine().trim();
-        MODEL.addStudentToCourse(sid, cid);
-        pause(" Student added.");
-    }
-
-    private static void removeStudent(String cid) {
-        System.out.print("Student ID: ");
-        String sid = SC.nextLine().trim();
-        MODEL.removeStudentFromCourse(sid, cid);
-        pause(" Student removed.");
-    }
-
-    private static void importStudents(String cid) {
-        System.out.print("Path to CSV: ");
-        String path = SC.nextLine().trim();
-        MODEL.importStudentAddToCourse(path, cid);
-        pause(" Students imported.");
-    }
-
-
-    private static void gradeEntryWizard(String cid) {
-        System.out.print("Assignment ID: ");
-        String aid = SC.nextLine().trim();
-        if (!MODEL.assignmentExists(cid, aid)) { pause("❌ assignment not found"); return; }
-        List<String> students = MODEL.viewStudentsInCourse(cid);
-        int total = MODEL.getAssignmentMaxPoints(cid, aid);
-        for (String sid : students) {
-            System.out.printf("Score for %s (blank skip): ", sid);
-            String in = SC.nextLine().trim();
-            if (in.isEmpty()) continue;
-            int earned = Integer.parseInt(in);
-            MODEL.addGradeForStudent(sid, aid, earned, total);
-        }
-        pause(" Grades saved.");
-    }
-
-
-    private static void analyticsMenu(String cid) {
-        while (true) {
-            clear();
-            System.out.println("📊 Analytics for " + MODEL.getCourseTitle(cid));
-            System.out.println("1) View class averages per assignment");
-            System.out.println("2) View ungraded assignments");
-            System.out.println("3) Assign final letter grades");
-            System.out.println("0) 🔙 Back");
-            System.out.print("👉 Choice: ");
-            switch (SC.nextLine().trim()) {
-                case "1" -> showClassAverages(cid);
-                case "2" -> showUngraded(cid);
-                case "3" -> assignFinalGrades(cid);
-                case "0" -> {return;}
-                default -> pause("Invalid");
-            }
-        }
-    }
-
-    private static void showClassAverages(String cid) {
-        List<String> ass = MODEL.getAssignmentIdentifiers(cid);
         List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("Assignment", "Average", "Median"));
-        for (String a : ass) {
-            double avg = MODEL.getAveragePercetangeAssig(a);
-            double med = MODEL.getMedianPercentageAssig(a); // TODO add helper
-            rows.add(List.of(a, String.format("%.2f%%", avg), String.format("%.2f%%", med)));
+        rows.add(List.of("Assignment", "Average %", "Median %"));
+        for (String name : groups) {
+            double avg = m.getAveragePercentageForGroup(course.getCourseID(), name);
+            double med = m.getMedianPercentageForGroup(course.getCourseID(), name);
+            rows.add(List.of(name, String.format("%.2f", avg), String.format("%.2f", med)));
         }
-        PRINTER.printDynamicTable("Class Averages", rows);
+        TablePrinter.printDynamicTable("📈 Class averages (" + course.getCourseName() + ")", rows);
         pause("");
     }
 
-    private static void showUngraded(String cid) {
-        List<String> ungraded = MODEL.getAllUngradedAssignments(cid); // TODO helper
-        if (ungraded.isEmpty()) { pause("All assignments graded."); return; }
-        System.out.println("Ungraded assignments: " + String.join(", ", ungraded));
-        pause("");
-    }
-
-    private static void assignFinalGrades(String cid) {
-        MODEL.assignFinalLetterGrades(cid); // TODO helper
-        pause(" Final grades assigned.");
-    }
-
-
-    private static void gptMenu(String cid) {
-        while (true) {
-            clear();
-            System.out.println("🤖 GPT tools for " + MODEL.getCourseTitle(cid));
-            System.out.println("1) Feedback for a student");
-            System.out.println("2) Class performance summary & tips");
-            System.out.println("0) 🔙 Back");
-            System.out.print("👉 Choice: ");
-            switch (SC.nextLine().trim()) {
-                case "1" -> gptFeedbackStudent(cid);
-                case "2" -> gptClassSummary(cid);
-                case "0" -> {return;}
-                default -> pause("Invalid");
-            }
+    private static void showUngraded(TeacherController ctl, Course course) {
+        List<String> ungraded = ctl.getUngradedAssignmentIDs(course.getCourseID());
+        if (ungraded.isEmpty()) {
+            System.out.println("✅ All submissions graded.");
+        } else {
+            System.out.println("❗ Ungraded submissions: " + ungraded.size());
+            System.out.println(String.join(", ", ungraded));
         }
-    }
-
-    private static void gptFeedbackStudent(String cid) {
-        ensureGPT();
-        System.out.print("Student ID: ");
-        String sid = SC.nextLine().trim();
-        if (!MODEL.isStudentInCourse(sid, cid)) { pause("Not in course"); return; }
-        String grade = MODEL.getStudentCourseGrade(sid, cid);
-        String prompt = "You are a teaching assistant. Provide 4 concise, actionable bullet‑point feedback for student " + sid +
-                " in course " + MODEL.getCourseTitle(cid) + ". Current grade: " + grade + ".";
-        String reply = callGPT(prompt);
-        System.out.println("\n========== GPT Feedback =========\n" + reply + "\n==================================\n");
         pause("");
     }
 
-    private static void gptClassSummary(String cid) {
-        ensureGPT();
-        double avgOverall = MODEL.getOverallClassAverage(cid); // TODO helper
-        String prompt = "Summarise class performance for " + MODEL.getCourseTitle(cid) +
-                " with current average " + String.format("%.2f%%", avgOverall) +
-                ". Suggest two pedagogical improvements.";
-        System.out.println("\n========== GPT Summary =========\n" + callGPT(prompt) + "\n=================================\n");
+    private static void showOverallAverage(LibraryModel m, String cid) {
+        double pct = m.getOverallClassAverage(cid);
+        System.out.printf("Current overall average: %.2f%%\n\n", pct);
         pause("");
     }
 
-    private static String callGPT(String prompt) {
-        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model(ChatModel.GPT_4O_MINI)
-                .addUserMessage(prompt)
-                .build();
-        ChatCompletion cp = GPT.chat().completions().create(params);
-        return cp.choices().get(0).message().content().orElse("No response");
+    private static void assignFinalGrades(LibraryModel m, String cid) {
+        Map<String, Grade> map = m.assignFinalLetterGrades(cid);
+        System.out.println("Final letter grades assigned for " + map.size() + " students:");
+        map.forEach((sid, g) -> System.out.printf("  %s → %s%n", sid, g));
+        pause("");
     }
-
-    private static void ensureGPT() {
-        if (GPT != null) return;
-        Dotenv env = Dotenv.configure().ignoreIfMissing().load();
-        GPT = OpenAIOkHttpClient.builder().apiKey(env.get("OPENAI_API_KEY", "")).build();
-    }
-
 
     private static void pause(String msg) {
-        if (!msg.isEmpty()) System.out.println("\n" + msg);
-        System.out.print("<enter> …");
-        SC.nextLine();
+        if (!msg.isEmpty()) System.out.println(msg);
+        System.out.println("⬅️ Press ENTER to return...");
+        sc.nextLine();
     }
 
-    private static void quit() {
-        System.out.println("Bye ✨");
-        System.exit(0);
-    }
+    private static void analyticsMenu(TeacherController ctl, Course course) {
+        LibraryModel m = TeacherController.getModel();
+        String cid = course.getCourseID();
 
-    private static void clear() {
-        System.out.print("\u001B[H\u001B[2J");
-        System.out.flush();
+        while (true) {
+            clear();
+            System.out.println("📊 Analytics for " + course.getCourseName());
+            System.out.println("1) View class averages per assignment");
+            System.out.println("2) View ungraded assignments");
+            System.out.println("3) Overall course average");
+            System.out.println("4) Assign final letter grades (overwrite)");
+            System.out.println("5) Set or edit category weights and drop rules");  // ⭐ 新功能
+            System.out.println("0) 🔙 Back");
+            System.out.print("👉 Choice: ");
+
+            switch (sc.nextLine().trim()) {
+                case "1" -> showClassAverages(ctl, course);
+                case "2" -> showUngraded(ctl, course);
+                case "3" -> showOverallAverage(m, cid);
+                case "4" -> assignFinalGrades(m, cid);
+                case "5" -> setCategoryWeightsAndDrops(course);  // ⭐ 新入口
+                case "0" -> { return; }
+                default  -> { System.out.println("❌ Invalid option."); pause(""); }
+            }
+        }
     }
- **/
+}
 
