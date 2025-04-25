@@ -534,20 +534,19 @@ public class LibraryModel {
         return count == 0 ? 0.0 : (1.0 * totalPoints / count);
     }
     public double getOverallClassAverage(String courseID) {
+        Course course = courseMap.get(courseID);
+        if (course == null) return 0.0;
+
         List<String> studentIDs = getStudentIDsInCourse(courseID);
-        int totalEarned = 0;
-        int totalPossible = 0;
+        double total = 0.0;
 
         for (String sid : studentIDs) {
-            for (Assignment a : getAssignmentsForStudentInCourse(sid, courseID)) {
-                Score s = getScoreForAssignment(a.getAssignmentID());
-                if (s != null) {
-                    totalEarned += s.getEarned();
-                    totalPossible += s.getTotal();
-                }
-            }
+            total += course.isUsingWeightedGrading()
+                    ? computeWeightedPercentage(sid, courseID)
+                    : computeTotalPointsPercentage(sid, courseID);
         }
-        return totalPossible == 0 ? 0.0 : (100.0 * totalEarned / totalPossible);
+
+        return studentIDs.isEmpty() ? 0.0 : total / studentIDs.size();
     }
 
     public Map<String, Grade> assignFinalLetterGrades(String courseID) {

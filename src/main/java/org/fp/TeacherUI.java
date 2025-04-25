@@ -1199,7 +1199,7 @@ public class TeacherUI {
             System.out.println("2) View ungraded assignments");
             System.out.println("3) Overall course average");
             System.out.println("4) Assign final letter grades (overwrite)");
-            System.out.println("5) Set or edit category weights and drop rules");  // ⭐ 新功能
+            System.out.println("5) Set or edit category weights and drop rules");
             System.out.println("0) 🔙 Back");
             System.out.print("👉 Choice: ");
 
@@ -1208,7 +1208,7 @@ public class TeacherUI {
                 case "2" -> showUngraded(ctl, course);
                 case "3" -> showOverallAverage(m, cid);
                 case "4" -> assignFinalGrades(m, cid);
-                case "5" -> setCategoryWeightsAndDrops(course);  // ⭐ 新入口
+                case "5" -> setCategoryWeightsAndDrops(course);
                 case "0" -> { return; }
                 default  -> { System.out.println("❌ Invalid option."); pause(""); }
             }
