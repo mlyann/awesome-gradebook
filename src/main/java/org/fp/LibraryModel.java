@@ -672,6 +672,7 @@ public class LibraryModel {
                 : (sorted.get(mid - 1) + sorted.get(mid)) / 2.0;
     }
 
+    /*
     public double calculateGPACompletedOnly(String studentID) {
         List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
         int totalPoints = 0;
@@ -695,6 +696,8 @@ public class LibraryModel {
 
         return count == 0 ? 0.0 : totalPoints * 1.0 / count;
     }
+
+     */
 
     public void markCourseAsCompleted(String courseID) {
         Course course = courseMap.get(courseID);
