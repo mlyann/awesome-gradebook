@@ -314,6 +314,30 @@
         "email": "alexander.jackson@gmail.com",
         "type": "STUDENT",
         "objectID": "STU00065"
+      },
+      "Jerry": {
+        "username": "Jerry",
+        "encryptedPassword": "null12345",
+        "firstName": "Jerry",
+        "lastName": "Yu",
+        "email": "1@1",
+        "type": "UNASSIGNED"
+      },
+      "Bob": {
+        "username": "Bob",
+        "encryptedPassword": "null12345nullnull",
+        "firstName": "Bob",
+        "lastName": "Yu",
+        "email": "Bob@email.com",
+        "type": "UNASSIGNED"
+      },
+      "Nathan": {
+        "username": "Nathan",
+        "encryptedPassword": "null12345null",
+        "firstName": "Nathan",
+        "lastName": "Oswald",
+        "email": "1@1",
+        "type": "UNASSIGNED"
       }
     }
   },

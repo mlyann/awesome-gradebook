@@ -289,7 +289,7 @@ public class LibraryModel {
         IDGen.initialize(prefix, max + 1);
     }
 
-
+/*
     public void state3() {
         Teacher t = new Teacher("Zhao", "T001");
         addTeacher(t);
@@ -366,7 +366,7 @@ public class LibraryModel {
             }
         }
     }
-
+ */
     /**
      * Populate a course with demo data (5 students + HW/Project/Quiz assignments).
      * All objects are created inside <code>courseID</code>;
@@ -448,6 +448,7 @@ public class LibraryModel {
         }
     }
 
+    /*
     public void stateStudent() {
         // create a new course and assign it to a teacher
         Teacher t = new Teacher("Zhao", "Chang");
@@ -487,6 +488,7 @@ public class LibraryModel {
             }
         }
     }
+     */
 
     public double calculateClassAverage(String courseID) {
         Course course = courseMap.get(courseID);
