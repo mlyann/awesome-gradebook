@@ -1,246 +1,12 @@
 {
   "users": {
     "users": {
-      "emily.jones@gmail.com": {
-        "username": "emily.jones@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Emily",
-        "lastName": "Jones",
-        "email": "emily.jones@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00001"
-      },
-      "olivia.miller@gmail.com": {
-        "username": "olivia.miller@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Olivia",
-        "lastName": "Miller",
-        "email": "olivia.miller@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00005"
-      },
-      "eli.russell@gmail.com": {
-        "username": "eli.russell@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Eli",
-        "lastName": "Russell",
-        "email": "eli.russell@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00029"
-      },
-      "owen.hughes@gmail.com": {
-        "username": "owen.hughes@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Owen",
-        "lastName": "Hughes",
-        "email": "owen.hughes@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00023"
-      },
-      "sophia.brown@gmail.com": {
-        "username": "sophia.brown@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Sophia",
-        "lastName": "Brown",
-        "email": "sophia.brown@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00003"
-      },
-      "william.davis@gmail.com": {
-        "username": "william.davis@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "William",
-        "lastName": "Davis",
-        "email": "william.davis@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00004"
-      },
-      "hazel.henderson@gmail.com": {
-        "username": "hazel.henderson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Hazel",
-        "lastName": "Henderson",
-        "email": "hazel.henderson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00028"
-      },
-      "hannah.parker@gmail.com": {
-        "username": "hannah.parker@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Hannah",
-        "lastName": "Parker",
-        "email": "hannah.parker@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00020"
-      },
-      "alexander.jackson@gmail.com": {
-        "username": "alexander.jackson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Alexander",
-        "lastName": "Jackson",
-        "email": "alexander.jackson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00010"
-      },
-      "caleb.foster@gmail.com": {
-        "username": "caleb.foster@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Caleb",
-        "lastName": "Foster",
-        "email": "caleb.foster@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00027"
-      },
-      "scarlet.bennett@gmail.com": {
-        "username": "scarlet.bennett@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Scarlet",
-        "lastName": "Bennett",
-        "email": "scarlet.bennett@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00024"
-      },
-      "ethan.anderson@gmail.com": {
-        "username": "ethan.anderson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Ethan",
-        "lastName": "Anderson",
-        "email": "ethan.anderson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00008"
-      },
-      "isabella.thomas@gmail.com": {
-        "username": "isabella.thomas@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Isabella",
-        "lastName": "Thomas",
-        "email": "isabella.thomas@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00009"
-      },
-      "landon.diaz@gmail.com": {
-        "username": "landon.diaz@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Landon",
-        "lastName": "Diaz",
-        "email": "landon.diaz@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00031"
-      },
-      "michael.williams@gmail.com": {
-        "username": "michael.williams@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Michael",
-        "lastName": "Williams",
-        "email": "michael.williams@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00002"
-      },
-      "emma.watson@gmail.com": {
-        "username": "emma.watson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Emma",
-        "lastName": "Watson",
-        "email": "emma.watson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00022"
-      },
-      "ava.taylor@gmail.com": {
-        "username": "ava.taylor@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Ava",
-        "lastName": "Taylor",
-        "email": "ava.taylor@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00007"
-      },
-      "gavin.patterson@gmail.com": {
-        "username": "gavin.patterson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Gavin",
-        "lastName": "Patterson",
-        "email": "gavin.patterson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00025"
-      },
-      "victoria.phillips@gmail.com": {
-        "username": "victoria.phillips@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Victoria",
-        "lastName": "Phillips",
-        "email": "victoria.phillips@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00018"
-      },
-      "aria.griffin@gmail.com": {
-        "username": "aria.griffin@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Aria",
-        "lastName": "Griffin",
-        "email": "aria.griffin@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00030"
-      },
-      "james.smith@gmail.com": {
-        "username": "james.smith@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "James",
-        "lastName": "Smith",
-        "email": "james.smith@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00000"
-      },
-      "christopher.evans@gmail.com": {
-        "username": "christopher.evans@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Christopher",
-        "lastName": "Evans",
-        "email": "christopher.evans@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00021"
-      },
-      "grace.adams@gmail.com": {
-        "username": "grace.adams@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Grace",
-        "lastName": "Adams",
-        "email": "grace.adams@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00011"
-      },
-      "mila.hayes@gmail.com": {
-        "username": "mila.hayes@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Mila",
-        "lastName": "Hayes",
-        "email": "mila.hayes@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00032"
-      },
-      "liam.turner@gmail.com": {
-        "username": "liam.turner@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Liam",
-        "lastName": "Turner",
-        "email": "liam.turner@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00017"
-      },
-      "nathan.campbell@gmail.com": {
-        "username": "nathan.campbell@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Nathan",
-        "lastName": "Campbell",
-        "email": "nathan.campbell@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00019"
-      },
       "1": {
         "username": "1",
         "encryptedPassword": "null12345",
         "firstName": "1",
         "lastName": "1",
-        "email": "@",
+        "email": "1@1",
         "type": "SUPERADMIN"
       },
       "2": {
@@ -248,72 +14,306 @@
         "encryptedPassword": "null12345",
         "firstName": "2",
         "lastName": "2",
-        "email": "@",
+        "email": "2@2",
         "type": "TEACHER",
-        "objectID": "TCH00000"
+        "objectID": "TCH00001"
       },
-      "elijah.mitchell@gmail.com": {
-        "username": "elijah.mitchell@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Elijah",
-        "lastName": "Mitchell",
-        "email": "elijah.mitchell@gmail.com",
+      "emma.watson@gmail.com": {
+        "username": "emma.watson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Emma",
+        "lastName": "Watson",
+        "email": "emma.watson@gmail.com",
         "type": "STUDENT",
-        "objectID": "STU00014"
+        "objectID": "STU00033"
       },
-      "avery.perez@gmail.com": {
-        "username": "avery.perez@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Avery",
-        "lastName": "Perez",
-        "email": "avery.perez@gmail.com",
+      "owen.hughes@gmail.com": {
+        "username": "owen.hughes@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Owen",
+        "lastName": "Hughes",
+        "email": "owen.hughes@gmail.com",
         "type": "STUDENT",
-        "objectID": "STU00015"
+        "objectID": "STU00034"
       },
-      "zoe.carter@gmail.com": {
-        "username": "zoe.carter@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Zoe",
-        "lastName": "Carter",
-        "email": "zoe.carter@gmail.com",
+      "scarlet.bennett@gmail.com": {
+        "username": "scarlet.bennett@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Scarlet",
+        "lastName": "Bennett",
+        "email": "scarlet.bennett@gmail.com",
         "type": "STUDENT",
-        "objectID": "STU00013"
+        "objectID": "STU00035"
       },
-      "evelyn.roberts@gmail.com": {
-        "username": "evelyn.roberts@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Evelyn",
-        "lastName": "Roberts",
-        "email": "evelyn.roberts@gmail.com",
+      "gavin.patterson@gmail.com": {
+        "username": "gavin.patterson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Gavin",
+        "lastName": "Patterson",
+        "email": "gavin.patterson@gmail.com",
         "type": "STUDENT",
-        "objectID": "STU00016"
-      },
-      "benjamin.wilson@gmail.com": {
-        "username": "benjamin.wilson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Benjamin",
-        "lastName": "Wilson",
-        "email": "benjamin.wilson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00006"
-      },
-      "noah.nelson@gmail.com": {
-        "username": "noah.nelson@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
-        "firstName": "Noah",
-        "lastName": "Nelson",
-        "email": "noah.nelson@gmail.com",
-        "type": "STUDENT",
-        "objectID": "STU00012"
+        "objectID": "STU00036"
       },
       "paisley.simmons@gmail.com": {
         "username": "paisley.simmons@gmail.com",
-        "encryptedPassword": "null12345nullnullnullnull",
+        "encryptedPassword": "null12345",
         "firstName": "Paisley",
         "lastName": "Simmons",
         "email": "paisley.simmons@gmail.com",
         "type": "STUDENT",
-        "objectID": "STU00026"
+        "objectID": "STU00037"
+      },
+      "caleb.foster@gmail.com": {
+        "username": "caleb.foster@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Caleb",
+        "lastName": "Foster",
+        "email": "caleb.foster@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00038"
+      },
+      "hazel.henderson@gmail.com": {
+        "username": "hazel.henderson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Hazel",
+        "lastName": "Henderson",
+        "email": "hazel.henderson@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00039"
+      },
+      "eli.russell@gmail.com": {
+        "username": "eli.russell@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Eli",
+        "lastName": "Russell",
+        "email": "eli.russell@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00040"
+      },
+      "aria.griffin@gmail.com": {
+        "username": "aria.griffin@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Aria",
+        "lastName": "Griffin",
+        "email": "aria.griffin@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00041"
+      },
+      "landon.diaz@gmail.com": {
+        "username": "landon.diaz@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Landon",
+        "lastName": "Diaz",
+        "email": "landon.diaz@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00042"
+      },
+      "mila.hayes@gmail.com": {
+        "username": "mila.hayes@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Mila",
+        "lastName": "Hayes",
+        "email": "mila.hayes@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00043"
+      },
+      "grace.adams@gmail.com": {
+        "username": "grace.adams@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Grace",
+        "lastName": "Adams",
+        "email": "grace.adams@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00044"
+      },
+      "noah.nelson@gmail.com": {
+        "username": "noah.nelson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Noah",
+        "lastName": "Nelson",
+        "email": "noah.nelson@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00045"
+      },
+      "zoe.carter@gmail.com": {
+        "username": "zoe.carter@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Zoe",
+        "lastName": "Carter",
+        "email": "zoe.carter@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00046"
+      },
+      "elijah.mitchell@gmail.com": {
+        "username": "elijah.mitchell@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Elijah",
+        "lastName": "Mitchell",
+        "email": "elijah.mitchell@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00047"
+      },
+      "avery.perez@gmail.com": {
+        "username": "avery.perez@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Avery",
+        "lastName": "Perez",
+        "email": "avery.perez@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00048"
+      },
+      "evelyn.roberts@gmail.com": {
+        "username": "evelyn.roberts@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Evelyn",
+        "lastName": "Roberts",
+        "email": "evelyn.roberts@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00049"
+      },
+      "liam.turner@gmail.com": {
+        "username": "liam.turner@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Liam",
+        "lastName": "Turner",
+        "email": "liam.turner@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00050"
+      },
+      "victoria.phillips@gmail.com": {
+        "username": "victoria.phillips@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Victoria",
+        "lastName": "Phillips",
+        "email": "victoria.phillips@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00051"
+      },
+      "nathan.campbell@gmail.com": {
+        "username": "nathan.campbell@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Nathan",
+        "lastName": "Campbell",
+        "email": "nathan.campbell@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00052"
+      },
+      "hannah.parker@gmail.com": {
+        "username": "hannah.parker@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Hannah",
+        "lastName": "Parker",
+        "email": "hannah.parker@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00053"
+      },
+      "christopher.evans@gmail.com": {
+        "username": "christopher.evans@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Christopher",
+        "lastName": "Evans",
+        "email": "christopher.evans@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00054"
+      },
+      "james.smith@gmail.com": {
+        "username": "james.smith@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "James",
+        "lastName": "Smith",
+        "email": "james.smith@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00055"
+      },
+      "emily.jones@gmail.com": {
+        "username": "emily.jones@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Emily",
+        "lastName": "Jones",
+        "email": "emily.jones@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00056"
+      },
+      "michael.williams@gmail.com": {
+        "username": "michael.williams@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Michael",
+        "lastName": "Williams",
+        "email": "michael.williams@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00057"
+      },
+      "sophia.brown@gmail.com": {
+        "username": "sophia.brown@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Sophia",
+        "lastName": "Brown",
+        "email": "sophia.brown@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00058"
+      },
+      "william.davis@gmail.com": {
+        "username": "william.davis@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "William",
+        "lastName": "Davis",
+        "email": "william.davis@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00059"
+      },
+      "olivia.miller@gmail.com": {
+        "username": "olivia.miller@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Olivia",
+        "lastName": "Miller",
+        "email": "olivia.miller@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00060"
+      },
+      "benjamin.wilson@gmail.com": {
+        "username": "benjamin.wilson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Benjamin",
+        "lastName": "Wilson",
+        "email": "benjamin.wilson@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00061"
+      },
+      "ava.taylor@gmail.com": {
+        "username": "ava.taylor@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Ava",
+        "lastName": "Taylor",
+        "email": "ava.taylor@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00062"
+      },
+      "ethan.anderson@gmail.com": {
+        "username": "ethan.anderson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Ethan",
+        "lastName": "Anderson",
+        "email": "ethan.anderson@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00063"
+      },
+      "isabella.thomas@gmail.com": {
+        "username": "isabella.thomas@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Isabella",
+        "lastName": "Thomas",
+        "email": "isabella.thomas@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00064"
+      },
+      "alexander.jackson@gmail.com": {
+        "username": "alexander.jackson@gmail.com",
+        "encryptedPassword": "null12345",
+        "firstName": "Alexander",
+        "lastName": "Jackson",
+        "email": "alexander.jackson@gmail.com",
+        "type": "STUDENT",
+        "objectID": "STU00065"
       }
     }
   },
@@ -432,7 +432,9 @@
         "firstName": "Avery",
         "lastName": "Perez",
         "email": "avery.perez@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
         "assignmentIDs": []
       },
       "STU00019": {
@@ -448,7 +450,9 @@
         "firstName": "Alexander",
         "lastName": "Jackson",
         "email": "alexander.jackson@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
         "assignmentIDs": []
       },
       "STU00032": {
@@ -472,7 +476,9 @@
         "firstName": "Aria",
         "lastName": "Griffin",
         "email": "aria.griffin@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
         "assignmentIDs": []
       },
       "STU00014": {
@@ -514,7 +520,9 @@
         "firstName": "Ava",
         "lastName": "Taylor",
         "email": "ava.taylor@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
         "assignmentIDs": []
       },
       "STU00029": {
@@ -590,6 +598,276 @@
         "email": "ethan.anderson@gmail.com",
         "enrolledCourseIDs": [],
         "assignmentIDs": []
+      },
+      "STU00033": {
+        "stuID": "STU00033",
+        "firstName": "Emma",
+        "lastName": "Watson",
+        "email": "emma.watson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00034": {
+        "stuID": "STU00034",
+        "firstName": "Owen",
+        "lastName": "Hughes",
+        "email": "owen.hughes@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00035": {
+        "stuID": "STU00035",
+        "firstName": "Scarlet",
+        "lastName": "Bennett",
+        "email": "scarlet.bennett@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00036": {
+        "stuID": "STU00036",
+        "firstName": "Gavin",
+        "lastName": "Patterson",
+        "email": "gavin.patterson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00037": {
+        "stuID": "STU00037",
+        "firstName": "Paisley",
+        "lastName": "Simmons",
+        "email": "paisley.simmons@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00038": {
+        "stuID": "STU00038",
+        "firstName": "Caleb",
+        "lastName": "Foster",
+        "email": "caleb.foster@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00039": {
+        "stuID": "STU00039",
+        "firstName": "Hazel",
+        "lastName": "Henderson",
+        "email": "hazel.henderson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00040": {
+        "stuID": "STU00040",
+        "firstName": "Eli",
+        "lastName": "Russell",
+        "email": "eli.russell@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00041": {
+        "stuID": "STU00041",
+        "firstName": "Aria",
+        "lastName": "Griffin",
+        "email": "aria.griffin@gmail.com",
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
+        "assignmentIDs": []
+      },
+      "STU00042": {
+        "stuID": "STU00042",
+        "firstName": "Landon",
+        "lastName": "Diaz",
+        "email": "landon.diaz@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00043": {
+        "stuID": "STU00043",
+        "firstName": "Mila",
+        "lastName": "Hayes",
+        "email": "mila.hayes@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00044": {
+        "stuID": "STU00044",
+        "firstName": "Grace",
+        "lastName": "Adams",
+        "email": "grace.adams@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00045": {
+        "stuID": "STU00045",
+        "firstName": "Noah",
+        "lastName": "Nelson",
+        "email": "noah.nelson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00046": {
+        "stuID": "STU00046",
+        "firstName": "Zoe",
+        "lastName": "Carter",
+        "email": "zoe.carter@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00047": {
+        "stuID": "STU00047",
+        "firstName": "Elijah",
+        "lastName": "Mitchell",
+        "email": "elijah.mitchell@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00048": {
+        "stuID": "STU00048",
+        "firstName": "Avery",
+        "lastName": "Perez",
+        "email": "avery.perez@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00049": {
+        "stuID": "STU00049",
+        "firstName": "Evelyn",
+        "lastName": "Roberts",
+        "email": "evelyn.roberts@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00050": {
+        "stuID": "STU00050",
+        "firstName": "Liam",
+        "lastName": "Turner",
+        "email": "liam.turner@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00051": {
+        "stuID": "STU00051",
+        "firstName": "Victoria",
+        "lastName": "Phillips",
+        "email": "victoria.phillips@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00052": {
+        "stuID": "STU00052",
+        "firstName": "Nathan",
+        "lastName": "Campbell",
+        "email": "nathan.campbell@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00053": {
+        "stuID": "STU00053",
+        "firstName": "Hannah",
+        "lastName": "Parker",
+        "email": "hannah.parker@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00054": {
+        "stuID": "STU00054",
+        "firstName": "Christopher",
+        "lastName": "Evans",
+        "email": "christopher.evans@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00055": {
+        "stuID": "STU00055",
+        "firstName": "James",
+        "lastName": "Smith",
+        "email": "james.smith@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00056": {
+        "stuID": "STU00056",
+        "firstName": "Emily",
+        "lastName": "Jones",
+        "email": "emily.jones@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00057": {
+        "stuID": "STU00057",
+        "firstName": "Michael",
+        "lastName": "Williams",
+        "email": "michael.williams@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00058": {
+        "stuID": "STU00058",
+        "firstName": "Sophia",
+        "lastName": "Brown",
+        "email": "sophia.brown@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00059": {
+        "stuID": "STU00059",
+        "firstName": "William",
+        "lastName": "Davis",
+        "email": "william.davis@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00060": {
+        "stuID": "STU00060",
+        "firstName": "Olivia",
+        "lastName": "Miller",
+        "email": "olivia.miller@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00061": {
+        "stuID": "STU00061",
+        "firstName": "Benjamin",
+        "lastName": "Wilson",
+        "email": "benjamin.wilson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00062": {
+        "stuID": "STU00062",
+        "firstName": "Ava",
+        "lastName": "Taylor",
+        "email": "ava.taylor@gmail.com",
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
+        "assignmentIDs": []
+      },
+      "STU00063": {
+        "stuID": "STU00063",
+        "firstName": "Ethan",
+        "lastName": "Anderson",
+        "email": "ethan.anderson@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00064": {
+        "stuID": "STU00064",
+        "firstName": "Isabella",
+        "lastName": "Thomas",
+        "email": "isabella.thomas@gmail.com",
+        "enrolledCourseIDs": [],
+        "assignmentIDs": []
+      },
+      "STU00065": {
+        "stuID": "STU00065",
+        "firstName": "Alexander",
+        "lastName": "Jackson",
+        "email": "alexander.jackson@gmail.com",
+        "enrolledCourseIDs": [
+          "CRS00001"
+        ],
+        "assignmentIDs": []
       }
     },
     "teacherMap": {
@@ -599,6 +877,14 @@
         "lastName": "2",
         "teachingCourseIDs": [
           "CRS00000"
+        ]
+      },
+      "TCH00001": {
+        "teacherID": "TCH00001",
+        "firstName": "2",
+        "lastName": "2",
+        "teachingCourseIDs": [
+          "CRS00001"
         ]
       }
     },
@@ -617,7 +903,25 @@
         },
         "categoryDropCount": {
           "Quiz": 1
-        }
+        },
+        "isCompleted": false
+      },
+      "CRS00001": {
+        "courseID": "CRS00001",
+        "courseName": "CS252",
+        "courseDescription": "ASM",
+        "teacherID": "TCH00001",
+        "assignments": {},
+        "useWeightedGrading": true,
+        "categoryWeights": {
+          "Project": 0.4,
+          "Quiz": 0.3,
+          "Homework": 0.3
+        },
+        "categoryDropCount": {
+          "Quiz": 1
+        },
+        "isCompleted": true
       }
     },
     "assignmentMap": {
@@ -1036,6 +1340,738 @@
         "status": "UNSUBMITTED",
         "published": false,
         "category": "Homework"
+      },
+      "ASG00036": {
+        "assignmentID": "ASG00036",
+        "assignmentName": "HW 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00036",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00037": {
+        "assignmentID": "ASG00037",
+        "assignmentName": "HW 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00037",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00038": {
+        "assignmentID": "ASG00038",
+        "assignmentName": "HW 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00038",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00039": {
+        "assignmentID": "ASG00039",
+        "assignmentName": "HW 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00040": {
+        "assignmentID": "ASG00040",
+        "assignmentName": "HW 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00040",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00041": {
+        "assignmentID": "ASG00041",
+        "assignmentName": "HW 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00041",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00042": {
+        "assignmentID": "ASG00042",
+        "assignmentName": "HW 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00043": {
+        "assignmentID": "ASG00043",
+        "assignmentName": "HW 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00043",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00044": {
+        "assignmentID": "ASG00044",
+        "assignmentName": "HW 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00044",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00045": {
+        "assignmentID": "ASG00045",
+        "assignmentName": "HW 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00046": {
+        "assignmentID": "ASG00046",
+        "assignmentName": "HW 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00047": {
+        "assignmentID": "ASG00047",
+        "assignmentName": "HW 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00048": {
+        "assignmentID": "ASG00048",
+        "assignmentName": "HW 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00048",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00049": {
+        "assignmentID": "ASG00049",
+        "assignmentName": "HW 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00049",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00050": {
+        "assignmentID": "ASG00050",
+        "assignmentName": "HW 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00050",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00051": {
+        "assignmentID": "ASG00051",
+        "assignmentName": "HW 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00051",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00052": {
+        "assignmentID": "ASG00052",
+        "assignmentName": "HW 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00052",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00053": {
+        "assignmentID": "ASG00053",
+        "assignmentName": "HW 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00053",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00054": {
+        "assignmentID": "ASG00054",
+        "assignmentName": "HW 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00055": {
+        "assignmentID": "ASG00055",
+        "assignmentName": "HW 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00055",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00056": {
+        "assignmentID": "ASG00056",
+        "assignmentName": "HW 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00057": {
+        "assignmentID": "ASG00057",
+        "assignmentName": "HW 4",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00057",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00058": {
+        "assignmentID": "ASG00058",
+        "assignmentName": "HW 4",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00058",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00059": {
+        "assignmentID": "ASG00059",
+        "assignmentName": "HW 4",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00060": {
+        "assignmentID": "ASG00060",
+        "assignmentName": "HW 4",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00061": {
+        "assignmentID": "ASG00061",
+        "assignmentName": "HW 4",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00061",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00062": {
+        "assignmentID": "ASG00062",
+        "assignmentName": "HW 4",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00062",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00063": {
+        "assignmentID": "ASG00063",
+        "assignmentName": "HW 4",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00063",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00064": {
+        "assignmentID": "ASG00064",
+        "assignmentName": "Project 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00065": {
+        "assignmentID": "ASG00065",
+        "assignmentName": "Project 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00065",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00066": {
+        "assignmentID": "ASG00066",
+        "assignmentName": "Project 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00067": {
+        "assignmentID": "ASG00067",
+        "assignmentName": "Project 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00067",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00068": {
+        "assignmentID": "ASG00068",
+        "assignmentName": "Project 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00068",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00069": {
+        "assignmentID": "ASG00069",
+        "assignmentName": "Project 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00069",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00070": {
+        "assignmentID": "ASG00070",
+        "assignmentName": "Project 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00070",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00071": {
+        "assignmentID": "ASG00071",
+        "assignmentName": "Project 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00071",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00072": {
+        "assignmentID": "ASG00072",
+        "assignmentName": "Project 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00072",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00073": {
+        "assignmentID": "ASG00073",
+        "assignmentName": "Project 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00073",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00074": {
+        "assignmentID": "ASG00074",
+        "assignmentName": "Project 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00075": {
+        "assignmentID": "ASG00075",
+        "assignmentName": "Project 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00076": {
+        "assignmentID": "ASG00076",
+        "assignmentName": "Project 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00076",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00077": {
+        "assignmentID": "ASG00077",
+        "assignmentName": "Project 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00077",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00078": {
+        "assignmentID": "ASG00078",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00078",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00079": {
+        "assignmentID": "ASG00079",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00079",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00080": {
+        "assignmentID": "ASG00080",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00080",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00081": {
+        "assignmentID": "ASG00081",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00081",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00082": {
+        "assignmentID": "ASG00082",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00083": {
+        "assignmentID": "ASG00083",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00084": {
+        "assignmentID": "ASG00084",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00084",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00085": {
+        "assignmentID": "ASG00085",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00086": {
+        "assignmentID": "ASG00086",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00087": {
+        "assignmentID": "ASG00087",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00088": {
+        "assignmentID": "ASG00088",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00089": {
+        "assignmentID": "ASG00089",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00089",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00090": {
+        "assignmentID": "ASG00090",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00090",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00091": {
+        "assignmentID": "ASG00091",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00092": {
+        "assignmentID": "ASG00092",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00093": {
+        "assignmentID": "ASG00093",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00094": {
+        "assignmentID": "ASG00094",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00095": {
+        "assignmentID": "ASG00095",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00095",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00096": {
+        "assignmentID": "ASG00096",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00096",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00097": {
+        "assignmentID": "ASG00097",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00001",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00098": {
+        "assignmentID": "ASG00098",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00001",
+        "gradeID": "G_ASG00098",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
       }
     },
     "gradeMap": {
@@ -1178,6 +2214,279 @@
         "studentID": "STU00004",
         "earned": 98,
         "total": 100
+      },
+      "G_ASG00036": {
+        "gradeID": "G_ASG00036",
+        "assignmentID": "ASG00036",
+        "studentID": "STU00010",
+        "earned": 61,
+        "total": 100
+      },
+      "G_ASG00037": {
+        "gradeID": "G_ASG00037",
+        "assignmentID": "ASG00037",
+        "studentID": "STU00065",
+        "earned": 72,
+        "total": 100
+      },
+      "G_ASG00038": {
+        "gradeID": "G_ASG00038",
+        "assignmentID": "ASG00038",
+        "studentID": "STU00030",
+        "earned": 94,
+        "total": 100
+      },
+      "G_ASG00040": {
+        "gradeID": "G_ASG00040",
+        "assignmentID": "ASG00040",
+        "studentID": "STU00007",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00041": {
+        "gradeID": "G_ASG00041",
+        "assignmentID": "ASG00041",
+        "studentID": "STU00062",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00043": {
+        "gradeID": "G_ASG00043",
+        "assignmentID": "ASG00043",
+        "studentID": "STU00010",
+        "earned": 95,
+        "total": 100
+      },
+      "G_ASG00044": {
+        "gradeID": "G_ASG00044",
+        "assignmentID": "ASG00044",
+        "studentID": "STU00065",
+        "earned": 66,
+        "total": 100
+      },
+      "G_ASG00048": {
+        "gradeID": "G_ASG00048",
+        "assignmentID": "ASG00048",
+        "studentID": "STU00062",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00049": {
+        "gradeID": "G_ASG00049",
+        "assignmentID": "ASG00049",
+        "studentID": "STU00015",
+        "earned": 96,
+        "total": 100
+      },
+      "G_ASG00050": {
+        "gradeID": "G_ASG00050",
+        "assignmentID": "ASG00050",
+        "studentID": "STU00010",
+        "earned": 65,
+        "total": 100
+      },
+      "G_ASG00051": {
+        "gradeID": "G_ASG00051",
+        "assignmentID": "ASG00051",
+        "studentID": "STU00065",
+        "earned": 62,
+        "total": 100
+      },
+      "G_ASG00052": {
+        "gradeID": "G_ASG00052",
+        "assignmentID": "ASG00052",
+        "studentID": "STU00030",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00053": {
+        "gradeID": "G_ASG00053",
+        "assignmentID": "ASG00053",
+        "studentID": "STU00041",
+        "earned": 91,
+        "total": 100
+      },
+      "G_ASG00055": {
+        "gradeID": "G_ASG00055",
+        "assignmentID": "ASG00055",
+        "studentID": "STU00062",
+        "earned": 63,
+        "total": 100
+      },
+      "G_ASG00057": {
+        "gradeID": "G_ASG00057",
+        "assignmentID": "ASG00057",
+        "studentID": "STU00010",
+        "earned": 65,
+        "total": 100
+      },
+      "G_ASG00058": {
+        "gradeID": "G_ASG00058",
+        "assignmentID": "ASG00058",
+        "studentID": "STU00065",
+        "earned": 97,
+        "total": 100
+      },
+      "G_ASG00061": {
+        "gradeID": "G_ASG00061",
+        "assignmentID": "ASG00061",
+        "studentID": "STU00007",
+        "earned": 98,
+        "total": 100
+      },
+      "G_ASG00062": {
+        "gradeID": "G_ASG00062",
+        "assignmentID": "ASG00062",
+        "studentID": "STU00062",
+        "earned": 71,
+        "total": 100
+      },
+      "G_ASG00063": {
+        "gradeID": "G_ASG00063",
+        "assignmentID": "ASG00063",
+        "studentID": "STU00015",
+        "earned": 99,
+        "total": 100
+      },
+      "G_ASG00065": {
+        "gradeID": "G_ASG00065",
+        "assignmentID": "ASG00065",
+        "studentID": "STU00065",
+        "earned": 116,
+        "total": 120
+      },
+      "G_ASG00067": {
+        "gradeID": "G_ASG00067",
+        "assignmentID": "ASG00067",
+        "studentID": "STU00041",
+        "earned": 114,
+        "total": 120
+      },
+      "G_ASG00068": {
+        "gradeID": "G_ASG00068",
+        "assignmentID": "ASG00068",
+        "studentID": "STU00007",
+        "earned": 97,
+        "total": 120
+      },
+      "G_ASG00069": {
+        "gradeID": "G_ASG00069",
+        "assignmentID": "ASG00069",
+        "studentID": "STU00062",
+        "earned": 114,
+        "total": 120
+      },
+      "G_ASG00070": {
+        "gradeID": "G_ASG00070",
+        "assignmentID": "ASG00070",
+        "studentID": "STU00015",
+        "earned": 111,
+        "total": 120
+      },
+      "G_ASG00071": {
+        "gradeID": "G_ASG00071",
+        "assignmentID": "ASG00071",
+        "studentID": "STU00010",
+        "earned": 115,
+        "total": 120
+      },
+      "G_ASG00072": {
+        "gradeID": "G_ASG00072",
+        "assignmentID": "ASG00072",
+        "studentID": "STU00065",
+        "earned": 101,
+        "total": 120
+      },
+      "G_ASG00073": {
+        "gradeID": "G_ASG00073",
+        "assignmentID": "ASG00073",
+        "studentID": "STU00030",
+        "earned": 116,
+        "total": 120
+      },
+      "G_ASG00076": {
+        "gradeID": "G_ASG00076",
+        "assignmentID": "ASG00076",
+        "studentID": "STU00062",
+        "earned": 105,
+        "total": 120
+      },
+      "G_ASG00077": {
+        "gradeID": "G_ASG00077",
+        "assignmentID": "ASG00077",
+        "studentID": "STU00015",
+        "earned": 95,
+        "total": 120
+      },
+      "G_ASG00078": {
+        "gradeID": "G_ASG00078",
+        "assignmentID": "ASG00078",
+        "studentID": "STU00010",
+        "earned": 96,
+        "total": 100
+      },
+      "G_ASG00079": {
+        "gradeID": "G_ASG00079",
+        "assignmentID": "ASG00079",
+        "studentID": "STU00065",
+        "earned": 71,
+        "total": 100
+      },
+      "G_ASG00080": {
+        "gradeID": "G_ASG00080",
+        "assignmentID": "ASG00080",
+        "studentID": "STU00030",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00081": {
+        "gradeID": "G_ASG00081",
+        "assignmentID": "ASG00081",
+        "studentID": "STU00041",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00084": {
+        "gradeID": "G_ASG00084",
+        "assignmentID": "ASG00084",
+        "studentID": "STU00015",
+        "earned": 70,
+        "total": 100
+      },
+      "G_ASG00089": {
+        "gradeID": "G_ASG00089",
+        "assignmentID": "ASG00089",
+        "studentID": "STU00007",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00090": {
+        "gradeID": "G_ASG00090",
+        "assignmentID": "ASG00090",
+        "studentID": "STU00062",
+        "earned": 76,
+        "total": 100
+      },
+      "G_ASG00095": {
+        "gradeID": "G_ASG00095",
+        "assignmentID": "ASG00095",
+        "studentID": "STU00041",
+        "earned": 91,
+        "total": 100
+      },
+      "G_ASG00096": {
+        "gradeID": "G_ASG00096",
+        "assignmentID": "ASG00096",
+        "studentID": "STU00007",
+        "earned": 70,
+        "total": 100
+      },
+      "G_ASG00098": {
+        "gradeID": "G_ASG00098",
+        "assignmentID": "ASG00098",
+        "studentID": "STU00015",
+        "earned": 79,
+        "total": 100
       }
     },
     "studentCourses": {
@@ -1192,6 +2501,27 @@
       ],
       "STU00013": [
         "CRS00000"
+      ],
+      "STU00010": [
+        "CRS00001"
+      ],
+      "STU00065": [
+        "CRS00001"
+      ],
+      "STU00030": [
+        "CRS00001"
+      ],
+      "STU00041": [
+        "CRS00001"
+      ],
+      "STU00007": [
+        "CRS00001"
+      ],
+      "STU00062": [
+        "CRS00001"
+      ],
+      "STU00015": [
+        "CRS00001"
       ]
     },
     "courseStudents": {
@@ -1200,6 +2530,15 @@
         "STU00004",
         "STU00018",
         "STU00003"
+      ],
+      "CRS00001": [
+        "STU00010",
+        "STU00065",
+        "STU00030",
+        "STU00041",
+        "STU00007",
+        "STU00062",
+        "STU00015"
       ]
     },
     "courseAssignments": {
@@ -1240,6 +2579,71 @@
         "ASG00033",
         "ASG00034",
         "ASG00035"
+      ],
+      "CRS00001": [
+        "ASG00036",
+        "ASG00037",
+        "ASG00038",
+        "ASG00039",
+        "ASG00040",
+        "ASG00041",
+        "ASG00042",
+        "ASG00043",
+        "ASG00044",
+        "ASG00045",
+        "ASG00046",
+        "ASG00047",
+        "ASG00048",
+        "ASG00049",
+        "ASG00050",
+        "ASG00051",
+        "ASG00052",
+        "ASG00053",
+        "ASG00054",
+        "ASG00055",
+        "ASG00056",
+        "ASG00057",
+        "ASG00058",
+        "ASG00059",
+        "ASG00060",
+        "ASG00061",
+        "ASG00062",
+        "ASG00063",
+        "ASG00064",
+        "ASG00065",
+        "ASG00066",
+        "ASG00067",
+        "ASG00068",
+        "ASG00069",
+        "ASG00070",
+        "ASG00071",
+        "ASG00072",
+        "ASG00073",
+        "ASG00074",
+        "ASG00075",
+        "ASG00076",
+        "ASG00077",
+        "ASG00078",
+        "ASG00079",
+        "ASG00080",
+        "ASG00081",
+        "ASG00082",
+        "ASG00083",
+        "ASG00084",
+        "ASG00085",
+        "ASG00086",
+        "ASG00087",
+        "ASG00088",
+        "ASG00089",
+        "ASG00090",
+        "ASG00091",
+        "ASG00092",
+        "ASG00093",
+        "ASG00094",
+        "ASG00095",
+        "ASG00096",
+        "ASG00097",
+        "ASG00098"
       ]
     },
     "studentAssignments": {
@@ -1286,6 +2690,83 @@
         "ASG00024",
         "ASG00028",
         "ASG00032"
+      ],
+      "STU00010": [
+        "ASG00036",
+        "ASG00043",
+        "ASG00050",
+        "ASG00057",
+        "ASG00064",
+        "ASG00071",
+        "ASG00078",
+        "ASG00085",
+        "ASG00092"
+      ],
+      "STU00065": [
+        "ASG00037",
+        "ASG00044",
+        "ASG00051",
+        "ASG00058",
+        "ASG00065",
+        "ASG00072",
+        "ASG00079",
+        "ASG00086",
+        "ASG00093"
+      ],
+      "STU00030": [
+        "ASG00038",
+        "ASG00045",
+        "ASG00052",
+        "ASG00059",
+        "ASG00066",
+        "ASG00073",
+        "ASG00080",
+        "ASG00087",
+        "ASG00094"
+      ],
+      "STU00041": [
+        "ASG00039",
+        "ASG00046",
+        "ASG00053",
+        "ASG00060",
+        "ASG00067",
+        "ASG00074",
+        "ASG00081",
+        "ASG00088",
+        "ASG00095"
+      ],
+      "STU00007": [
+        "ASG00040",
+        "ASG00047",
+        "ASG00054",
+        "ASG00061",
+        "ASG00068",
+        "ASG00075",
+        "ASG00082",
+        "ASG00089",
+        "ASG00096"
+      ],
+      "STU00062": [
+        "ASG00041",
+        "ASG00048",
+        "ASG00055",
+        "ASG00062",
+        "ASG00069",
+        "ASG00076",
+        "ASG00083",
+        "ASG00090",
+        "ASG00097"
+      ],
+      "STU00015": [
+        "ASG00042",
+        "ASG00049",
+        "ASG00056",
+        "ASG00063",
+        "ASG00070",
+        "ASG00077",
+        "ASG00084",
+        "ASG00091",
+        "ASG00098"
       ]
     },
     "assignmentGrades": {},

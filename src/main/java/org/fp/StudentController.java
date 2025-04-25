@@ -46,7 +46,14 @@ public class StudentController extends BaseController {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
-
+    public List<List<String>> getFormattedCourseListForDisplayRows() {
+        List<List<String>> output = new ArrayList<>();
+        for (Course c : cachedCourses) {
+            String status = c.isCompleted() ? "✅ Completed" : "🟢 In Progress";
+            output.add(List.of(c.getCourseName(), c.getCourseDescription(), status));
+        }
+        return output;
+    }
     public List<String> getFormattedCourseListForDisplay() {
         List<String> output = new ArrayList<>();
         for (int i = 0; i < cachedCourses.size(); i++) {

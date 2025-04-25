@@ -32,8 +32,6 @@ public class LibraryModel {
     private final Map<String, List<String>> courseToStudentIDs = new HashMap<>();
 
 
-
-
     public int getCourseCount() {
         return courseMap.size();
     }
@@ -378,25 +376,23 @@ public class LibraryModel {
      */
     // File: LibraryModel.java
     public void populateDemoData(String courseID) {
-        /* ---------- 基本检查 ---------- */
+        // see if the course exists
         Course c = courseMap.get(courseID);
         if (c == null) {
             throw new IllegalArgumentException("Course " + courseID + " not found.");
         }
-        // 确保课程-教师双向关联
+        //quick check
         Teacher tch = teacherMap.get(c.getTeacherID());
         if (tch != null && !tch.getTeachingCourseIDs().contains(courseID)) {
             tch.addCourse(courseID);
         }
 
-        /* ---------- 课程权重与丢弃规则 ---------- */
         c.setGradingMode(true);
         c.setCategoryWeight("Homework", 0.3);
         c.setCategoryWeight("Project",  0.4);
         c.setCategoryWeight("Quiz",     0.3);
         c.setCategoryDropCount("Quiz", 1);
 
-        /* ---------- 获取已有学生 ---------- */
         List<String> sids = getStudentIDsInCourse(courseID);
         if (sids.isEmpty()) {
             System.out.println("⚠️ No students enrolled in course " + courseID + " – skipping demo data.");
@@ -406,17 +402,9 @@ public class LibraryModel {
                 .map(studentMap::get)
                 .filter(Objects::nonNull)
                 .toList();
-
-        /* ---------- 生成作业并随机评分 ---------- */
         LocalDate base = LocalDate.of(2025, 4, 1);
-
-        // Homework ×4
         createGroup("HW", 4, "Homework", 5, base, studs, courseID, 60, 100);
-
-        // Project ×2
         createGroup("Project", 2, "Project", 10, base, studs, courseID, 80, 120);
-
-        // Quiz ×3
         createGroup("Quiz", 3, "Quiz", 2, base, studs, courseID, 70, 100);
 
         System.out.println("✅ Demo data populated for course " + courseID);
@@ -499,44 +487,6 @@ public class LibraryModel {
             }
         }
     }
-
-    public void loadStudentsFromCSV(Path csvPath) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(csvPath)) {
-            String line = reader.readLine();
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",", -1);
-                if (parts.length >= 3) {
-                    String first = parts[0].trim();
-                    String last  = parts[1].trim();
-                    String email = parts[2].trim();
-                    Student s = new Student(first, last, email);
-                    addStudent(s);
-                }
-            }
-        }
-        System.out.println(studentMap.size() + " students loaded");
-    }
-    public String getFirstStudentID() {
-        return studentMap.keySet()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No students loaded"));
-    }
-    /**
-     * @param dirPath CSV， "src/main/DataBase/Students"
-     */
-    public void loadStudentsFromDirectory(Path dirPath) throws IOException {
-        if (!Files.isDirectory(dirPath)) {
-            throw new IllegalArgumentException(dirPath + " 不是一个目录");
-        }
-        try (DirectoryStream<Path> stream =
-                     Files.newDirectoryStream(dirPath, "*.csv")) {
-            for (Path csvFile : stream) {
-                loadStudentsFromCSV(csvFile);
-            }
-        }
-    }
-
 
     public double calculateClassAverage(String courseID) {
         Course course = courseMap.get(courseID);
@@ -720,4 +670,77 @@ public class LibraryModel {
                 : (sorted.get(mid - 1) + sorted.get(mid)) / 2.0;
     }
 
+    public double calculateGPACompletedOnly(String studentID) {
+        List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
+        int totalPoints = 0;
+        int count = 0;
+
+        for (String courseID : courseIDs) {
+            Course course = courseMap.get(courseID);
+            if (course == null || !course.isCompleted()) continue;
+
+            double pct = course.isUsingWeightedGrading()
+                    ? computeWeightedPercentage(studentID, courseID)
+                    : computeTotalPointsPercentage(studentID, courseID);
+
+            Grade grade = Grade.fromScore(pct);
+            int gpaPoints = switch (grade) {
+                case A -> 4; case B -> 3; case C -> 2; case D -> 1; case F -> 0;
+            };
+            totalPoints += gpaPoints;
+            count++;
+        }
+
+        return count == 0 ? 0.0 : totalPoints * 1.0 / count;
+    }
+
+    public void markCourseAsCompleted(String courseID) {
+        Course course = courseMap.get(courseID);
+        if (course != null) {
+            course.markCompleted();
+        }
+    }
+    public List<String> getStudentCourses(String stuID) {
+        return new ArrayList<>(studentCourses.getOrDefault(stuID, List.of()));
+    }
+
+    /**
+     * Build a plain-text grade report for one student
+     */
+    public String buildGradeReport(String stuID) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Grade report for ").append(getStudent(stuID).getFullName()).append(":\n");
+
+        List<String> cids = studentCourses.getOrDefault(stuID, List.of());
+        for (String cid : cids) {
+            Course c = getCourse(cid);
+            double pct = getFinalPercentage(stuID, cid);
+            Grade  g   = Grade.fromScore(pct);
+            sb.append("  • ").append(c.getCourseName())
+                    .append(" – ").append(String.format("%.1f%%", pct))
+                    .append(" (").append(g).append(")\n");
+        }
+        double overall = courseAverageAcrossAll(stuID, false);
+        sb.append("Overall average: ").append(String.format("%.1f%%", overall))
+                .append(" (").append(Grade.fromScore(overall)).append(")\n");
+        return sb.toString();
+    }
+    /**
+     * Average of the final percentage for every course the student is enrolled in.
+     */
+    public double courseAverageAcrossAll(String stuID, boolean completedOnly) {
+        List<String> cids = studentCourses.getOrDefault(stuID, List.of());
+        double total  = 0.0;
+        int    counted = 0;
+
+        for (String cid : cids) {
+            Course c = courseMap.get(cid);
+            if (c == null) continue;
+            if (completedOnly && !c.isCompleted()) continue;
+
+            total += getFinalPercentage(stuID, cid);   // already in percent
+            counted++;
+        }
+        return counted == 0 ? 0.0 : total / counted;
+    }
 }

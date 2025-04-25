@@ -65,7 +65,7 @@ public class StudentUI {
     private static void level_1(StudentController studentController, Scanner sc) {
         StudentController.CourseSort sort = BaseController.CourseSort.NONE;
 
-
+        studentController.loadStudentCourses();
         while (true) {
             Student currentStudent = studentController.getCurrentStudent();
             if (currentStudent == null) {
@@ -81,7 +81,7 @@ public class StudentUI {
 
             printCourseTable(stuName, new ArrayList<>(courseData), sort);
 
-            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    g) 📈 GPA    0) 🚪 Exit");
+            System.out.println("1) 🔍 Select a course    s) 🔀 Change sort    p) \uD83E\uDD16 Personal feedback    g) 📈 GPA    0) 🚪 Exit");
             System.out.print("👉 Choice: ");
             String choice = sc.nextLine().trim();
 
@@ -95,6 +95,28 @@ public class StudentUI {
 
                 continue;
             }
+            if (choice.equalsIgnoreCase("p")) {
+                String report = studentController.getModel()
+                        .buildGradeReport(currentStudent.getStuID());
+
+                String prompt = """
+                You are an encouraging academic advisor.
+                Below is the student's current grade report.
+        
+                %s
+        
+                Write a short (4-5 sentence) personalised message:
+                  – start with a warm greeting
+                  – praise one area of strength
+                  – give two concrete suggestions for improvement
+                  – end on a motivating note
+                """.formatted(report);
+
+                String msg = GPT.chat(prompt);
+                System.out.println("\n========== 📬 GPT ADVICE =========\n" + msg +
+                        "\n==================================\n");
+                continue;
+            }
             if (choice.matches("[1-" + courseData.size() + "]")) {
                 int index = Integer.parseInt(choice) - 1;
                 Course selected = studentController.getCachedCourse(index);
@@ -105,15 +127,17 @@ public class StudentUI {
         }
     }
 
+    // StudentUI.java
     private static void printCourseTable(String stuName, List<List<String>> data, StudentController.CourseSort mode) {
         List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("No.", "Course Name", "Description"));
+        rows.add(List.of("No.", "Course Name", "Description", "Status"));
 
         int idx = 1;
         for (List<String> row : data) {
             String courseName = row.size() > 0 ? row.get(0) : "";
             String courseDesc = row.size() > 1 ? row.get(1) : "";
-            rows.add(List.of(String.valueOf(idx++), courseName, courseDesc));
+            String status = row.size() > 2 ? row.get(2) : "🟢 Unknown";
+            rows.add(List.of(String.valueOf(idx++), courseName, courseDesc, status));
         }
 
         String title = String.format("Courses of %s (sorted by %s)", stuName, mode.name().toLowerCase());
@@ -121,18 +145,57 @@ public class StudentUI {
     }
 
 
+    // StudentUI.java
+    private static void showGPA(StudentController ctl) {
+        Student cur = ctl.getCurrentStudent();
+        if (cur == null) { System.out.println("❌ No student selected."); return; }
 
-    private static void showGPA(StudentController studentController) {
-        Student current = studentController.getCurrentStudent();
-        if (current == null) {
-            System.out.println("❌ No student selected.");
-            return;
+        System.out.println("1) All enrolled courses");
+        System.out.println("2) Completed courses only");
+        System.out.print("👉 Choice: ");
+        boolean completedOnly = "2".equals(sc.nextLine().trim());
+
+        LibraryModel m   = ctl.getModel();
+        List<String> cids = m.getStudentCourses(cur.getStuID());   // <- add this getter if missing
+        if (cids.isEmpty()) { System.out.println("⚠️ No courses."); return; }
+
+        double pctSum  = 0, ptsSum = 0;
+        int    counted = 0;
+
+        System.out.println("\n==================================================");
+        System.out.printf(" %-12s │ %-9s │ %-5s │ %-6s%n",
+                "Course", "Percent", "Pts", "Grade");
+        System.out.println("--------------------------------------------------");
+
+        for (String cid : cids) {
+            Course c = m.getCourse(cid); // deep copy OK
+            if (completedOnly && !c.isCompleted()) continue;
+
+            double pct   = m.getFinalPercentage(cur.getStuID(), cid);
+            Grade  grade = Grade.fromScore(pct);
+            int    pts   = switch (grade) { case A->4; case B->3; case C->2; case D->1; case F->0; };
+
+            System.out.printf(" %-12s │ %7.2f%% │   %d   │ %s%n",
+                    c.getCourseName(), pct, pts, grade);
+
+            pctSum  += pct;
+            ptsSum  += pts;
+            counted++;
         }
-        double gpa = studentController.getModel().calculateGPA(current.getStuID());
-        System.out.printf("\n🎓 Your cumulative GPA: %.2f\n\n", gpa);
+        if (counted == 0) { System.out.println("\n⚠️ Nothing to average."); return; }
+
+        double avgPct = pctSum / counted;
+        double avgPts = ptsSum / counted;
+        Grade  avgGrade = switch ((int)Math.round(avgPts)) {
+            case 4 -> Grade.A; case 3 -> Grade.B; case 2 -> Grade.C;
+            case 1 -> Grade.D; default -> Grade.F;
+        };
+
+        System.out.println("--------------------------------------------------");
+        System.out.printf(" OVERALL      │ %7.2f%% │ %.2f │ %s%n",
+                avgPct, avgPts, avgGrade);
+        System.out.println("==================================================\n");
     }
-
-
     private static void level_2(StudentController studentController, Course course) {
         System.out.println("➡️ Entered course: " + course.getCourseName());
         System.out.println("📝 Description: " + course.getCourseDescription());

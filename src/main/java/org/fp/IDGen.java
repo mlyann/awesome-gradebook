@@ -20,7 +20,6 @@ public final class IDGen {
 
     /**
      * Generate a new unique ID for the given prefix.
-     * e.g., "STU00001", "ASG00010"
      */
     public static String generate(String prefix) {
         return getFlyweight(prefix).generateID();
@@ -31,7 +30,7 @@ public final class IDGen {
      * Must be called after loading existing entities from persistence,
      * before any calls to generate(prefix).
      *
-     * @param prefix    the ID prefix (e.g. "STU", "CRS", "ASG", etc.)
+     * @param prefix    the ID prefix ("STU", "CRS", "ASG")
      * @param nextValue the next integer value (base-0) to use
      *                  (max existing number + 1)
      */

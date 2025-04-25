@@ -43,9 +43,9 @@ public class LoginUI {
         // Load environment variables
         Dotenv env = Dotenv.configure().ignoreIfMissing().load();
         VICData vic = new VICData(
-                env.get("VIC_KEY",    "12345"),
-                env.get("VIC_DATE",   "250314"),
-                env.get("VIC_PASS",   "HELLOWORLD"),
+                env.get("VIC_KEY","12345"),
+                env.get("VIC_DATE","250314"),
+                env.get("VIC_PASS","HELLOWORLD"),
                 env.get("VIC_PATTERN","AB CD EFGH"),
                 ""
         );

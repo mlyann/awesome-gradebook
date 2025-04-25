@@ -1,12 +1,7 @@
 package org.fp;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import org.fp.TeacherController.AssignmentSort;
 
@@ -39,7 +34,7 @@ public class TeacherUI {
     public static void start(LibraryModel modelInstance, String teacherID) {
         TeacherUI.model = modelInstance;
 
-        // construct the controller
+        //construct the controller
         TeacherController tc = new TeacherController(model);   // ← 用局部名 tc
         tc.setCurrentTeacher(teacherID);
         TeacherUI.TeacherController = tc;
@@ -53,9 +48,7 @@ public class TeacherUI {
     }
 
 
-    /* =============================================================
-     *  DASHBOARD – list courses taught by this instructor
-     * ============================================================= */
+    //DASHBOARD – list courses taught by this instructor
     private static void level_1(TeacherController controller, Scanner sc) {
         TeacherController.CourseSort sort = BaseController.CourseSort.NONE;
 
@@ -192,12 +185,14 @@ public class TeacherUI {
             System.out.println();
             System.out.print(
                     view == ViewMode.ASSIGNMENTS
-                            ? "a) \ud83d\udcc4 Assignments    r) \ud83d\udc65 Roster    g) \ud83c\udfc1 Final Grades    "
-                            + "c) \u2699\ufe0f Grading setup    s) \ud83d\udd0d Search    f) \ud83e\uddf2 Filter    "
-                            + "o) \ud83d\udd00 Sort    d) \ud83d\udcaa Assignments Manage    n) \ud83d\udcca Analytics    0) \ud83d\udd19 Back\n"
-                            : "a) \ud83d\udcc4 Assignments    r) \ud83d\udc65 Roster    g) \ud83c\udfc1 Final Grades    "
-                            + "c) \u2699\ufe0f Grading setup    f) \ud83e\uddf2 Filter    o) \ud83d\udd00 Sort    "
-                            + "d) \ud83d\udc69\u200d\ud83c\udfeb Roster Manage    n) \ud83d\udcca Analytics    0) \ud83d\udd19 Back\n"
+                            ? "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    "
+                            + "c) ⚙️ Grading setup    s) 🔍 Search    f) 🧮 Filter    \n"
+                            + "o) 🔀 Sort    d) 🛠️ Assignments Manage    n) 📊 Analytics    "
+                            + "m) ✅ Mark Completed    0) 🔙 Back\n"
+                            : "a) 📄 Assignments    r) 👥 Roster    g) 🏁 Final Grades    "
+                            + "c) ⚙️ Grading setup    f) 🧮 Filter    o) 🔀 Sort    \n"
+                            + "d) 👩‍🏫 Roster Manage    n) 📊 Analytics    "
+                            + "m) ✅ Mark Completed    p) \uD83D\uDC65 Split into groups    0) 🔙 Back\n"
             );
             System.out.print("\ud83d\udd0a Choice: ");
             String choice = sc.nextLine().trim().toLowerCase();
@@ -224,8 +219,18 @@ public class TeacherUI {
                     setCategoryWeightsAndDrops(course);
                 continue;
             }
+            if (choice.equals("m")) {
+                LibraryModel model = TeacherController.getModel();
+                model.markCourseAsCompleted(course.getCourseID());
+                System.out.println("✅ Course marked as completed.");
+                continue;
+            }
             if (choice.equals("n")) {
                 analyticsMenu(controller, course);
+                continue;
+            }
+            if (choice.equals("p")) {
+                groupStudentsInCourse(controller, course);
                 continue;
             }
 
@@ -253,6 +258,7 @@ public class TeacherUI {
             System.out.println("\u274c Invalid input.");
         }
     }
+
 
     private enum ViewMode {
         ASSIGNMENTS, ROSTER
@@ -572,7 +578,6 @@ public class TeacherUI {
         } else {
             System.out.println("\nNo categories yet – start adding below.\n");
         }
-        /* ---------- END BLOCK ① ---------- */
 
         while (true) {
             System.out.print("Enter category name (or blank to finish): ");
@@ -633,7 +638,7 @@ public class TeacherUI {
 
         int index = 1;
         for (Student s : TeacherController.getStudentsInCourse(courseID)) {
-            double pct   = model.getFinalPercentage(s.getStuID(), courseID);   // ⭐ 直接调用
+            double pct   = model.getFinalPercentage(s.getStuID(), courseID);
             Grade grade  = Grade.fromScore(pct);
             double gpa   = model.calculateGPA(s.getStuID());
 
@@ -656,12 +661,12 @@ public class TeacherUI {
 
         boolean current = model.getCourse(cid).isUsingWeightedGrading();
         System.out.println("\n⚙️  Current mode: "
-                + (current ? "Option 2 ‑ category weights" : "Option 1 ‑ total points"));
+                + (current ? "Option=2 ‑ category weights" : "Option=1 ‑ total points"));
 
         System.out.println("""
         Choose new mode:
-          1) Option 1  – Total points earned / total points possible
-          2) Option 2  – Categories with weights (allows drops)
+          1) Total points earned / total points possible
+          2) Categories with weights (allows drops)
           0) Cancel
         """);
         System.out.print("👉 ");
@@ -1059,7 +1064,7 @@ public class TeacherUI {
      * @param course The Course instance.
      */
     private static void selectExistingStudent(TeacherController controller, Course course) {
-        // 获取当前可选学生
+        // get current students in course
         List<Student> available = controller.getAvailableStudents(course.getCourseID());
         clear();
         if (available.isEmpty()) {
@@ -1068,7 +1073,7 @@ public class TeacherUI {
             return;
         }
 
-        // 构造并打印一次表格
+        // print the whole table
         List<List<String>> rows = new ArrayList<>();
         rows.add(List.of("No.", "First Name", "Last Name", "Email"));
         for (int i = 0; i < available.size(); i++) {
@@ -1083,18 +1088,15 @@ public class TeacherUI {
         TablePrinter.printDynamicTable(
                 "📋 Available Students for " + course.getCourseName(), rows
         );
-
-        // 输入循环
         while (true) {
             System.out.println("f) 🔍 Search by keyword    0) 🔙 Back");
             System.out.print("👉 Choice or Student No.: ");
             String input = sc.nextLine().trim().toLowerCase();
 
             if (input.equals("0")) {
-                return;  // 直接退出添加
+                return;  // directly exit!!
             }
             else if (input.equals("f")) {
-                // 进入搜索：获取新的可选列表并重新打印
                 System.out.print("🔍 Enter keyword: ");
                 String kw = sc.nextLine().trim();
                 List<Student> matched = controller.searchAvailableStudents(
@@ -1104,7 +1106,6 @@ public class TeacherUI {
                     System.out.println("❌ No matching students.");
                     System.out.print("⬅️ Press ENTER to continue..."); sc.nextLine();
                 } else {
-                    // 重建表格 rows
                     rows.clear();
                     rows.add(List.of("No.", "First Name", "Last Name", "Email"));
                     for (int i = 0; i < matched.size(); i++) {
@@ -1119,7 +1120,6 @@ public class TeacherUI {
                     TablePrinter.printDynamicTable(
                             "🔎 Search Results for '" + kw + "'", rows
                     );
-                    // 替换可选列表
                     available = matched;
                 }
             }
@@ -1131,7 +1131,6 @@ public class TeacherUI {
                             chosen.getStuID(), course.getCourseID()
                     );
                     System.out.println("✅ Added " + chosen.getFullName());
-                    // 继续循环，重复提示“Choice or Student No.”
                 } else {
                     System.out.println("❌ Number out of range.");
                 }
@@ -1214,6 +1213,47 @@ public class TeacherUI {
                 default  -> { System.out.println("❌ Invalid option."); pause(""); }
             }
         }
+    }
+
+    private static void groupStudentsInCourse(TeacherController ctl, Course course) {
+        List<Student> roster = ctl.getStudentsInCourse(course.getCourseID());
+        if (roster.size() < 2) {
+            System.out.println("❌ Need at least 2 students to form groups.");
+            pause(""); return;
+        }
+        int groups = 0;
+        while (true) {
+            System.out.printf("🔢 How many groups (2-%d)? ", roster.size() - 1);
+            String in = sc.nextLine().trim();
+            try {
+                groups = Integer.parseInt(in);
+                if (groups >= 2 && groups < roster.size()) break;
+            } catch (NumberFormatException ignored) { }
+            System.out.println("❌ Invalid number – try again.");
+        }
+
+        Collections.shuffle(roster);
+
+        int base  = roster.size() / groups;
+        int extra = roster.size() % groups;
+
+        System.out.println("\n📦 Student Groups for " + course.getCourseName());
+        int idx = 0;
+        for (int g = 0; g < groups; g++) {
+            int size = base + (g < extra ? 1 : 0);
+            List<Student> sub = roster.subList(idx, idx + size);
+            idx += size;
+
+            char label = (char) ('A' + g);     // A, B, C…
+            System.out.print("  Group " + label + ": ");
+            for (int i = 0; i < sub.size(); i++) {
+                Student s = sub.get(i);
+                System.out.print(s.getFirstName() + " " + s.getLastName());
+                if (i < sub.size() - 1) System.out.print(", ");
+            }
+            System.out.println();
+        }
+        pause("");
     }
 }
 

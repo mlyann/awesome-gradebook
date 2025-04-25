@@ -13,7 +13,7 @@ public class Course {
     private boolean useWeightedGrading = false;  // true = use category weights
     private Map<String, Double> categoryWeights = new HashMap<>(); // e.g., "Homework" → 0.4
     private Map<String, Integer> categoryDropCount = new HashMap<>(); // e.g., "Quiz" → 1
-
+    private boolean isCompleted = false;
     public Course(String courseName, String courseDescription, String teacherID) {
         this.courseID = IDGen.generate("CRS");
         this.courseName = courseName;
@@ -27,17 +27,18 @@ public class Course {
         if (c == null){
             throw new IllegalArgumentException("Cannot copy a null Course.");
         }
-        this.courseID          = c.courseID;
-        this.courseName        = c.courseName;
+        this.courseID= c.courseID;
+        this.courseName = c.courseName;
         this.courseDescription = c.courseDescription;
-        this.teacherID         = c.teacherID;
+        this.teacherID= c.teacherID;
         this.assignments = new HashMap<>();
         for (var e : c.assignments.entrySet()) {
             this.assignments.put(e.getKey(), new Assignment(e.getValue()));
         }
-        this.useWeightedGrading = c.useWeightedGrading;
-        this.categoryWeights    = new HashMap<>(c.categoryWeights);
-        this.categoryDropCount  = new HashMap<>(c.categoryDropCount);
+        this.useWeightedGrading=c.useWeightedGrading;
+        this.categoryWeights= new HashMap<>(c.categoryWeights);
+        this.categoryDropCount= new HashMap<>(c.categoryDropCount);
+        this.isCompleted= c.isCompleted;
     }
 
     public String getCourseID() {
@@ -89,5 +90,11 @@ public class Course {
     }
     public Map<String, Integer> getCategoryDropCounts() {
         return Collections.unmodifiableMap(categoryDropCount);
+    }
+    public void markCompleted() {
+        this.isCompleted = true;
+    }
+    public boolean isCompleted() {
+        return isCompleted;
     }
 }
