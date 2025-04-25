@@ -376,33 +376,38 @@ public class LibraryModel {
      *
      * @param courseID the course to populate
      */
+    // File: LibraryModel.java
     public void populateDemoData(String courseID) {
         /* ---------- 基本检查 ---------- */
         Course c = courseMap.get(courseID);
         if (c == null) {
             throw new IllegalArgumentException("Course " + courseID + " not found.");
         }
-        // 可选：确保其教师持有该课程
+        // 确保课程-教师双向关联
         Teacher tch = teacherMap.get(c.getTeacherID());
-        if (tch != null) tch.addCourse(courseID);
+        if (tch != null && !tch.getTeachingCourseIDs().contains(courseID)) {
+            tch.addCourse(courseID);
+        }
 
         /* ---------- 课程权重与丢弃规则 ---------- */
-        c.setGradingMode(true);                 // Option 2 - category weights
+        c.setGradingMode(true);
         c.setCategoryWeight("Homework", 0.3);
         c.setCategoryWeight("Project",  0.4);
         c.setCategoryWeight("Quiz",     0.3);
-        c.setCategoryDropCount("Quiz", 1);      // drop lowest quiz
+        c.setCategoryDropCount("Quiz", 1);
 
-        /* ---------- 创建学生 ---------- */
-        List<Student> studs = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            Student s = new Student("Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
-            addStudent(s);
-            enrollStudentInCourse(s.getStuID(), courseID);
-            studs.add(s);
+        /* ---------- 获取已有学生 ---------- */
+        List<String> sids = getStudentIDsInCourse(courseID);
+        if (sids.isEmpty()) {
+            System.out.println("⚠️ No students enrolled in course " + courseID + " – skipping demo data.");
+            return;
         }
+        List<Student> studs = sids.stream()
+                .map(studentMap::get)
+                .filter(Objects::nonNull)
+                .toList();
 
-        /* ---------- 生成作业 ---------- */
+        /* ---------- 生成作业并随机评分 ---------- */
         LocalDate base = LocalDate.of(2025, 4, 1);
 
         // Homework ×4
@@ -413,9 +418,13 @@ public class LibraryModel {
 
         // Quiz ×3
         createGroup("Quiz", 3, "Quiz", 2, base, studs, courseID, 70, 100);
+
+        System.out.println("✅ Demo data populated for course " + courseID);
     }
 
-    /* ========== helper ========== */
+    /**
+     * Unchanged helper — 会逐个给 studs 添加 Assignment 并随机提交/评分
+     */
     private void createGroup(String prefix, int count, String cat, int span,
                              LocalDate base, List<Student> studs, String cid,
                              int minEarned, int maxEarned) {
@@ -430,20 +439,21 @@ public class LibraryModel {
                         base.plusDays(span)
                 );
                 a.setCategory(cat);
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
+                addAssignment(a);            // 加入 model.assignmentMap
+                courseAssignments.computeIfAbsent(cid, k -> new ArrayList<>())
+                        .add(a.getAssignmentID());
+                studentAssignments.computeIfAbsent(s.getStuID(), k -> new ArrayList<>())
+                        .add(a.getAssignmentID());
 
-                /* 随机决定是否提交并评分（作演示） */
-                if (Math.random() < 0.85) {          // ≈15 % 未提交
+                // 随机提交与评分
+                if (Math.random() < 0.85) {
                     a.submit();
-                    if (Math.random() < 0.75) {      // ≈25 % 已交未评
-                        a.markGraded("G_" + a.getAssignmentID());
-                        int earned = minEarned + (int) (Math.random() * (maxEarned - minEarned + 1));
-                        addScore(new Score("G_" + a.getAssignmentID(),
-                                a.getAssignmentID(),
-                                s.getStuID(),
-                                earned,
-                                maxEarned));
+                    if (Math.random() < 0.75) {
+                        String gid = "G_" + a.getAssignmentID();
+                        a.markGraded(gid);
+                        int earned = minEarned + (int)(Math.random() * (maxEarned - minEarned + 1));
+                        Score score = new Score(gid, a.getAssignmentID(), s.getStuID(), earned, maxEarned);
+                        addScore(score);
                     }
                 }
             }

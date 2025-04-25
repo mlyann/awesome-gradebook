@@ -101,21 +101,17 @@ public class AdminUI {
 
         List<Path> csvFiles = new ArrayList<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir, "StudentList*.csv")) {
-            for (Path p : ds) {
-                csvFiles.add(p);
-            }
+            for (Path p : ds) csvFiles.add(p);
         } catch (IOException e) {
             System.out.println("❌ Error reading directory: " + e.getMessage());
             return;
         }
-
         if (csvFiles.isEmpty()) {
             System.out.println("❌ No CSV files found matching StudentList*.csv");
             return;
         }
 
         int totalNew = 0, totalDup = 0, totalInvalid = 0;
-
         for (Path file : csvFiles) {
             int newCount = 0, dupCount = 0, invalidCount = 0;
             System.out.println("Processing file: " + file.getFileName());
@@ -139,22 +135,32 @@ public class AdminUI {
                         invalidCount++;
                         continue;
                     }
+
+                    // 如果 email 已经作为用户名注册过
                     if (users.userExists(email)) {
                         dupCount++;
+                        System.out.println("⚠️ Already registered, skipping: " + email);
                         continue;
                     }
-                    // register as UNASSIGNED then assign to STUDENT
-                    boolean reg = users.registerUser(email, initPassword, first, last, email,
-                            LibraryUsers.UserType.UNASSIGNED, vic);
+
+                    // 注册为未分配
+                    boolean reg = users.registerUser(
+                            email, initPassword, first, last, email,
+                            LibraryUsers.UserType.UNASSIGNED, vic
+                    );
                     if (!reg) {
                         dupCount++;
+                        System.out.println("⚠️ Registration failed or duplicate: " + email);
                         continue;
                     }
+
+                    // 立刻分配为 STUDENT 并创建实体
                     boolean assigned = users.assignRole(email, LibraryUsers.UserType.STUDENT, model);
                     if (!assigned) {
                         System.out.println("❌ Failed to assign STUDENT for: " + email);
                         continue;
                     }
+
                     newCount++;
                 }
 
@@ -175,6 +181,7 @@ public class AdminUI {
                 totalNew, totalDup, totalInvalid);
         users.saveToJSON("data/users.json");
     }
+
 
     private static void clearAllUsersUI(LibraryUsers users, VICData vic) {
         // 1) find SUPERADMIN

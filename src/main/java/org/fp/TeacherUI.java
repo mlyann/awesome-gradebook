@@ -168,8 +168,6 @@ public class TeacherUI {
     }
 
     private static void level_2(TeacherController controller, Course course) {
-        LibraryModel lib = TeacherController.getModel();
-        lib.populateDemoData(course.getCourseID());
         SortMode rosterSort = SortMode.FIRST_NAME;
         ViewMode view = ViewMode.ASSIGNMENTS;
         AssignmentSort sort = AssignmentSort.NONE;
@@ -628,17 +626,19 @@ public class TeacherUI {
         boolean weighted = course.isUsingWeightedGrading();
 
         List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("Student ID", "Full Name", "Email",
+        rows.add(List.of("No.", "Full Name", "Email",
                 weighted ? "Weighted %" : "Raw %",
                 "Grade", "GPA"));
 
+
+        int index = 1;
         for (Student s : TeacherController.getStudentsInCourse(courseID)) {
             double pct   = model.getFinalPercentage(s.getStuID(), courseID);   // ⭐ 直接调用
             Grade grade  = Grade.fromScore(pct);
             double gpa   = model.calculateGPA(s.getStuID());
 
             rows.add(List.of(
-                    s.getStuID(),
+                    String.valueOf(index++),
                     s.getFullName(),
                     s.getEmail(),
                     String.format("%.1f%%", pct),
@@ -810,17 +810,20 @@ public class TeacherUI {
 
             System.out.println("🗂️ Assignment Groups (Manage Mode)");
             for (int i = 0; i < names.size(); i++) {
-                System.out.printf("%d) %s\n", i + 1, names.get(i));
+                System.out.printf("%d) %s%n", i + 1, names.get(i));
             }
             System.out.println("a) ➕ Add new assignment group");
             System.out.println("d) 🗑️ Delete existing assignment group");
-            System.out.println(controller.isAssignmentCacheDirty() ? "s) 💾 Save changes" : "s)  No changes to save");
+            System.out.println("g) 🎲 Generate Assignment and Grading");      // ← new line
+            System.out.println(controller.isAssignmentCacheDirty()
+                    ? "s) 💾 Save changes"
+                    : "s)  No changes to save");
             System.out.println("0) 🔙 Back");
 
             System.out.print("👉 Choice: ");
-            String input = sc.nextLine().trim();
+            String input = sc.nextLine().trim().toLowerCase();
 
-            switch (input.toLowerCase()) {
+            switch (input) {
                 case "0" -> {
                     if (controller.isAssignmentCacheDirty()) {
                         System.out.print("⚠️ Unsaved changes. Save now? (y/n): ");
@@ -832,9 +835,18 @@ public class TeacherUI {
                 }
                 case "a" -> addNewAssignmentGroup(controller, course);
                 case "d" -> deleteAssignmentGroup(controller);
+                case "g" -> {
+                    // Delegate to controller – UI never touches LibraryModel directly
+                    controller.populateDemoDataForCourse(course.getCourseID());
+                    System.out.println("✅ Demo assignments & grading generated.");
+                    System.out.print("⬅️ Press ENTER to continue...");
+                    sc.nextLine();
+                    // After generation, you may want to refresh the cache:
+                    controller.refreshGroupedAssignments(course.getCourseID());
+                }
                 case "s" -> controller.commitAssignmentChanges();
                 default -> {
-                    if (input.matches("[1-9][0-9]*")) {
+                    if (input.matches("\\d+")) {
                         int idx = Integer.parseInt(input) - 1;
                         if (idx >= 0 && idx < names.size()) {
                             System.out.println("⚠️ No edit mode yet for group: " + names.get(idx));
@@ -846,6 +858,7 @@ public class TeacherUI {
             }
         }
     }
+
 
     /**
      * Add a new assignment group to the course.
@@ -1046,73 +1059,90 @@ public class TeacherUI {
      * @param course The Course instance.
      */
     private static void selectExistingStudent(TeacherController controller, Course course) {
-        while (true) {
-            List<Student> available = controller.getAvailableStudents(course.getCourseID());
-            clear();
-            if (available.isEmpty()) {
-                System.out.println("❌ No available students to add.");
-                System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
-                return;
-            }
-            List<List<String>> rows = new ArrayList<>();
-            rows.add(List.of("No.", "First Name", "Last Name", "Email"));
-            for (int i=0; i<available.size(); i++) {
-                Student s = available.get(i);
-                rows.add(List.of(
-                        String.valueOf(i+1), s.getFirstName(), s.getLastName(), s.getEmail()
-                ));
-            }
-            TablePrinter.printDynamicTable("📋 Available Students for " + course.getCourseName(), rows);
+        // 获取当前可选学生
+        List<Student> available = controller.getAvailableStudents(course.getCourseID());
+        clear();
+        if (available.isEmpty()) {
+            System.out.println("❌ No available students to add.");
+            System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+            return;
+        }
 
+        // 构造并打印一次表格
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(List.of("No.", "First Name", "Last Name", "Email"));
+        for (int i = 0; i < available.size(); i++) {
+            Student s = available.get(i);
+            rows.add(List.of(
+                    String.valueOf(i + 1),
+                    s.getFirstName(),
+                    s.getLastName(),
+                    s.getEmail()
+            ));
+        }
+        TablePrinter.printDynamicTable(
+                "📋 Available Students for " + course.getCourseName(), rows
+        );
+
+        // 输入循环
+        while (true) {
             System.out.println("f) 🔍 Search by keyword    0) 🔙 Back");
             System.out.print("👉 Choice or Student No.: ");
             String input = sc.nextLine().trim().toLowerCase();
 
-            if (input.equals("0")) return;
-            if (input.equals("f")) {
+            if (input.equals("0")) {
+                return;  // 直接退出添加
+            }
+            else if (input.equals("f")) {
+                // 进入搜索：获取新的可选列表并重新打印
                 System.out.print("🔍 Enter keyword: ");
                 String kw = sc.nextLine().trim();
-                List<Student> matched = controller.searchAvailableStudents(course.getCourseID(), kw);
+                List<Student> matched = controller.searchAvailableStudents(
+                        course.getCourseID(), kw
+                );
                 if (matched.isEmpty()) {
                     System.out.println("❌ No matching students.");
-                    System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
-                    continue;
-                }
-                rows.clear();
-                rows.add(List.of("No.", "First Name", "Last Name", "Email"));
-                for (int i=0; i<matched.size(); i++) {
-                    Student s = matched.get(i);
-                    rows.add(List.of(
-                            String.valueOf(i+1), s.getFirstName(), s.getLastName(), s.getEmail()
-                    ));
-                }
-                TablePrinter.printDynamicTable("🔎 Search Results for '"+kw+"'", rows);
-                System.out.print("🔢 Enter number to add or 0 to cancel: ");
-                String sel = sc.nextLine().trim();
-                if (sel.matches("\\d+")) {
-                    int idx = Integer.parseInt(sel);
-                    if (idx>0 && idx<=matched.size()) {
-                        Student chosen = matched.get(idx-1);
-                        controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-                        System.out.println(" Added " + chosen.getFullName());
-                        System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                    System.out.print("⬅️ Press ENTER to continue..."); sc.nextLine();
+                } else {
+                    // 重建表格 rows
+                    rows.clear();
+                    rows.add(List.of("No.", "First Name", "Last Name", "Email"));
+                    for (int i = 0; i < matched.size(); i++) {
+                        Student s = matched.get(i);
+                        rows.add(List.of(
+                                String.valueOf(i + 1),
+                                s.getFirstName(),
+                                s.getLastName(),
+                                s.getEmail()
+                        ));
                     }
+                    TablePrinter.printDynamicTable(
+                            "🔎 Search Results for '" + kw + "'", rows
+                    );
+                    // 替换可选列表
+                    available = matched;
                 }
-                continue;
             }
-            if (input.matches("\\d+")) {
+            else if (input.matches("\\d+")) {
                 int idx = Integer.parseInt(input);
-                if (idx>0 && idx<=available.size()) {
-                    Student chosen = available.get(idx-1);
-                    controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-                    System.out.println(" Added " + chosen.getFullName());
-                    System.out.print("⬅️ Press ENTER to return..."); sc.nextLine();
+                if (idx > 0 && idx <= available.size()) {
+                    Student chosen = available.get(idx - 1);
+                    controller.addExistingStudentToCache(
+                            chosen.getStuID(), course.getCourseID()
+                    );
+                    System.out.println("✅ Added " + chosen.getFullName());
+                    // 继续循环，重复提示“Choice or Student No.”
+                } else {
+                    System.out.println("❌ Number out of range.");
                 }
-                return;
             }
-            System.out.println("❌ Invalid input, enter number, 'f', or '0'");
+            else {
+                System.out.println("❌ Invalid input, enter number, 'f', or '0'");
+            }
         }
     }
+
+
 
     private static void showClassAverages(TeacherController ctl, Course course) {
         List<String> groups = ctl.getSortedAssignmentNames();   // Uses current sort order

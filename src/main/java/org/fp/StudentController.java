@@ -92,8 +92,30 @@ public class StudentController extends BaseController {
     }
 
     public void sortCachedAssignmentsByName() {
-        cachedAssignments.sort(Comparator.comparingInt(a -> extractAssignmentNumber(a.getAssignmentName())));
+        cachedAssignments.sort(
+                Comparator
+                        // first compare the prefix (e.g. "HW", "Project", "Quiz")
+                        .comparing((Assignment a) -> {
+                            String[] parts = a.getAssignmentName().split("\\s+", 2);
+                            return parts[0].toLowerCase();
+                        })
+                        // then compare the numeric suffix
+                        .thenComparing(a -> {
+                            String[] parts = a.getAssignmentName().split("\\s+", 2);
+                            if (parts.length > 1) {
+                                try {
+                                    return Integer.parseInt(parts[1]);
+                                } catch (NumberFormatException e) {
+                                    // if it isn’t numeric, push it to the front
+                                    return Integer.MIN_VALUE;
+                                }
+                            } else {
+                                return Integer.MIN_VALUE;
+                            }
+                        })
+        );
     }
+
 
     public int extractAssignmentNumber(String name) {
         String[] parts = name.trim().split(" ");

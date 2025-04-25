@@ -147,7 +147,16 @@ public class TeacherController extends BaseController {
         }
 
         switch (sort) {
-            case NAME -> names.sort(Comparator.comparing(TeacherController::extractAssignmentNumber));
+            case NAME -> names.sort(Comparator
+                    // 1) 比较前缀（去掉最后的数字部分）
+                    .comparing((String fullName) -> {
+                        int i = fullName.lastIndexOf(' ');
+                        return i > 0
+                                ? fullName.substring(0, i).toLowerCase()
+                                : fullName.toLowerCase();
+                    })
+                    .thenComparingInt(TeacherController::extractAssignmentNumber)
+            );
             case ASSIGN_DATE -> names.sort(Comparator.comparing(n -> groupedAssignments.get(n).get(0).getAssignDate()));
             case DUE_DATE -> names.sort(Comparator.comparing(n -> groupedAssignments.get(n).get(0).getDueDate()));
             case SUBMISSION -> names.sort(Comparator.comparingInt(n ->
@@ -543,5 +552,9 @@ public class TeacherController extends BaseController {
                 .filter(a -> a.getStatus() == Assignment.SubmissionStatus.SUBMITTED_UNGRADED)
                 .map(Assignment::getAssignmentID)
                 .collect(Collectors.toList());
+    }
+
+    public void populateDemoDataForCourse(String courseID) {
+        model.populateDemoData(courseID);
     }
 }
