@@ -2,6 +2,7 @@ package org.fp;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,6 +14,8 @@ class StudentTest {
     void constructorRejectsBadEmail() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Student( "First", "Last", "emailexample.com"));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Student( "First", "Last", null));
     }
 
     @Test
@@ -109,5 +112,22 @@ class StudentTest {
         set.add(s2);
         set.add(s1);
         assertEquals("Alice", set.first().getFirstName());
+    }
+
+    @Test
+    void testRemoveAssignment(){
+        Student s1 = new Student("Alice", "Brown", "a@x.com");
+        s1.removeAssignment(null);
+        s1.removeAssignment("");
+
+        Assignment a1 = new Assignment(
+                "Test Assignment",
+                "STU00001",
+                "C001",
+                LocalDate.of(2025, 4, 1),
+                LocalDate.of(2025, 4, 10)
+        );
+        s1.addAssignment(a1.getAssignmentID());
+        s1.removeAssignment(a1.getAssignmentID());
     }
 }
