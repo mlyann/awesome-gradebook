@@ -348,7 +348,9 @@
         "firstName": "Christopher",
         "lastName": "Evans",
         "email": "christopher.evans@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00020": {
@@ -374,14 +376,6 @@
         "firstName": "Gavin",
         "lastName": "Patterson",
         "email": "gavin.patterson@gmail.com",
-        "enrolledCourseIDs": [],
-        "assignmentIDs": []
-      },
-      "STU00002": {
-        "stuID": "STU00002",
-        "firstName": "Michael",
-        "lastName": "Williams",
-        "email": "michael.williams@gmail.com",
         "enrolledCourseIDs": [],
         "assignmentIDs": []
       },
@@ -457,7 +451,8 @@
         "lastName": "Perez",
         "email": "avery.perez@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -475,7 +470,8 @@
         "lastName": "Jackson",
         "email": "alexander.jackson@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -501,7 +497,8 @@
         "lastName": "Griffin",
         "email": "aria.griffin@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -545,7 +542,8 @@
         "lastName": "Taylor",
         "email": "ava.taylor@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -562,7 +560,9 @@
         "firstName": "Benjamin",
         "lastName": "Wilson",
         "email": "benjamin.wilson@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00028": {
@@ -586,7 +586,9 @@
         "firstName": "Caleb",
         "lastName": "Foster",
         "email": "caleb.foster@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00004": {
@@ -693,7 +695,8 @@
         "lastName": "Griffin",
         "email": "aria.griffin@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -710,7 +713,9 @@
         "firstName": "Mila",
         "lastName": "Hayes",
         "email": "mila.hayes@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00044": {
@@ -750,7 +755,9 @@
         "firstName": "Avery",
         "lastName": "Perez",
         "email": "avery.perez@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00049": {
@@ -766,7 +773,9 @@
         "firstName": "Liam",
         "lastName": "Turner",
         "email": "liam.turner@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00051": {
@@ -790,7 +799,9 @@
         "firstName": "Hannah",
         "lastName": "Parker",
         "email": "hannah.parker@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00054": {
@@ -838,7 +849,9 @@
         "firstName": "William",
         "lastName": "Davis",
         "email": "william.davis@gmail.com",
-        "enrolledCourseIDs": [],
+        "enrolledCourseIDs": [
+          "CRS00002"
+        ],
         "assignmentIDs": []
       },
       "STU00060": {
@@ -863,7 +876,8 @@
         "lastName": "Taylor",
         "email": "ava.taylor@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       },
@@ -889,7 +903,8 @@
         "lastName": "Jackson",
         "email": "alexander.jackson@gmail.com",
         "enrolledCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ],
         "assignmentIDs": []
       }
@@ -908,7 +923,8 @@
         "firstName": "2",
         "lastName": "2",
         "teachingCourseIDs": [
-          "CRS00001"
+          "CRS00001",
+          "CRS00002"
         ]
       }
     },
@@ -944,6 +960,25 @@
         },
         "categoryDropCount": {
           "Quiz": 1
+        },
+        "isCompleted": true
+      },
+      "CRS00002": {
+        "courseID": "CRS00002",
+        "courseName": "CS335",
+        "courseDescription": "MALENIE LOTZ",
+        "teacherID": "TCH00001",
+        "assignments": {},
+        "useWeightedGrading": true,
+        "categoryWeights": {
+          "Project": 1.0,
+          "Quiz": 0.5,
+          "Homework": 0.4
+        },
+        "categoryDropCount": {
+          "Project": 0,
+          "Quiz": 0,
+          "Homework": 0
         },
         "isCompleted": true
       }
@@ -2096,6 +2131,3148 @@
         "status": "GRADED",
         "published": false,
         "category": "Quiz"
+      },
+      "ASG00099": {
+        "assignmentID": "ASG00099",
+        "assignmentName": "HW 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00100": {
+        "assignmentID": "ASG00100",
+        "assignmentName": "HW 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00100",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00101": {
+        "assignmentID": "ASG00101",
+        "assignmentName": "HW 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00101",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00102": {
+        "assignmentID": "ASG00102",
+        "assignmentName": "HW 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00103": {
+        "assignmentID": "ASG00103",
+        "assignmentName": "HW 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00104": {
+        "assignmentID": "ASG00104",
+        "assignmentName": "HW 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00105": {
+        "assignmentID": "ASG00105",
+        "assignmentName": "HW 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00105",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00106": {
+        "assignmentID": "ASG00106",
+        "assignmentName": "HW 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00107": {
+        "assignmentID": "ASG00107",
+        "assignmentName": "HW 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00107",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00108": {
+        "assignmentID": "ASG00108",
+        "assignmentName": "HW 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00109": {
+        "assignmentID": "ASG00109",
+        "assignmentName": "HW 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00110": {
+        "assignmentID": "ASG00110",
+        "assignmentName": "HW 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00110",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00111": {
+        "assignmentID": "ASG00111",
+        "assignmentName": "HW 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00111",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00112": {
+        "assignmentID": "ASG00112",
+        "assignmentName": "HW 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00112",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00113": {
+        "assignmentID": "ASG00113",
+        "assignmentName": "HW 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00113",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00114": {
+        "assignmentID": "ASG00114",
+        "assignmentName": "HW 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00115": {
+        "assignmentID": "ASG00115",
+        "assignmentName": "HW 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00115",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00116": {
+        "assignmentID": "ASG00116",
+        "assignmentName": "HW 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00116",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00117": {
+        "assignmentID": "ASG00117",
+        "assignmentName": "HW 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00117",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00118": {
+        "assignmentID": "ASG00118",
+        "assignmentName": "HW 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00119": {
+        "assignmentID": "ASG00119",
+        "assignmentName": "HW 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00120": {
+        "assignmentID": "ASG00120",
+        "assignmentName": "HW 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00120",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00121": {
+        "assignmentID": "ASG00121",
+        "assignmentName": "HW 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00122": {
+        "assignmentID": "ASG00122",
+        "assignmentName": "HW 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00122",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00123": {
+        "assignmentID": "ASG00123",
+        "assignmentName": "HW 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00124": {
+        "assignmentID": "ASG00124",
+        "assignmentName": "HW 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00124",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00125": {
+        "assignmentID": "ASG00125",
+        "assignmentName": "HW 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00125",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00126": {
+        "assignmentID": "ASG00126",
+        "assignmentName": "HW 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00126",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00127": {
+        "assignmentID": "ASG00127",
+        "assignmentName": "HW 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00127",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00128": {
+        "assignmentID": "ASG00128",
+        "assignmentName": "HW 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00128",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00129": {
+        "assignmentID": "ASG00129",
+        "assignmentName": "HW 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00129",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00130": {
+        "assignmentID": "ASG00130",
+        "assignmentName": "HW 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00130",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00131": {
+        "assignmentID": "ASG00131",
+        "assignmentName": "HW 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00131",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00132": {
+        "assignmentID": "ASG00132",
+        "assignmentName": "HW 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00133": {
+        "assignmentID": "ASG00133",
+        "assignmentName": "HW 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00133",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00134": {
+        "assignmentID": "ASG00134",
+        "assignmentName": "HW 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00134",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00135": {
+        "assignmentID": "ASG00135",
+        "assignmentName": "HW 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00135",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00136": {
+        "assignmentID": "ASG00136",
+        "assignmentName": "HW 3",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00136",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00137": {
+        "assignmentID": "ASG00137",
+        "assignmentName": "HW 3",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00138": {
+        "assignmentID": "ASG00138",
+        "assignmentName": "HW 3",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00138",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00139": {
+        "assignmentID": "ASG00139",
+        "assignmentName": "HW 3",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00140": {
+        "assignmentID": "ASG00140",
+        "assignmentName": "HW 3",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00140",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00141": {
+        "assignmentID": "ASG00141",
+        "assignmentName": "HW 3",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00141",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00142": {
+        "assignmentID": "ASG00142",
+        "assignmentName": "HW 3",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00143": {
+        "assignmentID": "ASG00143",
+        "assignmentName": "HW 3",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00144": {
+        "assignmentID": "ASG00144",
+        "assignmentName": "HW 4",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00144",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00145": {
+        "assignmentID": "ASG00145",
+        "assignmentName": "HW 4",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00146": {
+        "assignmentID": "ASG00146",
+        "assignmentName": "HW 4",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00147": {
+        "assignmentID": "ASG00147",
+        "assignmentName": "HW 4",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00147",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00148": {
+        "assignmentID": "ASG00148",
+        "assignmentName": "HW 4",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00149": {
+        "assignmentID": "ASG00149",
+        "assignmentName": "HW 4",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00150": {
+        "assignmentID": "ASG00150",
+        "assignmentName": "HW 4",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00150",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00151": {
+        "assignmentID": "ASG00151",
+        "assignmentName": "HW 4",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00151",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00152": {
+        "assignmentID": "ASG00152",
+        "assignmentName": "HW 4",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00153": {
+        "assignmentID": "ASG00153",
+        "assignmentName": "HW 4",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00153",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00154": {
+        "assignmentID": "ASG00154",
+        "assignmentName": "HW 4",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00155": {
+        "assignmentID": "ASG00155",
+        "assignmentName": "HW 4",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00156": {
+        "assignmentID": "ASG00156",
+        "assignmentName": "HW 4",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00156",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00157": {
+        "assignmentID": "ASG00157",
+        "assignmentName": "HW 4",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00157",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00158": {
+        "assignmentID": "ASG00158",
+        "assignmentName": "HW 4",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00158",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00159": {
+        "assignmentID": "ASG00159",
+        "assignmentName": "Project 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00159",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00160": {
+        "assignmentID": "ASG00160",
+        "assignmentName": "Project 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00160",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00161": {
+        "assignmentID": "ASG00161",
+        "assignmentName": "Project 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00161",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00162": {
+        "assignmentID": "ASG00162",
+        "assignmentName": "Project 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00162",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00163": {
+        "assignmentID": "ASG00163",
+        "assignmentName": "Project 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00163",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00164": {
+        "assignmentID": "ASG00164",
+        "assignmentName": "Project 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00164",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00165": {
+        "assignmentID": "ASG00165",
+        "assignmentName": "Project 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00165",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00166": {
+        "assignmentID": "ASG00166",
+        "assignmentName": "Project 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00167": {
+        "assignmentID": "ASG00167",
+        "assignmentName": "Project 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00167",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00168": {
+        "assignmentID": "ASG00168",
+        "assignmentName": "Project 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00169": {
+        "assignmentID": "ASG00169",
+        "assignmentName": "Project 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00169",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00170": {
+        "assignmentID": "ASG00170",
+        "assignmentName": "Project 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00170",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00171": {
+        "assignmentID": "ASG00171",
+        "assignmentName": "Project 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00172": {
+        "assignmentID": "ASG00172",
+        "assignmentName": "Project 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00172",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00173": {
+        "assignmentID": "ASG00173",
+        "assignmentName": "Project 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00173",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00174": {
+        "assignmentID": "ASG00174",
+        "assignmentName": "Project 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00174",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00175": {
+        "assignmentID": "ASG00175",
+        "assignmentName": "Project 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00175",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00176": {
+        "assignmentID": "ASG00176",
+        "assignmentName": "Project 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00177": {
+        "assignmentID": "ASG00177",
+        "assignmentName": "Project 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00177",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00178": {
+        "assignmentID": "ASG00178",
+        "assignmentName": "Project 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00179": {
+        "assignmentID": "ASG00179",
+        "assignmentName": "Project 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00179",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00180": {
+        "assignmentID": "ASG00180",
+        "assignmentName": "Project 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00180",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00181": {
+        "assignmentID": "ASG00181",
+        "assignmentName": "Project 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00181",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00182": {
+        "assignmentID": "ASG00182",
+        "assignmentName": "Project 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00182",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00183": {
+        "assignmentID": "ASG00183",
+        "assignmentName": "Project 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00184": {
+        "assignmentID": "ASG00184",
+        "assignmentName": "Project 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00184",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00185": {
+        "assignmentID": "ASG00185",
+        "assignmentName": "Project 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00185",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00186": {
+        "assignmentID": "ASG00186",
+        "assignmentName": "Project 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00186",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00187": {
+        "assignmentID": "ASG00187",
+        "assignmentName": "Project 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00187",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00188": {
+        "assignmentID": "ASG00188",
+        "assignmentName": "Project 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00189": {
+        "assignmentID": "ASG00189",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00189",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00190": {
+        "assignmentID": "ASG00190",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00191": {
+        "assignmentID": "ASG00191",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00192": {
+        "assignmentID": "ASG00192",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00193": {
+        "assignmentID": "ASG00193",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00193",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00194": {
+        "assignmentID": "ASG00194",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00195": {
+        "assignmentID": "ASG00195",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00195",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00196": {
+        "assignmentID": "ASG00196",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00197": {
+        "assignmentID": "ASG00197",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00197",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00198": {
+        "assignmentID": "ASG00198",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00198",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00199": {
+        "assignmentID": "ASG00199",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00199",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00200": {
+        "assignmentID": "ASG00200",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00201": {
+        "assignmentID": "ASG00201",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00201",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00202": {
+        "assignmentID": "ASG00202",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00202",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00203": {
+        "assignmentID": "ASG00203",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00204": {
+        "assignmentID": "ASG00204",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00205": {
+        "assignmentID": "ASG00205",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00205",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00206": {
+        "assignmentID": "ASG00206",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00207": {
+        "assignmentID": "ASG00207",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00207",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00208": {
+        "assignmentID": "ASG00208",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00208",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00209": {
+        "assignmentID": "ASG00209",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00209",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00210": {
+        "assignmentID": "ASG00210",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00211": {
+        "assignmentID": "ASG00211",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00212": {
+        "assignmentID": "ASG00212",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00212",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00213": {
+        "assignmentID": "ASG00213",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00213",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00214": {
+        "assignmentID": "ASG00214",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00215": {
+        "assignmentID": "ASG00215",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00215",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00216": {
+        "assignmentID": "ASG00216",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00216",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00217": {
+        "assignmentID": "ASG00217",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00218": {
+        "assignmentID": "ASG00218",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00218",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00219": {
+        "assignmentID": "ASG00219",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00219",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00220": {
+        "assignmentID": "ASG00220",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00220",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00221": {
+        "assignmentID": "ASG00221",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00221",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00222": {
+        "assignmentID": "ASG00222",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00223": {
+        "assignmentID": "ASG00223",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00223",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00224": {
+        "assignmentID": "ASG00224",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00225": {
+        "assignmentID": "ASG00225",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00226": {
+        "assignmentID": "ASG00226",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00226",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00227": {
+        "assignmentID": "ASG00227",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00228": {
+        "assignmentID": "ASG00228",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00228",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00229": {
+        "assignmentID": "ASG00229",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00230": {
+        "assignmentID": "ASG00230",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00230",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00231": {
+        "assignmentID": "ASG00231",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00231",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00232": {
+        "assignmentID": "ASG00232",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00232",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00233": {
+        "assignmentID": "ASG00233",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00233",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00234": {
+        "assignmentID": "ASG00234",
+        "assignmentName": "HW 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00234",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00235": {
+        "assignmentID": "ASG00235",
+        "assignmentName": "HW 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00236": {
+        "assignmentID": "ASG00236",
+        "assignmentName": "HW 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00236",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00237": {
+        "assignmentID": "ASG00237",
+        "assignmentName": "HW 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00237",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00238": {
+        "assignmentID": "ASG00238",
+        "assignmentName": "HW 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00239": {
+        "assignmentID": "ASG00239",
+        "assignmentName": "HW 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00239",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00240": {
+        "assignmentID": "ASG00240",
+        "assignmentName": "HW 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00240",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00241": {
+        "assignmentID": "ASG00241",
+        "assignmentName": "HW 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00241",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00242": {
+        "assignmentID": "ASG00242",
+        "assignmentName": "HW 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00242",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00243": {
+        "assignmentID": "ASG00243",
+        "assignmentName": "HW 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00243",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00244": {
+        "assignmentID": "ASG00244",
+        "assignmentName": "HW 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00245": {
+        "assignmentID": "ASG00245",
+        "assignmentName": "HW 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00245",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00246": {
+        "assignmentID": "ASG00246",
+        "assignmentName": "HW 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00246",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00247": {
+        "assignmentID": "ASG00247",
+        "assignmentName": "HW 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00247",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00248": {
+        "assignmentID": "ASG00248",
+        "assignmentName": "HW 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00248",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00249": {
+        "assignmentID": "ASG00249",
+        "assignmentName": "HW 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00249",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00250": {
+        "assignmentID": "ASG00250",
+        "assignmentName": "HW 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00250",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00251": {
+        "assignmentID": "ASG00251",
+        "assignmentName": "HW 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00251",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00252": {
+        "assignmentID": "ASG00252",
+        "assignmentName": "HW 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00252",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00253": {
+        "assignmentID": "ASG00253",
+        "assignmentName": "HW 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00254": {
+        "assignmentID": "ASG00254",
+        "assignmentName": "HW 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00254",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00255": {
+        "assignmentID": "ASG00255",
+        "assignmentName": "HW 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00255",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00256": {
+        "assignmentID": "ASG00256",
+        "assignmentName": "HW 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00256",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00257": {
+        "assignmentID": "ASG00257",
+        "assignmentName": "HW 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00257",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00258": {
+        "assignmentID": "ASG00258",
+        "assignmentName": "HW 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00259": {
+        "assignmentID": "ASG00259",
+        "assignmentName": "HW 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00259",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00260": {
+        "assignmentID": "ASG00260",
+        "assignmentName": "HW 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00260",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00261": {
+        "assignmentID": "ASG00261",
+        "assignmentName": "HW 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00261",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00262": {
+        "assignmentID": "ASG00262",
+        "assignmentName": "HW 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00262",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00263": {
+        "assignmentID": "ASG00263",
+        "assignmentName": "HW 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00263",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00264": {
+        "assignmentID": "ASG00264",
+        "assignmentName": "HW 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00264",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00265": {
+        "assignmentID": "ASG00265",
+        "assignmentName": "HW 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00266": {
+        "assignmentID": "ASG00266",
+        "assignmentName": "HW 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00266",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00267": {
+        "assignmentID": "ASG00267",
+        "assignmentName": "HW 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00267",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00268": {
+        "assignmentID": "ASG00268",
+        "assignmentName": "HW 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00268",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00269": {
+        "assignmentID": "ASG00269",
+        "assignmentName": "HW 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00270": {
+        "assignmentID": "ASG00270",
+        "assignmentName": "HW 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00270",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00271": {
+        "assignmentID": "ASG00271",
+        "assignmentName": "HW 3",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00271",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00272": {
+        "assignmentID": "ASG00272",
+        "assignmentName": "HW 3",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00272",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00273": {
+        "assignmentID": "ASG00273",
+        "assignmentName": "HW 3",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00274": {
+        "assignmentID": "ASG00274",
+        "assignmentName": "HW 3",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00275": {
+        "assignmentID": "ASG00275",
+        "assignmentName": "HW 3",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00275",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00276": {
+        "assignmentID": "ASG00276",
+        "assignmentName": "HW 3",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00276",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00277": {
+        "assignmentID": "ASG00277",
+        "assignmentName": "HW 3",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00278": {
+        "assignmentID": "ASG00278",
+        "assignmentName": "HW 3",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00278",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00279": {
+        "assignmentID": "ASG00279",
+        "assignmentName": "HW 4",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00280": {
+        "assignmentID": "ASG00280",
+        "assignmentName": "HW 4",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00280",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00281": {
+        "assignmentID": "ASG00281",
+        "assignmentName": "HW 4",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00281",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00282": {
+        "assignmentID": "ASG00282",
+        "assignmentName": "HW 4",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00283": {
+        "assignmentID": "ASG00283",
+        "assignmentName": "HW 4",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00283",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00284": {
+        "assignmentID": "ASG00284",
+        "assignmentName": "HW 4",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00285": {
+        "assignmentID": "ASG00285",
+        "assignmentName": "HW 4",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00285",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00286": {
+        "assignmentID": "ASG00286",
+        "assignmentName": "HW 4",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00287": {
+        "assignmentID": "ASG00287",
+        "assignmentName": "HW 4",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00288": {
+        "assignmentID": "ASG00288",
+        "assignmentName": "HW 4",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00288",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00289": {
+        "assignmentID": "ASG00289",
+        "assignmentName": "HW 4",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00290": {
+        "assignmentID": "ASG00290",
+        "assignmentName": "HW 4",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00291": {
+        "assignmentID": "ASG00291",
+        "assignmentName": "HW 4",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00291",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00292": {
+        "assignmentID": "ASG00292",
+        "assignmentName": "HW 4",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00293": {
+        "assignmentID": "ASG00293",
+        "assignmentName": "HW 4",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00293",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-06",
+        "status": "GRADED",
+        "published": false,
+        "category": "Homework"
+      },
+      "ASG00294": {
+        "assignmentID": "ASG00294",
+        "assignmentName": "Project 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00294",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00295": {
+        "assignmentID": "ASG00295",
+        "assignmentName": "Project 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00296": {
+        "assignmentID": "ASG00296",
+        "assignmentName": "Project 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00296",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00297": {
+        "assignmentID": "ASG00297",
+        "assignmentName": "Project 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00297",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00298": {
+        "assignmentID": "ASG00298",
+        "assignmentName": "Project 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00299": {
+        "assignmentID": "ASG00299",
+        "assignmentName": "Project 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00299",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00300": {
+        "assignmentID": "ASG00300",
+        "assignmentName": "Project 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00300",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00301": {
+        "assignmentID": "ASG00301",
+        "assignmentName": "Project 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00302": {
+        "assignmentID": "ASG00302",
+        "assignmentName": "Project 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00303": {
+        "assignmentID": "ASG00303",
+        "assignmentName": "Project 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00304": {
+        "assignmentID": "ASG00304",
+        "assignmentName": "Project 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00304",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00305": {
+        "assignmentID": "ASG00305",
+        "assignmentName": "Project 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00305",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00306": {
+        "assignmentID": "ASG00306",
+        "assignmentName": "Project 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00307": {
+        "assignmentID": "ASG00307",
+        "assignmentName": "Project 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00308": {
+        "assignmentID": "ASG00308",
+        "assignmentName": "Project 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00308",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00309": {
+        "assignmentID": "ASG00309",
+        "assignmentName": "Project 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00310": {
+        "assignmentID": "ASG00310",
+        "assignmentName": "Project 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00310",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00311": {
+        "assignmentID": "ASG00311",
+        "assignmentName": "Project 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00311",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00312": {
+        "assignmentID": "ASG00312",
+        "assignmentName": "Project 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00312",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00313": {
+        "assignmentID": "ASG00313",
+        "assignmentName": "Project 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00313",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00314": {
+        "assignmentID": "ASG00314",
+        "assignmentName": "Project 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00314",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00315": {
+        "assignmentID": "ASG00315",
+        "assignmentName": "Project 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00316": {
+        "assignmentID": "ASG00316",
+        "assignmentName": "Project 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00317": {
+        "assignmentID": "ASG00317",
+        "assignmentName": "Project 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00317",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00318": {
+        "assignmentID": "ASG00318",
+        "assignmentName": "Project 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00318",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00319": {
+        "assignmentID": "ASG00319",
+        "assignmentName": "Project 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00320": {
+        "assignmentID": "ASG00320",
+        "assignmentName": "Project 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00321": {
+        "assignmentID": "ASG00321",
+        "assignmentName": "Project 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00321",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "GRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00322": {
+        "assignmentID": "ASG00322",
+        "assignmentName": "Project 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00323": {
+        "assignmentID": "ASG00323",
+        "assignmentName": "Project 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-11",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Project"
+      },
+      "ASG00324": {
+        "assignmentID": "ASG00324",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00324",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00325": {
+        "assignmentID": "ASG00325",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00325",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00326": {
+        "assignmentID": "ASG00326",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00327": {
+        "assignmentID": "ASG00327",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00328": {
+        "assignmentID": "ASG00328",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00328",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00329": {
+        "assignmentID": "ASG00329",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00329",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00330": {
+        "assignmentID": "ASG00330",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00330",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00331": {
+        "assignmentID": "ASG00331",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00331",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00332": {
+        "assignmentID": "ASG00332",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00332",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00333": {
+        "assignmentID": "ASG00333",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00333",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00334": {
+        "assignmentID": "ASG00334",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00334",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00335": {
+        "assignmentID": "ASG00335",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00336": {
+        "assignmentID": "ASG00336",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00337": {
+        "assignmentID": "ASG00337",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00337",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00338": {
+        "assignmentID": "ASG00338",
+        "assignmentName": "Quiz 1",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00339": {
+        "assignmentID": "ASG00339",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00340": {
+        "assignmentID": "ASG00340",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00341": {
+        "assignmentID": "ASG00341",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00341",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00342": {
+        "assignmentID": "ASG00342",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00342",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00343": {
+        "assignmentID": "ASG00343",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00343",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00344": {
+        "assignmentID": "ASG00344",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00345": {
+        "assignmentID": "ASG00345",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00345",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00346": {
+        "assignmentID": "ASG00346",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00346",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00347": {
+        "assignmentID": "ASG00347",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00348": {
+        "assignmentID": "ASG00348",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00348",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00349": {
+        "assignmentID": "ASG00349",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00350": {
+        "assignmentID": "ASG00350",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00350",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00351": {
+        "assignmentID": "ASG00351",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00352": {
+        "assignmentID": "ASG00352",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00352",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00353": {
+        "assignmentID": "ASG00353",
+        "assignmentName": "Quiz 2",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00354": {
+        "assignmentID": "ASG00354",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00010",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00354",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00355": {
+        "assignmentID": "ASG00355",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00065",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00355",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00356": {
+        "assignmentID": "ASG00356",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00030",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00356",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00357": {
+        "assignmentID": "ASG00357",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00041",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00358": {
+        "assignmentID": "ASG00358",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00007",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00358",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00359": {
+        "assignmentID": "ASG00359",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00062",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00360": {
+        "assignmentID": "ASG00360",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00015",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "UNSUBMITTED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00361": {
+        "assignmentID": "ASG00361",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00048",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00361",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00362": {
+        "assignmentID": "ASG00362",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00006",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00362",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00363": {
+        "assignmentID": "ASG00363",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00027",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00364": {
+        "assignmentID": "ASG00364",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00021",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00364",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00365": {
+        "assignmentID": "ASG00365",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00043",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00365",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00366": {
+        "assignmentID": "ASG00366",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00050",
+        "courseID": "CRS00002",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "SUBMITTED_UNGRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00367": {
+        "assignmentID": "ASG00367",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00053",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00367",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
+      },
+      "ASG00368": {
+        "assignmentID": "ASG00368",
+        "assignmentName": "Quiz 3",
+        "studentID": "STU00059",
+        "courseID": "CRS00002",
+        "gradeID": "G_ASG00368",
+        "assignDate": "2025-04-01",
+        "dueDate": "2025-04-03",
+        "status": "GRADED",
+        "published": false,
+        "category": "Quiz"
       }
     },
     "gradeMap": {
@@ -2511,6 +5688,1210 @@
         "studentID": "STU00015",
         "earned": 79,
         "total": 100
+      },
+      "G_ASG00100": {
+        "gradeID": "G_ASG00100",
+        "assignmentID": "ASG00100",
+        "studentID": "STU00065",
+        "earned": 91,
+        "total": 100
+      },
+      "G_ASG00101": {
+        "gradeID": "G_ASG00101",
+        "assignmentID": "ASG00101",
+        "studentID": "STU00030",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00105": {
+        "gradeID": "G_ASG00105",
+        "assignmentID": "ASG00105",
+        "studentID": "STU00015",
+        "earned": 82,
+        "total": 100
+      },
+      "G_ASG00107": {
+        "gradeID": "G_ASG00107",
+        "assignmentID": "ASG00107",
+        "studentID": "STU00006",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00110": {
+        "gradeID": "G_ASG00110",
+        "assignmentID": "ASG00110",
+        "studentID": "STU00043",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00111": {
+        "gradeID": "G_ASG00111",
+        "assignmentID": "ASG00111",
+        "studentID": "STU00050",
+        "earned": 85,
+        "total": 100
+      },
+      "G_ASG00112": {
+        "gradeID": "G_ASG00112",
+        "assignmentID": "ASG00112",
+        "studentID": "STU00053",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00113": {
+        "gradeID": "G_ASG00113",
+        "assignmentID": "ASG00113",
+        "studentID": "STU00059",
+        "earned": 96,
+        "total": 100
+      },
+      "G_ASG00115": {
+        "gradeID": "G_ASG00115",
+        "assignmentID": "ASG00115",
+        "studentID": "STU00065",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00116": {
+        "gradeID": "G_ASG00116",
+        "assignmentID": "ASG00116",
+        "studentID": "STU00030",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00117": {
+        "gradeID": "G_ASG00117",
+        "assignmentID": "ASG00117",
+        "studentID": "STU00041",
+        "earned": 62,
+        "total": 100
+      },
+      "G_ASG00120": {
+        "gradeID": "G_ASG00120",
+        "assignmentID": "ASG00120",
+        "studentID": "STU00015",
+        "earned": 67,
+        "total": 100
+      },
+      "G_ASG00122": {
+        "gradeID": "G_ASG00122",
+        "assignmentID": "ASG00122",
+        "studentID": "STU00006",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00124": {
+        "gradeID": "G_ASG00124",
+        "assignmentID": "ASG00124",
+        "studentID": "STU00021",
+        "earned": 82,
+        "total": 100
+      },
+      "G_ASG00125": {
+        "gradeID": "G_ASG00125",
+        "assignmentID": "ASG00125",
+        "studentID": "STU00043",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00126": {
+        "gradeID": "G_ASG00126",
+        "assignmentID": "ASG00126",
+        "studentID": "STU00050",
+        "earned": 77,
+        "total": 100
+      },
+      "G_ASG00127": {
+        "gradeID": "G_ASG00127",
+        "assignmentID": "ASG00127",
+        "studentID": "STU00053",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00128": {
+        "gradeID": "G_ASG00128",
+        "assignmentID": "ASG00128",
+        "studentID": "STU00059",
+        "earned": 99,
+        "total": 100
+      },
+      "G_ASG00129": {
+        "gradeID": "G_ASG00129",
+        "assignmentID": "ASG00129",
+        "studentID": "STU00010",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00130": {
+        "gradeID": "G_ASG00130",
+        "assignmentID": "ASG00130",
+        "studentID": "STU00065",
+        "earned": 72,
+        "total": 100
+      },
+      "G_ASG00131": {
+        "gradeID": "G_ASG00131",
+        "assignmentID": "ASG00131",
+        "studentID": "STU00030",
+        "earned": 65,
+        "total": 100
+      },
+      "G_ASG00133": {
+        "gradeID": "G_ASG00133",
+        "assignmentID": "ASG00133",
+        "studentID": "STU00007",
+        "earned": 77,
+        "total": 100
+      },
+      "G_ASG00134": {
+        "gradeID": "G_ASG00134",
+        "assignmentID": "ASG00134",
+        "studentID": "STU00062",
+        "earned": 88,
+        "total": 100
+      },
+      "G_ASG00135": {
+        "gradeID": "G_ASG00135",
+        "assignmentID": "ASG00135",
+        "studentID": "STU00015",
+        "earned": 70,
+        "total": 100
+      },
+      "G_ASG00136": {
+        "gradeID": "G_ASG00136",
+        "assignmentID": "ASG00136",
+        "studentID": "STU00048",
+        "earned": 65,
+        "total": 100
+      },
+      "G_ASG00138": {
+        "gradeID": "G_ASG00138",
+        "assignmentID": "ASG00138",
+        "studentID": "STU00027",
+        "earned": 96,
+        "total": 100
+      },
+      "G_ASG00140": {
+        "gradeID": "G_ASG00140",
+        "assignmentID": "ASG00140",
+        "studentID": "STU00043",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00141": {
+        "gradeID": "G_ASG00141",
+        "assignmentID": "ASG00141",
+        "studentID": "STU00050",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00144": {
+        "gradeID": "G_ASG00144",
+        "assignmentID": "ASG00144",
+        "studentID": "STU00010",
+        "earned": 72,
+        "total": 100
+      },
+      "G_ASG00147": {
+        "gradeID": "G_ASG00147",
+        "assignmentID": "ASG00147",
+        "studentID": "STU00041",
+        "earned": 60,
+        "total": 100
+      },
+      "G_ASG00150": {
+        "gradeID": "G_ASG00150",
+        "assignmentID": "ASG00150",
+        "studentID": "STU00015",
+        "earned": 84,
+        "total": 100
+      },
+      "G_ASG00151": {
+        "gradeID": "G_ASG00151",
+        "assignmentID": "ASG00151",
+        "studentID": "STU00048",
+        "earned": 66,
+        "total": 100
+      },
+      "G_ASG00153": {
+        "gradeID": "G_ASG00153",
+        "assignmentID": "ASG00153",
+        "studentID": "STU00027",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00156": {
+        "gradeID": "G_ASG00156",
+        "assignmentID": "ASG00156",
+        "studentID": "STU00050",
+        "earned": 60,
+        "total": 100
+      },
+      "G_ASG00157": {
+        "gradeID": "G_ASG00157",
+        "assignmentID": "ASG00157",
+        "studentID": "STU00053",
+        "earned": 90,
+        "total": 100
+      },
+      "G_ASG00158": {
+        "gradeID": "G_ASG00158",
+        "assignmentID": "ASG00158",
+        "studentID": "STU00059",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00159": {
+        "gradeID": "G_ASG00159",
+        "assignmentID": "ASG00159",
+        "studentID": "STU00010",
+        "earned": 98,
+        "total": 120
+      },
+      "G_ASG00160": {
+        "gradeID": "G_ASG00160",
+        "assignmentID": "ASG00160",
+        "studentID": "STU00065",
+        "earned": 91,
+        "total": 120
+      },
+      "G_ASG00161": {
+        "gradeID": "G_ASG00161",
+        "assignmentID": "ASG00161",
+        "studentID": "STU00030",
+        "earned": 91,
+        "total": 120
+      },
+      "G_ASG00162": {
+        "gradeID": "G_ASG00162",
+        "assignmentID": "ASG00162",
+        "studentID": "STU00041",
+        "earned": 85,
+        "total": 120
+      },
+      "G_ASG00163": {
+        "gradeID": "G_ASG00163",
+        "assignmentID": "ASG00163",
+        "studentID": "STU00007",
+        "earned": 106,
+        "total": 120
+      },
+      "G_ASG00164": {
+        "gradeID": "G_ASG00164",
+        "assignmentID": "ASG00164",
+        "studentID": "STU00062",
+        "earned": 95,
+        "total": 120
+      },
+      "G_ASG00165": {
+        "gradeID": "G_ASG00165",
+        "assignmentID": "ASG00165",
+        "studentID": "STU00015",
+        "earned": 97,
+        "total": 120
+      },
+      "G_ASG00167": {
+        "gradeID": "G_ASG00167",
+        "assignmentID": "ASG00167",
+        "studentID": "STU00006",
+        "earned": 93,
+        "total": 120
+      },
+      "G_ASG00169": {
+        "gradeID": "G_ASG00169",
+        "assignmentID": "ASG00169",
+        "studentID": "STU00021",
+        "earned": 100,
+        "total": 120
+      },
+      "G_ASG00170": {
+        "gradeID": "G_ASG00170",
+        "assignmentID": "ASG00170",
+        "studentID": "STU00043",
+        "earned": 94,
+        "total": 120
+      },
+      "G_ASG00172": {
+        "gradeID": "G_ASG00172",
+        "assignmentID": "ASG00172",
+        "studentID": "STU00053",
+        "earned": 115,
+        "total": 120
+      },
+      "G_ASG00173": {
+        "gradeID": "G_ASG00173",
+        "assignmentID": "ASG00173",
+        "studentID": "STU00059",
+        "earned": 99,
+        "total": 120
+      },
+      "G_ASG00174": {
+        "gradeID": "G_ASG00174",
+        "assignmentID": "ASG00174",
+        "studentID": "STU00010",
+        "earned": 115,
+        "total": 120
+      },
+      "G_ASG00175": {
+        "gradeID": "G_ASG00175",
+        "assignmentID": "ASG00175",
+        "studentID": "STU00065",
+        "earned": 120,
+        "total": 120
+      },
+      "G_ASG00177": {
+        "gradeID": "G_ASG00177",
+        "assignmentID": "ASG00177",
+        "studentID": "STU00041",
+        "earned": 112,
+        "total": 120
+      },
+      "G_ASG00179": {
+        "gradeID": "G_ASG00179",
+        "assignmentID": "ASG00179",
+        "studentID": "STU00062",
+        "earned": 82,
+        "total": 120
+      },
+      "G_ASG00180": {
+        "gradeID": "G_ASG00180",
+        "assignmentID": "ASG00180",
+        "studentID": "STU00015",
+        "earned": 94,
+        "total": 120
+      },
+      "G_ASG00181": {
+        "gradeID": "G_ASG00181",
+        "assignmentID": "ASG00181",
+        "studentID": "STU00048",
+        "earned": 98,
+        "total": 120
+      },
+      "G_ASG00182": {
+        "gradeID": "G_ASG00182",
+        "assignmentID": "ASG00182",
+        "studentID": "STU00006",
+        "earned": 113,
+        "total": 120
+      },
+      "G_ASG00184": {
+        "gradeID": "G_ASG00184",
+        "assignmentID": "ASG00184",
+        "studentID": "STU00021",
+        "earned": 111,
+        "total": 120
+      },
+      "G_ASG00185": {
+        "gradeID": "G_ASG00185",
+        "assignmentID": "ASG00185",
+        "studentID": "STU00043",
+        "earned": 84,
+        "total": 120
+      },
+      "G_ASG00186": {
+        "gradeID": "G_ASG00186",
+        "assignmentID": "ASG00186",
+        "studentID": "STU00050",
+        "earned": 101,
+        "total": 120
+      },
+      "G_ASG00187": {
+        "gradeID": "G_ASG00187",
+        "assignmentID": "ASG00187",
+        "studentID": "STU00053",
+        "earned": 85,
+        "total": 120
+      },
+      "G_ASG00189": {
+        "gradeID": "G_ASG00189",
+        "assignmentID": "ASG00189",
+        "studentID": "STU00010",
+        "earned": 97,
+        "total": 100
+      },
+      "G_ASG00193": {
+        "gradeID": "G_ASG00193",
+        "assignmentID": "ASG00193",
+        "studentID": "STU00007",
+        "earned": 92,
+        "total": 100
+      },
+      "G_ASG00195": {
+        "gradeID": "G_ASG00195",
+        "assignmentID": "ASG00195",
+        "studentID": "STU00015",
+        "earned": 94,
+        "total": 100
+      },
+      "G_ASG00197": {
+        "gradeID": "G_ASG00197",
+        "assignmentID": "ASG00197",
+        "studentID": "STU00006",
+        "earned": 70,
+        "total": 100
+      },
+      "G_ASG00198": {
+        "gradeID": "G_ASG00198",
+        "assignmentID": "ASG00198",
+        "studentID": "STU00027",
+        "earned": 71,
+        "total": 100
+      },
+      "G_ASG00199": {
+        "gradeID": "G_ASG00199",
+        "assignmentID": "ASG00199",
+        "studentID": "STU00021",
+        "earned": 84,
+        "total": 100
+      },
+      "G_ASG00201": {
+        "gradeID": "G_ASG00201",
+        "assignmentID": "ASG00201",
+        "studentID": "STU00050",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00202": {
+        "gradeID": "G_ASG00202",
+        "assignmentID": "ASG00202",
+        "studentID": "STU00053",
+        "earned": 98,
+        "total": 100
+      },
+      "G_ASG00205": {
+        "gradeID": "G_ASG00205",
+        "assignmentID": "ASG00205",
+        "studentID": "STU00065",
+        "earned": 85,
+        "total": 100
+      },
+      "G_ASG00207": {
+        "gradeID": "G_ASG00207",
+        "assignmentID": "ASG00207",
+        "studentID": "STU00041",
+        "earned": 82,
+        "total": 100
+      },
+      "G_ASG00208": {
+        "gradeID": "G_ASG00208",
+        "assignmentID": "ASG00208",
+        "studentID": "STU00007",
+        "earned": 72,
+        "total": 100
+      },
+      "G_ASG00209": {
+        "gradeID": "G_ASG00209",
+        "assignmentID": "ASG00209",
+        "studentID": "STU00062",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00212": {
+        "gradeID": "G_ASG00212",
+        "assignmentID": "ASG00212",
+        "studentID": "STU00006",
+        "earned": 94,
+        "total": 100
+      },
+      "G_ASG00213": {
+        "gradeID": "G_ASG00213",
+        "assignmentID": "ASG00213",
+        "studentID": "STU00027",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00215": {
+        "gradeID": "G_ASG00215",
+        "assignmentID": "ASG00215",
+        "studentID": "STU00043",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00216": {
+        "gradeID": "G_ASG00216",
+        "assignmentID": "ASG00216",
+        "studentID": "STU00050",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00218": {
+        "gradeID": "G_ASG00218",
+        "assignmentID": "ASG00218",
+        "studentID": "STU00059",
+        "earned": 73,
+        "total": 100
+      },
+      "G_ASG00219": {
+        "gradeID": "G_ASG00219",
+        "assignmentID": "ASG00219",
+        "studentID": "STU00010",
+        "earned": 74,
+        "total": 100
+      },
+      "G_ASG00220": {
+        "gradeID": "G_ASG00220",
+        "assignmentID": "ASG00220",
+        "studentID": "STU00065",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00221": {
+        "gradeID": "G_ASG00221",
+        "assignmentID": "ASG00221",
+        "studentID": "STU00030",
+        "earned": 77,
+        "total": 100
+      },
+      "G_ASG00223": {
+        "gradeID": "G_ASG00223",
+        "assignmentID": "ASG00223",
+        "studentID": "STU00007",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00226": {
+        "gradeID": "G_ASG00226",
+        "assignmentID": "ASG00226",
+        "studentID": "STU00048",
+        "earned": 76,
+        "total": 100
+      },
+      "G_ASG00228": {
+        "gradeID": "G_ASG00228",
+        "assignmentID": "ASG00228",
+        "studentID": "STU00027",
+        "earned": 82,
+        "total": 100
+      },
+      "G_ASG00230": {
+        "gradeID": "G_ASG00230",
+        "assignmentID": "ASG00230",
+        "studentID": "STU00043",
+        "earned": 95,
+        "total": 100
+      },
+      "G_ASG00231": {
+        "gradeID": "G_ASG00231",
+        "assignmentID": "ASG00231",
+        "studentID": "STU00050",
+        "earned": 91,
+        "total": 100
+      },
+      "G_ASG00232": {
+        "gradeID": "G_ASG00232",
+        "assignmentID": "ASG00232",
+        "studentID": "STU00053",
+        "earned": 89,
+        "total": 100
+      },
+      "G_ASG00233": {
+        "gradeID": "G_ASG00233",
+        "assignmentID": "ASG00233",
+        "studentID": "STU00059",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00234": {
+        "gradeID": "G_ASG00234",
+        "assignmentID": "ASG00234",
+        "studentID": "STU00010",
+        "earned": 92,
+        "total": 100
+      },
+      "G_ASG00236": {
+        "gradeID": "G_ASG00236",
+        "assignmentID": "ASG00236",
+        "studentID": "STU00030",
+        "earned": 60,
+        "total": 100
+      },
+      "G_ASG00237": {
+        "gradeID": "G_ASG00237",
+        "assignmentID": "ASG00237",
+        "studentID": "STU00041",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00239": {
+        "gradeID": "G_ASG00239",
+        "assignmentID": "ASG00239",
+        "studentID": "STU00062",
+        "earned": 73,
+        "total": 100
+      },
+      "G_ASG00240": {
+        "gradeID": "G_ASG00240",
+        "assignmentID": "ASG00240",
+        "studentID": "STU00015",
+        "earned": 95,
+        "total": 100
+      },
+      "G_ASG00241": {
+        "gradeID": "G_ASG00241",
+        "assignmentID": "ASG00241",
+        "studentID": "STU00048",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00242": {
+        "gradeID": "G_ASG00242",
+        "assignmentID": "ASG00242",
+        "studentID": "STU00006",
+        "earned": 63,
+        "total": 100
+      },
+      "G_ASG00243": {
+        "gradeID": "G_ASG00243",
+        "assignmentID": "ASG00243",
+        "studentID": "STU00027",
+        "earned": 61,
+        "total": 100
+      },
+      "G_ASG00245": {
+        "gradeID": "G_ASG00245",
+        "assignmentID": "ASG00245",
+        "studentID": "STU00043",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00246": {
+        "gradeID": "G_ASG00246",
+        "assignmentID": "ASG00246",
+        "studentID": "STU00050",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00247": {
+        "gradeID": "G_ASG00247",
+        "assignmentID": "ASG00247",
+        "studentID": "STU00053",
+        "earned": 60,
+        "total": 100
+      },
+      "G_ASG00248": {
+        "gradeID": "G_ASG00248",
+        "assignmentID": "ASG00248",
+        "studentID": "STU00059",
+        "earned": 73,
+        "total": 100
+      },
+      "G_ASG00249": {
+        "gradeID": "G_ASG00249",
+        "assignmentID": "ASG00249",
+        "studentID": "STU00010",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00250": {
+        "gradeID": "G_ASG00250",
+        "assignmentID": "ASG00250",
+        "studentID": "STU00065",
+        "earned": 78,
+        "total": 100
+      },
+      "G_ASG00251": {
+        "gradeID": "G_ASG00251",
+        "assignmentID": "ASG00251",
+        "studentID": "STU00030",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00252": {
+        "gradeID": "G_ASG00252",
+        "assignmentID": "ASG00252",
+        "studentID": "STU00041",
+        "earned": 88,
+        "total": 100
+      },
+      "G_ASG00254": {
+        "gradeID": "G_ASG00254",
+        "assignmentID": "ASG00254",
+        "studentID": "STU00062",
+        "earned": 95,
+        "total": 100
+      },
+      "G_ASG00255": {
+        "gradeID": "G_ASG00255",
+        "assignmentID": "ASG00255",
+        "studentID": "STU00015",
+        "earned": 71,
+        "total": 100
+      },
+      "G_ASG00256": {
+        "gradeID": "G_ASG00256",
+        "assignmentID": "ASG00256",
+        "studentID": "STU00048",
+        "earned": 76,
+        "total": 100
+      },
+      "G_ASG00257": {
+        "gradeID": "G_ASG00257",
+        "assignmentID": "ASG00257",
+        "studentID": "STU00006",
+        "earned": 89,
+        "total": 100
+      },
+      "G_ASG00259": {
+        "gradeID": "G_ASG00259",
+        "assignmentID": "ASG00259",
+        "studentID": "STU00021",
+        "earned": 95,
+        "total": 100
+      },
+      "G_ASG00260": {
+        "gradeID": "G_ASG00260",
+        "assignmentID": "ASG00260",
+        "studentID": "STU00043",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00261": {
+        "gradeID": "G_ASG00261",
+        "assignmentID": "ASG00261",
+        "studentID": "STU00050",
+        "earned": 69,
+        "total": 100
+      },
+      "G_ASG00262": {
+        "gradeID": "G_ASG00262",
+        "assignmentID": "ASG00262",
+        "studentID": "STU00053",
+        "earned": 67,
+        "total": 100
+      },
+      "G_ASG00263": {
+        "gradeID": "G_ASG00263",
+        "assignmentID": "ASG00263",
+        "studentID": "STU00059",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00264": {
+        "gradeID": "G_ASG00264",
+        "assignmentID": "ASG00264",
+        "studentID": "STU00010",
+        "earned": 96,
+        "total": 100
+      },
+      "G_ASG00266": {
+        "gradeID": "G_ASG00266",
+        "assignmentID": "ASG00266",
+        "studentID": "STU00030",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00267": {
+        "gradeID": "G_ASG00267",
+        "assignmentID": "ASG00267",
+        "studentID": "STU00041",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00268": {
+        "gradeID": "G_ASG00268",
+        "assignmentID": "ASG00268",
+        "studentID": "STU00007",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00270": {
+        "gradeID": "G_ASG00270",
+        "assignmentID": "ASG00270",
+        "studentID": "STU00015",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00271": {
+        "gradeID": "G_ASG00271",
+        "assignmentID": "ASG00271",
+        "studentID": "STU00048",
+        "earned": 99,
+        "total": 100
+      },
+      "G_ASG00272": {
+        "gradeID": "G_ASG00272",
+        "assignmentID": "ASG00272",
+        "studentID": "STU00006",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00275": {
+        "gradeID": "G_ASG00275",
+        "assignmentID": "ASG00275",
+        "studentID": "STU00043",
+        "earned": 76,
+        "total": 100
+      },
+      "G_ASG00276": {
+        "gradeID": "G_ASG00276",
+        "assignmentID": "ASG00276",
+        "studentID": "STU00050",
+        "earned": 81,
+        "total": 100
+      },
+      "G_ASG00278": {
+        "gradeID": "G_ASG00278",
+        "assignmentID": "ASG00278",
+        "studentID": "STU00059",
+        "earned": 68,
+        "total": 100
+      },
+      "G_ASG00280": {
+        "gradeID": "G_ASG00280",
+        "assignmentID": "ASG00280",
+        "studentID": "STU00065",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00281": {
+        "gradeID": "G_ASG00281",
+        "assignmentID": "ASG00281",
+        "studentID": "STU00030",
+        "earned": 86,
+        "total": 100
+      },
+      "G_ASG00283": {
+        "gradeID": "G_ASG00283",
+        "assignmentID": "ASG00283",
+        "studentID": "STU00007",
+        "earned": 77,
+        "total": 100
+      },
+      "G_ASG00285": {
+        "gradeID": "G_ASG00285",
+        "assignmentID": "ASG00285",
+        "studentID": "STU00015",
+        "earned": 91,
+        "total": 100
+      },
+      "G_ASG00288": {
+        "gradeID": "G_ASG00288",
+        "assignmentID": "ASG00288",
+        "studentID": "STU00027",
+        "earned": 64,
+        "total": 100
+      },
+      "G_ASG00291": {
+        "gradeID": "G_ASG00291",
+        "assignmentID": "ASG00291",
+        "studentID": "STU00050",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00293": {
+        "gradeID": "G_ASG00293",
+        "assignmentID": "ASG00293",
+        "studentID": "STU00059",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00294": {
+        "gradeID": "G_ASG00294",
+        "assignmentID": "ASG00294",
+        "studentID": "STU00010",
+        "earned": 100,
+        "total": 120
+      },
+      "G_ASG00296": {
+        "gradeID": "G_ASG00296",
+        "assignmentID": "ASG00296",
+        "studentID": "STU00030",
+        "earned": 105,
+        "total": 120
+      },
+      "G_ASG00297": {
+        "gradeID": "G_ASG00297",
+        "assignmentID": "ASG00297",
+        "studentID": "STU00041",
+        "earned": 113,
+        "total": 120
+      },
+      "G_ASG00299": {
+        "gradeID": "G_ASG00299",
+        "assignmentID": "ASG00299",
+        "studentID": "STU00062",
+        "earned": 114,
+        "total": 120
+      },
+      "G_ASG00300": {
+        "gradeID": "G_ASG00300",
+        "assignmentID": "ASG00300",
+        "studentID": "STU00015",
+        "earned": 104,
+        "total": 120
+      },
+      "G_ASG00304": {
+        "gradeID": "G_ASG00304",
+        "assignmentID": "ASG00304",
+        "studentID": "STU00021",
+        "earned": 87,
+        "total": 120
+      },
+      "G_ASG00305": {
+        "gradeID": "G_ASG00305",
+        "assignmentID": "ASG00305",
+        "studentID": "STU00043",
+        "earned": 97,
+        "total": 120
+      },
+      "G_ASG00308": {
+        "gradeID": "G_ASG00308",
+        "assignmentID": "ASG00308",
+        "studentID": "STU00059",
+        "earned": 101,
+        "total": 120
+      },
+      "G_ASG00310": {
+        "gradeID": "G_ASG00310",
+        "assignmentID": "ASG00310",
+        "studentID": "STU00065",
+        "earned": 110,
+        "total": 120
+      },
+      "G_ASG00311": {
+        "gradeID": "G_ASG00311",
+        "assignmentID": "ASG00311",
+        "studentID": "STU00030",
+        "earned": 97,
+        "total": 120
+      },
+      "G_ASG00312": {
+        "gradeID": "G_ASG00312",
+        "assignmentID": "ASG00312",
+        "studentID": "STU00041",
+        "earned": 119,
+        "total": 120
+      },
+      "G_ASG00313": {
+        "gradeID": "G_ASG00313",
+        "assignmentID": "ASG00313",
+        "studentID": "STU00007",
+        "earned": 105,
+        "total": 120
+      },
+      "G_ASG00314": {
+        "gradeID": "G_ASG00314",
+        "assignmentID": "ASG00314",
+        "studentID": "STU00062",
+        "earned": 117,
+        "total": 120
+      },
+      "G_ASG00317": {
+        "gradeID": "G_ASG00317",
+        "assignmentID": "ASG00317",
+        "studentID": "STU00006",
+        "earned": 106,
+        "total": 120
+      },
+      "G_ASG00318": {
+        "gradeID": "G_ASG00318",
+        "assignmentID": "ASG00318",
+        "studentID": "STU00027",
+        "earned": 108,
+        "total": 120
+      },
+      "G_ASG00321": {
+        "gradeID": "G_ASG00321",
+        "assignmentID": "ASG00321",
+        "studentID": "STU00050",
+        "earned": 100,
+        "total": 120
+      },
+      "G_ASG00324": {
+        "gradeID": "G_ASG00324",
+        "assignmentID": "ASG00324",
+        "studentID": "STU00010",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00325": {
+        "gradeID": "G_ASG00325",
+        "assignmentID": "ASG00325",
+        "studentID": "STU00065",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00328": {
+        "gradeID": "G_ASG00328",
+        "assignmentID": "ASG00328",
+        "studentID": "STU00007",
+        "earned": 74,
+        "total": 100
+      },
+      "G_ASG00329": {
+        "gradeID": "G_ASG00329",
+        "assignmentID": "ASG00329",
+        "studentID": "STU00062",
+        "earned": 94,
+        "total": 100
+      },
+      "G_ASG00330": {
+        "gradeID": "G_ASG00330",
+        "assignmentID": "ASG00330",
+        "studentID": "STU00015",
+        "earned": 77,
+        "total": 100
+      },
+      "G_ASG00331": {
+        "gradeID": "G_ASG00331",
+        "assignmentID": "ASG00331",
+        "studentID": "STU00048",
+        "earned": 99,
+        "total": 100
+      },
+      "G_ASG00332": {
+        "gradeID": "G_ASG00332",
+        "assignmentID": "ASG00332",
+        "studentID": "STU00006",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00333": {
+        "gradeID": "G_ASG00333",
+        "assignmentID": "ASG00333",
+        "studentID": "STU00027",
+        "earned": 88,
+        "total": 100
+      },
+      "G_ASG00334": {
+        "gradeID": "G_ASG00334",
+        "assignmentID": "ASG00334",
+        "studentID": "STU00021",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00337": {
+        "gradeID": "G_ASG00337",
+        "assignmentID": "ASG00337",
+        "studentID": "STU00053",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00341": {
+        "gradeID": "G_ASG00341",
+        "assignmentID": "ASG00341",
+        "studentID": "STU00030",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00342": {
+        "gradeID": "G_ASG00342",
+        "assignmentID": "ASG00342",
+        "studentID": "STU00041",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00343": {
+        "gradeID": "G_ASG00343",
+        "assignmentID": "ASG00343",
+        "studentID": "STU00007",
+        "earned": 90,
+        "total": 100
+      },
+      "G_ASG00345": {
+        "gradeID": "G_ASG00345",
+        "assignmentID": "ASG00345",
+        "studentID": "STU00015",
+        "earned": 70,
+        "total": 100
+      },
+      "G_ASG00346": {
+        "gradeID": "G_ASG00346",
+        "assignmentID": "ASG00346",
+        "studentID": "STU00048",
+        "earned": 75,
+        "total": 100
+      },
+      "G_ASG00348": {
+        "gradeID": "G_ASG00348",
+        "assignmentID": "ASG00348",
+        "studentID": "STU00027",
+        "earned": 97,
+        "total": 100
+      },
+      "G_ASG00350": {
+        "gradeID": "G_ASG00350",
+        "assignmentID": "ASG00350",
+        "studentID": "STU00043",
+        "earned": 83,
+        "total": 100
+      },
+      "G_ASG00352": {
+        "gradeID": "G_ASG00352",
+        "assignmentID": "ASG00352",
+        "studentID": "STU00053",
+        "earned": 74,
+        "total": 100
+      },
+      "G_ASG00354": {
+        "gradeID": "G_ASG00354",
+        "assignmentID": "ASG00354",
+        "studentID": "STU00010",
+        "earned": 100,
+        "total": 100
+      },
+      "G_ASG00355": {
+        "gradeID": "G_ASG00355",
+        "assignmentID": "ASG00355",
+        "studentID": "STU00065",
+        "earned": 93,
+        "total": 100
+      },
+      "G_ASG00356": {
+        "gradeID": "G_ASG00356",
+        "assignmentID": "ASG00356",
+        "studentID": "STU00030",
+        "earned": 92,
+        "total": 100
+      },
+      "G_ASG00358": {
+        "gradeID": "G_ASG00358",
+        "assignmentID": "ASG00358",
+        "studentID": "STU00007",
+        "earned": 97,
+        "total": 100
+      },
+      "G_ASG00361": {
+        "gradeID": "G_ASG00361",
+        "assignmentID": "ASG00361",
+        "studentID": "STU00048",
+        "earned": 79,
+        "total": 100
+      },
+      "G_ASG00362": {
+        "gradeID": "G_ASG00362",
+        "assignmentID": "ASG00362",
+        "studentID": "STU00006",
+        "earned": 87,
+        "total": 100
+      },
+      "G_ASG00364": {
+        "gradeID": "G_ASG00364",
+        "assignmentID": "ASG00364",
+        "studentID": "STU00021",
+        "earned": 73,
+        "total": 100
+      },
+      "G_ASG00365": {
+        "gradeID": "G_ASG00365",
+        "assignmentID": "ASG00365",
+        "studentID": "STU00043",
+        "earned": 80,
+        "total": 100
+      },
+      "G_ASG00367": {
+        "gradeID": "G_ASG00367",
+        "assignmentID": "ASG00367",
+        "studentID": "STU00053",
+        "earned": 90,
+        "total": 100
+      },
+      "G_ASG00368": {
+        "gradeID": "G_ASG00368",
+        "assignmentID": "ASG00368",
+        "studentID": "STU00059",
+        "earned": 71,
+        "total": 100
       }
     },
     "studentCourses": {
@@ -2527,25 +6908,59 @@
         "CRS00000"
       ],
       "STU00010": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00065": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00030": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00041": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00007": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00062": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
       ],
       "STU00015": [
-        "CRS00001"
+        "CRS00001",
+        "CRS00002"
+      ],
+      "STU00048": [
+        "CRS00002"
+      ],
+      "STU00006": [
+        "CRS00002"
+      ],
+      "STU00027": [
+        "CRS00002"
+      ],
+      "STU00021": [
+        "CRS00002"
+      ],
+      "STU00043": [
+        "CRS00002"
+      ],
+      "STU00050": [
+        "CRS00002"
+      ],
+      "STU00053": [
+        "CRS00002"
+      ],
+      "STU00059": [
+        "CRS00002"
+      ],
+      "STU00002": [
+        "CRS00002"
       ]
     },
     "courseStudents": {
@@ -2563,6 +6978,24 @@
         "STU00007",
         "STU00062",
         "STU00015"
+      ],
+      "CRS00002": [
+        "STU00010",
+        "STU00065",
+        "STU00030",
+        "STU00041",
+        "STU00007",
+        "STU00062",
+        "STU00015",
+        "STU00048",
+        "STU00006",
+        "STU00027",
+        "STU00021",
+        "STU00043",
+        "STU00050",
+        "STU00053",
+        "STU00059",
+        "STU00002"
       ]
     },
     "courseAssignments": {
@@ -2668,6 +7101,278 @@
         "ASG00096",
         "ASG00097",
         "ASG00098"
+      ],
+      "CRS00002": [
+        "ASG00099",
+        "ASG00100",
+        "ASG00101",
+        "ASG00102",
+        "ASG00103",
+        "ASG00104",
+        "ASG00105",
+        "ASG00106",
+        "ASG00107",
+        "ASG00108",
+        "ASG00109",
+        "ASG00110",
+        "ASG00111",
+        "ASG00112",
+        "ASG00113",
+        "ASG00114",
+        "ASG00115",
+        "ASG00116",
+        "ASG00117",
+        "ASG00118",
+        "ASG00119",
+        "ASG00120",
+        "ASG00121",
+        "ASG00122",
+        "ASG00123",
+        "ASG00124",
+        "ASG00125",
+        "ASG00126",
+        "ASG00127",
+        "ASG00128",
+        "ASG00129",
+        "ASG00130",
+        "ASG00131",
+        "ASG00132",
+        "ASG00133",
+        "ASG00134",
+        "ASG00135",
+        "ASG00136",
+        "ASG00137",
+        "ASG00138",
+        "ASG00139",
+        "ASG00140",
+        "ASG00141",
+        "ASG00142",
+        "ASG00143",
+        "ASG00144",
+        "ASG00145",
+        "ASG00146",
+        "ASG00147",
+        "ASG00148",
+        "ASG00149",
+        "ASG00150",
+        "ASG00151",
+        "ASG00152",
+        "ASG00153",
+        "ASG00154",
+        "ASG00155",
+        "ASG00156",
+        "ASG00157",
+        "ASG00158",
+        "ASG00159",
+        "ASG00160",
+        "ASG00161",
+        "ASG00162",
+        "ASG00163",
+        "ASG00164",
+        "ASG00165",
+        "ASG00166",
+        "ASG00167",
+        "ASG00168",
+        "ASG00169",
+        "ASG00170",
+        "ASG00171",
+        "ASG00172",
+        "ASG00173",
+        "ASG00174",
+        "ASG00175",
+        "ASG00176",
+        "ASG00177",
+        "ASG00178",
+        "ASG00179",
+        "ASG00180",
+        "ASG00181",
+        "ASG00182",
+        "ASG00183",
+        "ASG00184",
+        "ASG00185",
+        "ASG00186",
+        "ASG00187",
+        "ASG00188",
+        "ASG00189",
+        "ASG00190",
+        "ASG00191",
+        "ASG00192",
+        "ASG00193",
+        "ASG00194",
+        "ASG00195",
+        "ASG00196",
+        "ASG00197",
+        "ASG00198",
+        "ASG00199",
+        "ASG00200",
+        "ASG00201",
+        "ASG00202",
+        "ASG00203",
+        "ASG00204",
+        "ASG00205",
+        "ASG00206",
+        "ASG00207",
+        "ASG00208",
+        "ASG00209",
+        "ASG00210",
+        "ASG00211",
+        "ASG00212",
+        "ASG00213",
+        "ASG00214",
+        "ASG00215",
+        "ASG00216",
+        "ASG00217",
+        "ASG00218",
+        "ASG00219",
+        "ASG00220",
+        "ASG00221",
+        "ASG00222",
+        "ASG00223",
+        "ASG00224",
+        "ASG00225",
+        "ASG00226",
+        "ASG00227",
+        "ASG00228",
+        "ASG00229",
+        "ASG00230",
+        "ASG00231",
+        "ASG00232",
+        "ASG00233",
+        "ASG00234",
+        "ASG00235",
+        "ASG00236",
+        "ASG00237",
+        "ASG00238",
+        "ASG00239",
+        "ASG00240",
+        "ASG00241",
+        "ASG00242",
+        "ASG00243",
+        "ASG00244",
+        "ASG00245",
+        "ASG00246",
+        "ASG00247",
+        "ASG00248",
+        "ASG00249",
+        "ASG00250",
+        "ASG00251",
+        "ASG00252",
+        "ASG00253",
+        "ASG00254",
+        "ASG00255",
+        "ASG00256",
+        "ASG00257",
+        "ASG00258",
+        "ASG00259",
+        "ASG00260",
+        "ASG00261",
+        "ASG00262",
+        "ASG00263",
+        "ASG00264",
+        "ASG00265",
+        "ASG00266",
+        "ASG00267",
+        "ASG00268",
+        "ASG00269",
+        "ASG00270",
+        "ASG00271",
+        "ASG00272",
+        "ASG00273",
+        "ASG00274",
+        "ASG00275",
+        "ASG00276",
+        "ASG00277",
+        "ASG00278",
+        "ASG00279",
+        "ASG00280",
+        "ASG00281",
+        "ASG00282",
+        "ASG00283",
+        "ASG00284",
+        "ASG00285",
+        "ASG00286",
+        "ASG00287",
+        "ASG00288",
+        "ASG00289",
+        "ASG00290",
+        "ASG00291",
+        "ASG00292",
+        "ASG00293",
+        "ASG00294",
+        "ASG00295",
+        "ASG00296",
+        "ASG00297",
+        "ASG00298",
+        "ASG00299",
+        "ASG00300",
+        "ASG00301",
+        "ASG00302",
+        "ASG00303",
+        "ASG00304",
+        "ASG00305",
+        "ASG00306",
+        "ASG00307",
+        "ASG00308",
+        "ASG00309",
+        "ASG00310",
+        "ASG00311",
+        "ASG00312",
+        "ASG00313",
+        "ASG00314",
+        "ASG00315",
+        "ASG00316",
+        "ASG00317",
+        "ASG00318",
+        "ASG00319",
+        "ASG00320",
+        "ASG00321",
+        "ASG00322",
+        "ASG00323",
+        "ASG00324",
+        "ASG00325",
+        "ASG00326",
+        "ASG00327",
+        "ASG00328",
+        "ASG00329",
+        "ASG00330",
+        "ASG00331",
+        "ASG00332",
+        "ASG00333",
+        "ASG00334",
+        "ASG00335",
+        "ASG00336",
+        "ASG00337",
+        "ASG00338",
+        "ASG00339",
+        "ASG00340",
+        "ASG00341",
+        "ASG00342",
+        "ASG00343",
+        "ASG00344",
+        "ASG00345",
+        "ASG00346",
+        "ASG00347",
+        "ASG00348",
+        "ASG00349",
+        "ASG00350",
+        "ASG00351",
+        "ASG00352",
+        "ASG00353",
+        "ASG00354",
+        "ASG00355",
+        "ASG00356",
+        "ASG00357",
+        "ASG00358",
+        "ASG00359",
+        "ASG00360",
+        "ASG00361",
+        "ASG00362",
+        "ASG00363",
+        "ASG00364",
+        "ASG00365",
+        "ASG00366",
+        "ASG00367",
+        "ASG00368"
       ]
     },
     "studentAssignments": {
@@ -2724,7 +7429,25 @@
         "ASG00071",
         "ASG00078",
         "ASG00085",
-        "ASG00092"
+        "ASG00092",
+        "ASG00099",
+        "ASG00114",
+        "ASG00129",
+        "ASG00144",
+        "ASG00159",
+        "ASG00174",
+        "ASG00189",
+        "ASG00204",
+        "ASG00219",
+        "ASG00234",
+        "ASG00249",
+        "ASG00264",
+        "ASG00279",
+        "ASG00294",
+        "ASG00309",
+        "ASG00324",
+        "ASG00339",
+        "ASG00354"
       ],
       "STU00065": [
         "ASG00037",
@@ -2735,7 +7458,25 @@
         "ASG00072",
         "ASG00079",
         "ASG00086",
-        "ASG00093"
+        "ASG00093",
+        "ASG00100",
+        "ASG00115",
+        "ASG00130",
+        "ASG00145",
+        "ASG00160",
+        "ASG00175",
+        "ASG00190",
+        "ASG00205",
+        "ASG00220",
+        "ASG00235",
+        "ASG00250",
+        "ASG00265",
+        "ASG00280",
+        "ASG00295",
+        "ASG00310",
+        "ASG00325",
+        "ASG00340",
+        "ASG00355"
       ],
       "STU00030": [
         "ASG00038",
@@ -2746,7 +7487,25 @@
         "ASG00073",
         "ASG00080",
         "ASG00087",
-        "ASG00094"
+        "ASG00094",
+        "ASG00101",
+        "ASG00116",
+        "ASG00131",
+        "ASG00146",
+        "ASG00161",
+        "ASG00176",
+        "ASG00191",
+        "ASG00206",
+        "ASG00221",
+        "ASG00236",
+        "ASG00251",
+        "ASG00266",
+        "ASG00281",
+        "ASG00296",
+        "ASG00311",
+        "ASG00326",
+        "ASG00341",
+        "ASG00356"
       ],
       "STU00041": [
         "ASG00039",
@@ -2757,7 +7516,25 @@
         "ASG00074",
         "ASG00081",
         "ASG00088",
-        "ASG00095"
+        "ASG00095",
+        "ASG00102",
+        "ASG00117",
+        "ASG00132",
+        "ASG00147",
+        "ASG00162",
+        "ASG00177",
+        "ASG00192",
+        "ASG00207",
+        "ASG00222",
+        "ASG00237",
+        "ASG00252",
+        "ASG00267",
+        "ASG00282",
+        "ASG00297",
+        "ASG00312",
+        "ASG00327",
+        "ASG00342",
+        "ASG00357"
       ],
       "STU00007": [
         "ASG00040",
@@ -2768,7 +7545,25 @@
         "ASG00075",
         "ASG00082",
         "ASG00089",
-        "ASG00096"
+        "ASG00096",
+        "ASG00103",
+        "ASG00118",
+        "ASG00133",
+        "ASG00148",
+        "ASG00163",
+        "ASG00178",
+        "ASG00193",
+        "ASG00208",
+        "ASG00223",
+        "ASG00238",
+        "ASG00253",
+        "ASG00268",
+        "ASG00283",
+        "ASG00298",
+        "ASG00313",
+        "ASG00328",
+        "ASG00343",
+        "ASG00358"
       ],
       "STU00062": [
         "ASG00041",
@@ -2779,7 +7574,25 @@
         "ASG00076",
         "ASG00083",
         "ASG00090",
-        "ASG00097"
+        "ASG00097",
+        "ASG00104",
+        "ASG00119",
+        "ASG00134",
+        "ASG00149",
+        "ASG00164",
+        "ASG00179",
+        "ASG00194",
+        "ASG00209",
+        "ASG00224",
+        "ASG00239",
+        "ASG00254",
+        "ASG00269",
+        "ASG00284",
+        "ASG00299",
+        "ASG00314",
+        "ASG00329",
+        "ASG00344",
+        "ASG00359"
       ],
       "STU00015": [
         "ASG00042",
@@ -2790,7 +7603,185 @@
         "ASG00077",
         "ASG00084",
         "ASG00091",
-        "ASG00098"
+        "ASG00098",
+        "ASG00105",
+        "ASG00120",
+        "ASG00135",
+        "ASG00150",
+        "ASG00165",
+        "ASG00180",
+        "ASG00195",
+        "ASG00210",
+        "ASG00225",
+        "ASG00240",
+        "ASG00255",
+        "ASG00270",
+        "ASG00285",
+        "ASG00300",
+        "ASG00315",
+        "ASG00330",
+        "ASG00345",
+        "ASG00360"
+      ],
+      "STU00048": [
+        "ASG00106",
+        "ASG00121",
+        "ASG00136",
+        "ASG00151",
+        "ASG00166",
+        "ASG00181",
+        "ASG00196",
+        "ASG00211",
+        "ASG00226",
+        "ASG00241",
+        "ASG00256",
+        "ASG00271",
+        "ASG00286",
+        "ASG00301",
+        "ASG00316",
+        "ASG00331",
+        "ASG00346",
+        "ASG00361"
+      ],
+      "STU00006": [
+        "ASG00107",
+        "ASG00122",
+        "ASG00137",
+        "ASG00152",
+        "ASG00167",
+        "ASG00182",
+        "ASG00197",
+        "ASG00212",
+        "ASG00227",
+        "ASG00242",
+        "ASG00257",
+        "ASG00272",
+        "ASG00287",
+        "ASG00302",
+        "ASG00317",
+        "ASG00332",
+        "ASG00347",
+        "ASG00362"
+      ],
+      "STU00027": [
+        "ASG00108",
+        "ASG00123",
+        "ASG00138",
+        "ASG00153",
+        "ASG00168",
+        "ASG00183",
+        "ASG00198",
+        "ASG00213",
+        "ASG00228",
+        "ASG00243",
+        "ASG00258",
+        "ASG00273",
+        "ASG00288",
+        "ASG00303",
+        "ASG00318",
+        "ASG00333",
+        "ASG00348",
+        "ASG00363"
+      ],
+      "STU00021": [
+        "ASG00109",
+        "ASG00124",
+        "ASG00139",
+        "ASG00154",
+        "ASG00169",
+        "ASG00184",
+        "ASG00199",
+        "ASG00214",
+        "ASG00229",
+        "ASG00244",
+        "ASG00259",
+        "ASG00274",
+        "ASG00289",
+        "ASG00304",
+        "ASG00319",
+        "ASG00334",
+        "ASG00349",
+        "ASG00364"
+      ],
+      "STU00043": [
+        "ASG00110",
+        "ASG00125",
+        "ASG00140",
+        "ASG00155",
+        "ASG00170",
+        "ASG00185",
+        "ASG00200",
+        "ASG00215",
+        "ASG00230",
+        "ASG00245",
+        "ASG00260",
+        "ASG00275",
+        "ASG00290",
+        "ASG00305",
+        "ASG00320",
+        "ASG00335",
+        "ASG00350",
+        "ASG00365"
+      ],
+      "STU00050": [
+        "ASG00111",
+        "ASG00126",
+        "ASG00141",
+        "ASG00156",
+        "ASG00171",
+        "ASG00186",
+        "ASG00201",
+        "ASG00216",
+        "ASG00231",
+        "ASG00246",
+        "ASG00261",
+        "ASG00276",
+        "ASG00291",
+        "ASG00306",
+        "ASG00321",
+        "ASG00336",
+        "ASG00351",
+        "ASG00366"
+      ],
+      "STU00053": [
+        "ASG00112",
+        "ASG00127",
+        "ASG00142",
+        "ASG00157",
+        "ASG00172",
+        "ASG00187",
+        "ASG00202",
+        "ASG00217",
+        "ASG00232",
+        "ASG00247",
+        "ASG00262",
+        "ASG00277",
+        "ASG00292",
+        "ASG00307",
+        "ASG00322",
+        "ASG00337",
+        "ASG00352",
+        "ASG00367"
+      ],
+      "STU00059": [
+        "ASG00113",
+        "ASG00128",
+        "ASG00143",
+        "ASG00158",
+        "ASG00173",
+        "ASG00188",
+        "ASG00203",
+        "ASG00218",
+        "ASG00233",
+        "ASG00248",
+        "ASG00263",
+        "ASG00278",
+        "ASG00293",
+        "ASG00308",
+        "ASG00323",
+        "ASG00338",
+        "ASG00353",
+        "ASG00368"
       ]
     },
     "assignmentGrades": {},

@@ -1,4 +1,3 @@
-// File: LoginUI.java
 package org.fp;
 
 import java.io.FileReader;
