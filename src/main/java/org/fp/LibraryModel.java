@@ -91,7 +91,11 @@ public class LibraryModel {
     }
 
     public Course getCourse(String id) {
-        return new Course(courseMap.get(id));
+        Course c = courseMap.get(id);
+        if (c == null){
+                return null;
+        }
+        return new Course(c);
     }
 
     public Collection<Course> getAllCourses() {
