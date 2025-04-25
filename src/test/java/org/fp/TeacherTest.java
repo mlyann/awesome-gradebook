@@ -7,23 +7,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeacherTest {
-
-    @Test
-    void constructorRejectsNullID() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Teacher("First", "Last"));
-    }
-
-    @Test
-    void constructorRejectsEmptyID() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Teacher("First", "Last"));
-    }
-
     @Test
     void gettersAndFullName() {
         Teacher t = new Teacher("Jane", "Smith");
-        assertEquals("T1", t.getTeacherID());
+        assertTrue(t.getTeacherID().contains("TCH"));
         assertEquals("Jane", t.getFirstName());
         assertEquals("Smith", t.getLastName());
         assertEquals("Jane Smith", t.getFullName());
@@ -53,6 +40,23 @@ class TeacherTest {
         Teacher t = new Teacher("Jane", "Doe");
         String str = t.toString();
         assertTrue(str.contains("Jane Doe"));
-        assertTrue(str.contains("T1"));
+        assertTrue(str.contains("TCH"));
+    }
+
+    @Test
+    void testCopyConstructor(){
+        Teacher teacher = new Teacher("Jane", "Smith");
+        Teacher t = new Teacher(teacher);
+        assertTrue(t.getTeacherID().contains("TCH"));
+        assertEquals("Jane", t.getFirstName());
+        assertEquals("Smith", t.getLastName());
+        assertEquals("Jane Smith", t.getFullName());
+    }
+
+    @Test
+    void testCopyNullTeacher(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Teacher(null);
+        });
     }
 }

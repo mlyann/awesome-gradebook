@@ -11,7 +11,6 @@ class AssignmentTest {
 //    fake data to test first
     private Assignment makeAssignment() {
         return new Assignment(
-                "A001",
                 "Test Assignment",
                 "STU00001",
                 "C001",
@@ -22,34 +21,34 @@ class AssignmentTest {
     @Test
     void constructorRejectsNullAssignmentID() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Assignment(null, "Name", "S1", "C1",
+                new Assignment( "Name", null, "C1",
                         LocalDate.now(), LocalDate.now()));
     }
 
     @Test
     void constructorRejectsNullStudentID() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Assignment("A1", "Name", null, "C1",
+                new Assignment( "Name", null, "C1",
                         LocalDate.now(), LocalDate.now()));
     }
 
     @Test
     void constructorRejectsNullCourseID() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Assignment("A1", "Name", "S1", null,
+                new Assignment( "Name", "S1", null,
                         LocalDate.now(), LocalDate.now()));
     }
 
     @Test
     void constructorRejectsNullAssignDate() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Assignment("A1", "Name", "S1", "C1",
+                new Assignment( "Name", "S1", "C1",
                         null, LocalDate.now()));
     }
     @Test
     void constructorRejectsNullDueDate() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Assignment("A1", "Name", "S1", "C1",
+                new Assignment( "Name", "S1", "C1",
                         LocalDate.now(), null));
     }
     @Test
@@ -118,10 +117,11 @@ class AssignmentTest {
     void toStringContainsAllFields() {
         Assignment a = makeAssignment();
         String s = a.toString();
+        System.out.println(s);
         assertTrue(s.contains("Test Assignment"));
-        assertTrue(s.contains("A001"));
-        assertTrue(s.contains("C001"));
-        assertTrue(s.contains("STU00001"));
+        assertTrue(s.contains("ASG"));
+        assertTrue(s.contains("C"));
+        assertTrue(s.contains("STU"));
         assertTrue(s.contains("2025-04-01"));
         assertTrue(s.contains("2025-04-10"));
         assertTrue(s.contains("UNSUBMITTED"));

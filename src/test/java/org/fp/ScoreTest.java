@@ -44,4 +44,29 @@ class ScoreTest {
         assertTrue(str.contains("75.0%"));
         assertTrue(str.contains("[C]"));
     }
+
+    @Test
+    void testCopyConstructor(){
+        Score sco = new Score("G9", "A9", "S9", 45, 60);
+        Score s = new Score(sco);
+        String str = s.toString();
+        assertTrue(str.contains("45/60"));
+        assertTrue(str.contains("75.0%"));
+        assertTrue(str.contains("[C]"));
+    }
+
+    @Test
+    void testCopyNullScore(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Score(null);
+        });
+    }
+
+    @Test
+    void testOtherGetters(){
+        Score sco = new Score("G9", "A9", "S9", 45, 60);
+        assertEquals("G9", sco.getGradeID());
+        assertEquals("A9", sco.getAssignmentID());
+        assertEquals("S9", sco.getStudentID());
+    }
 }

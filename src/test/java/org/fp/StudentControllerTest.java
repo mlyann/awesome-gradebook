@@ -22,7 +22,7 @@ class StudentControllerTest {
 
         // prepare student and current
         stuId = IDGen.generate("STU");
-        model.addStudent(new Student(stuId, "Alice", "Smith", "alice@example.com"));
+        model.addStudent(new Student( "Alice", "Smith", "alice@example.com"));
         ctrl.setCurrentStudent(stuId);
 
         // prepare teacher, course, enroll student
@@ -33,9 +33,9 @@ class StudentControllerTest {
 
         // prepare assignments
         LocalDate base = LocalDate.of(2025,4,1);
-        a1 = new Assignment("A1","Assignment 1",stuId,courseId,base,base.plusDays(1));
-        a2 = new Assignment("A2","Assignment 2",stuId,courseId,base.minusDays(1),base.plusDays(2));
-        aInvalid = new Assignment("A3","FooX",stuId,courseId,base,base.plusDays(3));
+        a1 = new Assignment("Assignment 1",stuId,courseId,base,base.plusDays(1));
+        a2 = new Assignment("Assignment 2",stuId,courseId,base.minusDays(1),base.plusDays(2));
+        aInvalid = new Assignment("FooX",stuId,courseId,base,base.plusDays(3));
         model.addAssignment(a1);
         model.addAssignment(a2);
         model.addAssignment(aInvalid);

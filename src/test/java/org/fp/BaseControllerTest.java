@@ -68,7 +68,7 @@ class BaseControllerTest {
 
     @Test
     void setAndGetCurrentAssignment() {
-        Assignment a = new Assignment("A1","HW","S1","C1",
+        Assignment a = new Assignment("HW","S1","C1",
                 LocalDate.now(), LocalDate.now().plusDays(1));
         ctrl.setCurrentAssignment(a);
         assertSame(a, ctrl.getCurrentAssignment());
