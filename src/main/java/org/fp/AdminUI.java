@@ -152,7 +152,7 @@ public class AdminUI {
                         continue;
                     }
 
-                    // 立刻分配为 STUDENT 并创建实体
+                    // give to the model with students
                     boolean assigned = users.assignRole(email, LibraryUsers.UserType.STUDENT, model);
                     if (!assigned) {
                         System.out.println("❌ Failed to assign STUDENT for: " + email);

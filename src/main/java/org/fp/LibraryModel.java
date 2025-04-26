@@ -229,23 +229,21 @@ public class LibraryModel {
 
 
     public void removeAssignment(String assignmentID) {
-        // 1) Pull out and remove the Assignment object
         Assignment a = assignmentMap.remove(assignmentID);
         if (a == null) return;
-
-        // 2) Detach from its Course
+        // Detach from its Course
         Course course = courseMap.get(a.getCourseID());
         if (course != null) {
             course.removeAssignmentByID(assignmentID);
         }
 
-        // 3) Detach from its Student
+        // Detach from its Student
         Student student = studentMap.get(a.getStudentID());
         if (student != null) {
             student.removeAssignment(assignmentID);
         }
 
-        // 4) Cascade‐delete the Score by reading it off the Assignment itself
+        // Cascade‐delete the Score by reading it off the Assignment itself
         String gradeID = a.getGradeID();
         if (gradeID != null) {
             gradeMap.remove(gradeID);
@@ -261,26 +259,19 @@ public class LibraryModel {
 
 
     public void removeCourse(String courseID) {
-        // 1) pull out and delete the Course itself
+        // pull out and delete the Course itself
         Course c = courseMap.remove(courseID);
         if (c == null) return;
-
-        // 2) delete its assignments via our single-assignment remover
         for (String aid : new ArrayList<>(c.getAssignments().keySet())) {
             removeAssignment(aid);
         }
 
-        // 3) drop this course from every student’s enrolled list
+        //drop this course from every student’s enrolled list
         for (Student s : studentMap.values()) {
             s.dropCourse(courseID);
         }
     }
 
-    /*
-    public void removeScore(String scoreID) {
-        gradeMap.remove(scoreID);
-    } // Simple removal for scores by ID
-     */
 
     public void initializeIDGen() {
         initPrefix("STU", studentMap.keySet());
@@ -360,7 +351,6 @@ public class LibraryModel {
     ) {
         for (int i = 1; i <= count; i++) {
             for (Student s : studs) {
-                // 1) Construct the assignment
                 Assignment a = new Assignment(
                         prefix + " " + i,
                         s.getStuID(),
@@ -369,24 +359,16 @@ public class LibraryModel {
                         base.plusDays(span)
                 );
                 a.setCategory(category);
-
-                // 2) Add to model (ties into Course and Student)
                 addAssignment(a);
-
-                // 3) Simulate submission with 85% probability
                 if (Math.random() < 0.85) {
                     a.submit();
-
-                    // 4) Simulate grading with 75% probability
                     if (Math.random() < 0.75) {
                         String gradeID = "G_" + a.getAssignmentID();
                         a.markGraded(gradeID);
-
-                        // 5) Random earned points between minEarned and maxEarned
                         int earned = minEarned
                                 + (int)(Math.random() * (maxEarned - minEarned + 1));
 
-                        // 6) Create and store the Score
+                        // create, init and store the Score
                         Score score = new Score(
                                 gradeID,
                                 a.getAssignmentID(),
