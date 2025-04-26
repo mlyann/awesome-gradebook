@@ -157,9 +157,16 @@ public class StudentController extends BaseController {
             return g1.getLetterGrade().compareTo(g2.getLetterGrade());
         });
     }
+
     public Course getCourseByAssignment(String assignmentID) {
         Assignment a = model.getAssignment(assignmentID);
         if (a == null) return null;
         return model.getCourse(a.getCourseID());
     }
+
+    public void submitAssignment(String assignmentID) {
+        model.submitAssignment(assignmentID);
+        loadAssignmentsForCourse(model.getAssignment(assignmentID).getCourseID());
+    }
+
 }
