@@ -535,7 +535,7 @@ Jerry Yu - [@Jerry]() - jerryyu1@arizona.edu
 Project Link: [https://github.com/mlyann/music-store](https://github.com/mlyann/music-store)
 
 ## Acknowledgments
-We deeply appreciate the guidance and support of our instructor Malenie Lotz and TA Jenny Yu throughout this journey. 😊 
+We deeply appreciate the guidance and support of our instructor Malenie Lotz and TA Paulina Aguirre throughout this journey. 😊 
 
 **Mentors**:
  - Instructor: [Malenie Lotz](https://www.cs.arizona.edu/person/melanie-lotz) (CSC 335)
