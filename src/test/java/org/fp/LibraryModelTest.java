@@ -222,8 +222,8 @@ public class LibraryModelTest {
 
         Map<String, Grade> grades = model.assignFinalLetterGrades(course.getCourseID());
         assertEquals(2, grades.size());
-        assertEquals(Grade.F, grades.get(s1.getStuID()));
-        assertEquals(Grade.B, grades.get(s2.getStuID()));
+        assertEquals(Grade.F, grades.get(s1.getFullName()));
+        assertEquals(Grade.B, grades.get(s2.getFullName()));
     }
 
     @Test
@@ -246,7 +246,7 @@ public class LibraryModelTest {
         model.addScore(new Score("G999", a.getAssignmentID(), student.getStuID(), 78, 100));
 
         Map<String, Grade> finalGrades = model.assignFinalLetterGrades(course.getCourseID());
-        assertEquals(Grade.C, finalGrades.get(student.getStuID()));
+        assertEquals(Grade.C, finalGrades.get(student.getFullName()));
     }
 
     @Test

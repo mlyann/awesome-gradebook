@@ -58,11 +58,6 @@ public class Teacher {
         return Collections.unmodifiableSet(teachingCourseIDs);
     }
 
-    public void removeCourse(String courseID) {
-        teachingCourseIDs.remove(courseID);
-    }
-
-
     @Override
     public String toString() {
         return String.format("Teacher: %s (%s)", getFullName(), getTeacherID());

@@ -17,13 +17,6 @@ public abstract class BaseController {
         return model;
     }
 
-    public List<Course> getCachedCourses() {
-        List<Course> copyCourse = new ArrayList<>();
-        for (Course c : cachedCourses){
-            copyCourse.add(new Course(c));
-        }
-        return copyCourse;
-    }
 
     public Course getCachedCourse(int index) {
         return (index >= 0 && index < cachedCourses.size()) ? new Course(cachedCourses.get(index)) : null;
@@ -59,26 +52,10 @@ public abstract class BaseController {
     }
 
 
-
-    public Assignment getCachedAssignment(int index) {
-        return (index >= 0 && index < cachedAssignments.size()) ? new Assignment(cachedAssignments.get(index)) : null;
-    }
-
     public void setCurrentAssignment(Assignment a) {
         currentAssignment = a;
     }
 
-    public Assignment getCurrentAssignment() {
-        return new Assignment(currentAssignment);
-    }
-
-    public List<Assignment> getCachedAssignments() {
-        List<Assignment> copyAssignments = new ArrayList<>();
-        for (Assignment a : cachedAssignments){
-            copyAssignments.add(new Assignment(a));
-        }
-        return copyAssignments;
-    }
 
     public Score getScoreForAssignment(String assignmentID) {
         if (model.getScoreForAssignment(assignmentID) == null){

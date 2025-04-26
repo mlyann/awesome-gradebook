@@ -15,7 +15,7 @@ public class Student {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address.");
         }
-        this.stuID = IDGen.generate("STU"); // 🆕 使用 Flyweight 生成 ID
+        this.stuID = IDGen.generate("STU");
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

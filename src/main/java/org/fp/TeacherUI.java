@@ -35,7 +35,7 @@ public class TeacherUI {
         TeacherUI.model = modelInstance;
 
         //construct the controller
-        TeacherController tc = new TeacherController(model);   // ← 用局部名 tc
+        TeacherController tc = new TeacherController(model);
         tc.setCurrentTeacher(teacherID);
         TeacherUI.TeacherController = tc;
 
@@ -317,8 +317,6 @@ public class TeacherUI {
             long graded = group.stream().filter(a -> a.getStatus() == Assignment.SubmissionStatus.GRADED).count();
             int percent = (submitted == 0) ? 0 : (int) ((graded * 100.0) / submitted);
             String gradedBar = generateGradedBar(percent, (int) graded, (int) submitted);
-            boolean allPublished = group.stream().allMatch(Assignment::isPublished);
-
             rows.add(List.of(
                     String.valueOf(index++),
                     name,
@@ -341,15 +339,6 @@ public class TeacherUI {
         return bar + graded + "/" + total;
     }
 
-
-    private static int extractAssignmentNumber(String name) {
-        String[] parts = name.trim().split(" ");
-        try {
-            return Integer.parseInt(parts[parts.length - 1]);
-        } catch (NumberFormatException e) {
-            return Integer.MAX_VALUE;
-        }
-    }
 
     /* 
      *  View a single assignment detail for a teacher
@@ -477,10 +466,8 @@ public class TeacherUI {
                 displayGroup = list.stream().map(Map.Entry::getKey).toList();
             }
 
-            //  缓存当前 group 用于后续选择操作
             controller.setCurrentAssignmentGroupList(displayGroup);
 
-            // 📋 表格展示
             List<List<String>> rows = new ArrayList<>();
             rows.add(List.of("No.", "Student", "Email", "Status", "Score", "Grade"));
 
@@ -949,45 +936,6 @@ public class TeacherUI {
         }
     }
 
-    /**
-     * Select an existing student to add to the course.
-     * @param controller The TeacherController instance.
-     * @param course The Course instance.
-     */
-    private static void searchStudents(TeacherController controller, Course course) {
-        System.out.print("🔍 Enter letters to match (name or email): ");
-        String pattern = sc.nextLine().trim();
-        if (pattern.isEmpty()) {
-            System.out.println("⚠️ Empty input. Returning...");
-            return;
-        }
-
-        List<Student> matched = controller.searchAvailableStudents(course.getCourseID(), pattern);
-        if (matched.isEmpty()) {
-            System.out.println("❌ No matching students found.");
-            System.out.print("⬅️ Press ENTER to return...");
-            sc.nextLine();
-            return;
-        }
-
-        System.out.println("📋 Search Results:");
-        for (int i = 0; i < matched.size(); i++) {
-            Student s = matched.get(i);
-            System.out.printf("%d) %s (%s) - %s%n",
-                    i + 1, s.getFullName(), s.getStuID(), s.getEmail());
-        }
-        System.out.print("🔢 Enter number to add (0 to cancel): ");
-        String input = sc.nextLine().trim();
-        if (!input.matches("\\d+")) return;
-        int idx = Integer.parseInt(input);
-        if (idx <= 0 || idx > matched.size()) return;
-
-        Student chosen = matched.get(idx - 1);
-        controller.addExistingStudentToCache(chosen.getStuID(), course.getCourseID());
-        System.out.println(" Added " + chosen.getFullName() + " to course.");
-        System.out.print("⬅️ Press ENTER to return...");
-        sc.nextLine();
-    }
 
 
     /**
@@ -1024,7 +972,7 @@ public class TeacherUI {
                     exit = true;
                 }
                 case "a" -> selectExistingStudent(controller, course);
-                case "d" -> deleteStudent(controller);
+                case "d" -> deleteStudent(controller, course);
                 case "v" -> controller.commitStudentChanges();
                 default -> {
                     if (input.matches("\\d+")) {
@@ -1039,7 +987,8 @@ public class TeacherUI {
         }
     }
 
-    private static void deleteStudent(TeacherController controller) {
+    private static void deleteStudent(TeacherController controller, Course course) {
+        controller.refreshStudentCache(course.getCourseID());
         List<Student> cached = controller.getCachedStudents();
         if (cached.isEmpty()) {
             System.out.println("❌ No students to delete.");
