@@ -11,8 +11,8 @@ public class Course {
     private final String teacherID;
     private final Map<String, Assignment> assignments;
     private boolean useWeightedGrading = false;  // true = use category weights
-    private Map<String, Double> categoryWeights = new HashMap<>(); // e.g., "Homework" → 0.4
-    private Map<String, Integer> categoryDropCount = new HashMap<>(); // e.g., "Quiz" → 1
+    private Map<String, Double> categoryWeights = new HashMap<>(); //Homework → 0.4
+    private Map<String, Integer> categoryDropCount = new HashMap<>(); //Quiz → 1
     private boolean isCompleted = false;
     public Course(String courseName, String courseDescription, String teacherID) {
         this.courseID = IDGen.generate("CRS");
@@ -44,29 +44,22 @@ public class Course {
     public String getCourseID() {
         return courseID;
     }
-
     public String getCourseName() {
         return courseName;
     }
-
     public String getCourseDescription() {
         return courseDescription;
     }
-
     public String getTeacherID() { return teacherID; }
-
     public void setCourseDescription(String courseDescription) {
         this.courseDescription = courseDescription;
     }
-
     public void addAssignment(Assignment assignment) {
         assignments.put(assignment.getAssignmentID(), assignment);
     }
-
     public Assignment getAssignmentByID(String assignmentID) {
         return assignments.get(assignmentID);
     }
-
     public void setGradingMode(boolean useWeighted) {
         this.useWeightedGrading = useWeighted;
     }

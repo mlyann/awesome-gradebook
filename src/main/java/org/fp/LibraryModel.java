@@ -299,11 +299,8 @@ public class LibraryModel {
     /**
      * Populate a course with demo data (5 students + HW/Project/Quiz assignments).
      * All objects are created inside <code>courseID</code>;
-     * existing teacher / course信息保持不变。
-     *
      * @param courseID the course to populate
      */
-    // File: LibraryModel.java
     public void populateDemoData(String courseID) {
         // see if the course exists
         Course c = courseMap.get(courseID);
@@ -340,7 +337,7 @@ public class LibraryModel {
     }
 
     /**
-     * Unchanged helper — 会逐个给 studs 添加 Assignment 并随机提交/评分
+     * Unchanged helper method to create a group of assignments.
      */
     private void createGroup(
             String prefix,

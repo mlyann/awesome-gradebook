@@ -183,7 +183,7 @@ public class AdminUI {
 
 
     private static void clearAllUsersUI(LibraryUsers users, VICData vic, LibraryModel model) {
-        // 1) find SUPERADMIN
+        // find SUPERADMIN
         String superadmin = users.listAllUsers().entrySet().stream()
                 .filter(e -> e.getValue() == LibraryUsers.UserType.SUPERADMIN)
                 .map(Map.Entry::getKey)
@@ -195,7 +195,7 @@ public class AdminUI {
             return;
         }
 
-        // 2) redo the password check
+        // redo the password check
         System.out.print("Re-enter SUPERADMIN password: ");
         String pwd = sc.nextLine().trim();
         if (!users.authenticate(superadmin, pwd, vic)) {
@@ -203,7 +203,7 @@ public class AdminUI {
             return;
         }
 
-        // 3) double check
+        //double check
         System.out.print("Type 'DELETE' to confirm clearing all user data: ");
         String confirm = sc.nextLine().trim();
         if (!"DELETE".equals(confirm)) {
@@ -211,7 +211,7 @@ public class AdminUI {
             return;
         }
 
-        // 4) clear all users
+        // clear all users
         users.clearAllUsers();
         users.saveToJSON("data/users.json");
 

@@ -23,7 +23,7 @@ public class StudentUI {
     private static final Scanner sc = new Scanner(System.in);
     private static StudentController studentController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025,4,6);
-    private static LibraryModel model;    // ← 共享的 model
+    private static LibraryModel model;    // shared model
     // GPT client – created lazily
     private static OpenAIClient gpt;
     /* =============================================================
@@ -39,7 +39,7 @@ public class StudentUI {
 
         // 3) Check if student exists
         if (!StudentUI.model.studentExists(studentID)) {
-            System.out.println("❌ 学生 ID 不存在: " + studentID);
+            System.out.println("❌ Student ID not exist: " + studentID);
             return;
         }
         studentController.setCurrentStudent(studentID);

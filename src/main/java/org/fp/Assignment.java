@@ -76,7 +76,6 @@ public class Assignment {
     public boolean isPublished() {
         return published;
     }
-
     public String getAssignmentID() { return assignmentID; }
     public String getAssignmentName() { return assignmentName; }
     public String getStudentID() { return studentID; }
@@ -85,7 +84,6 @@ public class Assignment {
     public LocalDate getAssignDate() { return assignDate; }
     public LocalDate getDueDate() { return dueDate; }
     public SubmissionStatus getStatus() { return status; }
-
     public String getDueDateString() {
         return dueDate.toString();
     }

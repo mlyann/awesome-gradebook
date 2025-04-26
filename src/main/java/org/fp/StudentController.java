@@ -10,7 +10,7 @@ public class StudentController extends BaseController {
     private String currentStudentID;
 
     public StudentController(LibraryModel model) {
-        super(model); // ✅ Call the constructor of the superclass
+        super(model); // call the constructor
     }
 
     public void setCurrentStudent(String id) {
@@ -122,8 +122,8 @@ public class StudentController extends BaseController {
             boolean is2Graded = (g2 != null);
 
             if (!is1Graded && !is2Graded) return 0; // both ungraded
-            if (!is1Graded) return 1;  // a1 ungraded → push back
-            if (!is2Graded) return -1; // a2 ungraded → push back
+            if (!is1Graded) return 1;
+            if (!is2Graded) return -1;
 
             return g1.getLetterGrade().compareTo(g2.getLetterGrade());
         });
