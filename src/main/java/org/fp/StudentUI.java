@@ -22,7 +22,7 @@ public class StudentUI {
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
     private static StudentController studentController;
-    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 15);
+    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025,4,6);
     private static LibraryModel model;    // ← 共享的 model
     // GPT client – created lazily
     private static OpenAIClient gpt;
@@ -63,6 +63,7 @@ public class StudentUI {
 
 
     private static void level_1(StudentController studentController, Scanner sc) {
+        System.out.println("Current date: " + SYSTEM_DATE);
         StudentController.CourseSort sort = BaseController.CourseSort.NONE;
 
         studentController.loadStudentCourses();
@@ -197,6 +198,7 @@ public class StudentUI {
         System.out.println("==================================================\n");
     }
     private static void level_2(StudentController studentController, Course course) {
+        System.out.println("Current date: " + SYSTEM_DATE);
         System.out.println("➡️ Entered course: " + course.getCourseName());
         System.out.println("📝 Description: " + course.getCourseDescription());
 
@@ -282,6 +284,7 @@ public class StudentUI {
     }
 
     private static void level_3(StudentController studentController, Assignment assignment) {
+        System.out.println("Current date: " + SYSTEM_DATE);
         System.out.println("📘 Assignment Detail: " + assignment.getAssignmentName());
         System.out.println("🧾 Course: " + assignment.getCourseID());
         System.out.println("🗓️ Assigned: " + assignment.getAssignDate());
@@ -304,12 +307,33 @@ public class StudentUI {
         }
         System.out.println("===============================================");
 
+        if (status == Assignment.SubmissionStatus.UNSUBMITTED
+                && !SYSTEM_DATE.isBefore(assignment.getAssignDate())
+                && !SYSTEM_DATE.isAfter(assignment.getDueDate())) {
+            System.out.println("s) 📝 Submit assignment");
+        }
+
         // Show GPT option only if graded
         if (score != null && assignment.getStatus() == Assignment.SubmissionStatus.GRADED) {
             System.out.println("g) 🤖 Get GPT feedback for this assignment");
         }
         System.out.println("⬅️ Press ENTER to return...");
         String input = sc.nextLine().trim();
+
+        if (input.equalsIgnoreCase("s")) {
+            if (status != Assignment.SubmissionStatus.UNSUBMITTED) {
+                System.out.println("⛔ This assignment has already been submitted.");
+            } else if (SYSTEM_DATE.isBefore(assignment.getAssignDate())
+                    || SYSTEM_DATE.isAfter(assignment.getDueDate())) {
+                System.out.println("⛔ You cannot submit on this date.");
+            } else {
+                studentController.submitAssignment(assignment.getAssignmentID());
+                System.out.println("✅ Assignment submitted successfully.");
+            }
+            System.out.print("⬅️ Press ENTER to return...");
+            sc.nextLine();
+            return;
+        }
 
         // Only trigger GPT feedback if available
         if (input.equalsIgnoreCase("g")) {

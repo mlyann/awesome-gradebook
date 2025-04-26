@@ -26,7 +26,7 @@ public class TeacherUI {
      * ============================================================= */
     private static final Scanner sc = new Scanner(System.in);
     private static TeacherController TeacherController;
-    private static final LocalDate SYSTEM_DATE = LocalDate.of(2025, 4, 2);
+    private static final LocalDate SYSTEM_DATE = LocalDate.now();
     // GPT client
     private static OpenAIClient GPT;
     private static LibraryModel model;
@@ -50,6 +50,7 @@ public class TeacherUI {
 
     //DASHBOARD – list courses taught by this instructor
     private static void level_1(TeacherController controller, Scanner sc) {
+        System.out.println("Current date: " + SYSTEM_DATE);
         TeacherController.CourseSort sort = BaseController.CourseSort.NONE;
 
         while (true) {
@@ -449,6 +450,7 @@ public class TeacherUI {
      *  View a single assignment detail for a teacher
      */
     private static void viewAssignmentDetails(TeacherController controller, String groupName, List<Assignment> group) {
+        System.out.println("Current date: " + SYSTEM_DATE);
         GradeSort gradeSort = GradeSort.NONE;
 
         while (true) {
@@ -1003,7 +1005,7 @@ public class TeacherUI {
             System.out.println("👥 Students in Course (Manage Mode)");
             for (int i = 0; i < cached.size(); i++) {
                 Student s = cached.get(i);
-                System.out.printf("%d) %s (%s)\n", i+1, s.getFullName(), s.getStuID());
+                System.out.printf("%d) %s (%s)\n", i+1, s.getFullName());
             }
             System.out.println("a) ➕ Add existing student");
             System.out.println("d) 🗑️ Delete existing student");
@@ -1127,15 +1129,19 @@ public class TeacherUI {
                 int idx = Integer.parseInt(input);
                 if (idx > 0 && idx <= available.size()) {
                     Student chosen = available.get(idx - 1);
-                    controller.addExistingStudentToCache(
+
+                    String err = controller.addExistingStudentToCache(
                             chosen.getStuID(), course.getCourseID()
                     );
-                    System.out.println("✅ Added " + chosen.getFullName());
+                    if (err == null) {
+                        System.out.println("✅ Added " + chosen.getFullName());
+                    } else {
+                        System.out.println("❌ " + err);
+                    }
                 } else {
                     System.out.println("❌ Number out of range.");
                 }
-            }
-            else {
+            } else {
                 System.out.println("❌ Invalid input, enter number, 'f', or '0'");
             }
         }
