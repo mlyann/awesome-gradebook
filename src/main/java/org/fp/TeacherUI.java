@@ -298,7 +298,7 @@ public class TeacherUI {
         List<List<String>> rows = new ArrayList<>();
         rows.add(List.of(
                 "No.", "Assignment Name", "Assigned", "Due",
-                "Progress", "Submissions", "Graded", "Published?"
+                "Progress", "Submissions", "Graded"
         ));
 
         int totalStudents = controller.getStudentsInCourse(course.getCourseID()).size();
@@ -326,8 +326,7 @@ public class TeacherUI {
                     dueDate,
                     progress,
                     submitted + "/" + totalStudents,
-                    gradedBar,
-                    allPublished ? " Yes" : "❌ No"
+                    gradedBar
             ));
         }
 
@@ -1005,7 +1004,7 @@ public class TeacherUI {
             System.out.println("👥 Students in Course (Manage Mode)");
             for (int i = 0; i < cached.size(); i++) {
                 Student s = cached.get(i);
-                System.out.printf("%d) %s (%s)\n", i+1, s.getFullName());
+                System.out.printf("%d) %s \n", i+1, s.getFullName());
             }
             System.out.println("a) ➕ Add existing student");
             System.out.println("d) 🗑️ Delete existing student");

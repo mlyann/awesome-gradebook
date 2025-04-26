@@ -97,4 +97,14 @@ public class Course {
     public boolean isCompleted() {
         return isCompleted;
     }
+    public Map<String, Assignment> getAssignments() {
+        Map<String, Assignment> copy = new HashMap<>();
+        for (var entry : assignments.entrySet()) {
+            copy.put(entry.getKey(), new Assignment(entry.getValue()));
+        }
+        return Collections.unmodifiableMap(copy);
+    }
+    public void removeAssignmentByID(String assignmentID) {
+        assignments.remove(assignmentID);
+    }
 }

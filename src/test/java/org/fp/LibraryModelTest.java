@@ -4,6 +4,7 @@ import org.fp.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -103,6 +104,46 @@ public class LibraryModelTest {
     }
 
     @Test
+    void testEnrollStudentInCourse_Valid() {
+        Student student = new Student("Lina", "Zhou", "lz@u.edu");
+        Teacher teacher = new Teacher("Dr", "Who");
+        Course course = new Course("Chem", "Intro Chem", teacher.getTeacherID());
+
+        model.addStudent(student);
+        model.addTeacher(teacher);
+        model.addCourse(course);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        assertTrue(
+                model.getStudentCourses(student.getStuID()).contains(course.getCourseID())
+        );
+    }
+
+    @Test
+    void testEnrollStudentInCourse_ThrowsForUnknownStudent() {
+        Teacher teacher = new Teacher("Dr", "Who");
+        model.addTeacher(teacher);
+        Course course = new Course("Chem", "Intro Chem", teacher.getTeacherID());
+        model.addCourse(course);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.enrollStudentInCourse("NON_EXISTENT_STUDENT", course.getCourseID())
+        );
+    }
+
+    @Test
+    void testEnrollStudentInCourse_ThrowsForUnknownCourse() {
+        Student student = new Student("Lina", "Zhou", "lz@u.edu");
+        model.addStudent(student);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.enrollStudentInCourse(student.getStuID(), "NON_EXISTENT_COURSE")
+        );
+    }
+
+    @Test
     void testCalculateGPA() {
         Student student = new Student("Bob", "Lee", "bob@email.com");
         Teacher teacher = new Teacher("Dr", "House");
@@ -123,6 +164,66 @@ public class LibraryModelTest {
 
         double gpa = model.calculateGPA(student.getStuID());
         assertEquals(4.0, gpa);
+    }
+
+    @Test
+    void testAssignFinalLetterGrades_NonExistentCourse() {
+        Map<String, Grade> grades = model.assignFinalLetterGrades("NO_SUCH_COURSE");
+        assertNotNull(grades);
+        assertTrue(grades.isEmpty());
+    }
+
+    @Test
+    void testAssignFinalLetterGrades_NoStudentsEnrolled() {
+        Teacher teacher = new Teacher("Empty", "Course");
+        model.addTeacher(teacher);
+        Course course = new Course("Empty101", "No students", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Map<String, Grade> grades = model.assignFinalLetterGrades(course.getCourseID());
+        assertNotNull(grades);
+        assertTrue(grades.isEmpty());
+    }
+
+    @Test
+    void testAssignFinalLetterGrades_WeightedAndUnweighted() {
+        Teacher teacher = new Teacher("Weight", "Tester");
+        model.addTeacher(teacher);
+        Course course = new Course("Math200", "Weighted vs Unweighted", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student s1 = new Student("Stu", "One", "one@uni.edu");
+        Student s2 = new Student("Stu", "Two", "two@uni.edu");
+        model.addStudent(s1);
+        model.addStudent(s2);
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        // Unweighted assignment for s1: 50% → Grade F
+        Assignment u = new Assignment("Unwtd", s1.getStuID(), course.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(1));
+        u.submit();
+        u.markGraded("G1");
+        model.addAssignment(u);
+        model.addScore(new Score("G1", u.getAssignmentID(), s1.getStuID(), 50, 100));
+
+        // Switch to weighted grading and set weights
+        model.setGradingMode(course.getCourseID(), true);
+        model.setCategoryWeight(course.getCourseID(), "Cat", 1.0);
+
+        // Weighted assignment for s2: 80% → Grade B
+        Assignment w = new Assignment("Weighted", s2.getStuID(), course.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(1));
+        w.setCategory("Cat");
+        w.submit();
+        w.markGraded("G2");
+        model.addAssignment(w);
+        model.addScore(new Score("G2", w.getAssignmentID(), s2.getStuID(), 80, 100));
+
+        Map<String, Grade> grades = model.assignFinalLetterGrades(course.getCourseID());
+        assertEquals(2, grades.size());
+        assertEquals(Grade.F, grades.get(s1.getStuID()));
+        assertEquals(Grade.B, grades.get(s2.getStuID()));
     }
 
     @Test
@@ -210,6 +311,43 @@ public class LibraryModelTest {
 
     }
 
+    @Test
+    void testCalculateClassAverage_NonExistentCourse() {
+        assertEquals(0.0, model.calculateClassAverage("NO_SUCH_COURSE"), 1e-6);
+    }
+
+    @Test
+    void testCalculateClassAverage_NoStudentsEnrolled() {
+        Teacher t = new Teacher("Test", "Teacher");
+        model.addTeacher(t);
+        Course c = new Course("Empty", "No students", t.getTeacherID());
+        model.addCourse(c);
+
+        assertEquals(0.0, model.calculateClassAverage(c.getCourseID()), 1e-6);
+    }
+
+    @Test
+    void testCalculateClassAverage_UnweightedSingleStudent() {
+        Teacher t = new Teacher("Dr", "Unweighted");
+        model.addTeacher(t);
+        Course c = new Course("Math101", "Algebra", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Jane", "Doe", "jane@uni.edu");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a = new Assignment(
+                "Quiz1", s.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(1)
+        );
+        a.submit();
+        a.markGraded("G50");
+        model.addAssignment(a);
+        model.addScore(new Score("G50", a.getAssignmentID(), s.getStuID(), 70, 100));
+
+        assertEquals(70.0, model.calculateClassAverage(c.getCourseID()), 1e-6);
+    }
 
     @Test
     void testCalculateClassAverage_NoScores() {
@@ -340,7 +478,7 @@ public class LibraryModelTest {
     }
 
     @Test
-    void testGetScoreForAssignment_WithAndWithoutScore() {
+    void testGetScoreForAssignment_AllBranches() {
         // Setup teacher, student, course
         Teacher teacher = new Teacher("Greg", "Marks");
         model.addTeacher(teacher);
@@ -350,18 +488,36 @@ public class LibraryModelTest {
         model.addStudent(student);
         model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
 
-        // Assignment with no score
-        Assignment a1 = new Assignment("Lab Report", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(2));
-        model.addAssignment(a1);
-        assertNull(model.getScoreForAssignment(a1.getAssignmentID()), "Expected null for ungraded assignment");
+        assertNull(
+                model.getScoreForAssignment("NO_SUCH_ASG")
+        );
 
-        // Assignment with score
+        Assignment a1 = new Assignment(
+                "Lab Report",
+                student.getStuID(),
+                course.getCourseID(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(2)
+        );
+        model.addAssignment(a1);
+        assertNull(
+                model.getScoreForAssignment(a1.getAssignmentID())
+        );
+
         a1.submit();
         a1.markGraded("G123");
-        model.addScore(new Score("G123", a1.getAssignmentID(), student.getStuID(), 85, 100));
-        assertNotNull(model.getScoreForAssignment(a1.getAssignmentID()), "Expected score to be found");
-        assertEquals(85, model.getScoreForAssignment(a1.getAssignmentID()).getEarned());
+        model.addScore(new Score(
+                "G123",
+                a1.getAssignmentID(),
+                student.getStuID(),
+                85,
+                100
+        ));
+        Score s = model.getScoreForAssignment(a1.getAssignmentID());
+        assertNotNull(s);
+        assertEquals(85, s.getEarned());
     }
+
 
     @Test
     void testGetStudentIDsInCourse_WithAndWithoutStudents() {
@@ -392,7 +548,7 @@ public class LibraryModelTest {
 
     @Test
     void testRemoveAssignment_WithAndWithoutGrade() {
-        // Setup teacher, course, student
+        // --- Setup teacher, course, student ---
         Teacher teacher = new Teacher("Tina", "Remove");
         model.addTeacher(teacher);
         Course course = new Course("History", "Modern", teacher.getTeacherID());
@@ -401,51 +557,66 @@ public class LibraryModelTest {
         model.addStudent(student);
         model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
 
-        // Assignment without grade
-        Assignment a1 = new Assignment("Essay", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(2));
+        // --- Assignment without grade ---
+        Assignment a1 = new Assignment(
+                "Essay",
+                student.getStuID(),
+                course.getCourseID(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(2)
+        );
         model.addAssignment(a1);
         student.addAssignment(a1.getAssignmentID());
-        assertNotNull(model.getAssignment(a1.getAssignmentID()));
-        model.removeAssignment(a1.getAssignmentID());
-        assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a1.getAssignmentID()));
 
-        // Assignment with grade
-        Assignment a2 = new Assignment("Debate", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        // verify it exists
+        assertNotNull(model.getAssignment(a1.getAssignmentID()));
+
+        // remove it
+        model.removeAssignment(a1.getAssignmentID());
+        // now it should be gone
+        assertNull(
+                model.getAssignment(a1.getAssignmentID()),
+                "Un‐graded assignment should return null after removal"
+        );
+
+        // --- Assignment with grade ---
+        Assignment a2 = new Assignment(
+                "Debate",
+                student.getStuID(),
+                course.getCourseID(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(3)
+        );
         a2.submit();
         a2.markGraded("G777");
         model.addAssignment(a2);
-        model.addScore(new Score("G777", a2.getAssignmentID(), student.getStuID(), 92, 100));
+        model.addScore(new Score(
+                "G777",
+                a2.getAssignmentID(),
+                student.getStuID(),
+                92,
+                100
+        ));
         student.addAssignment(a2.getAssignmentID());
+
+        // verify both assignment and score exist
+        assertNotNull(model.getAssignment(a2.getAssignmentID()));
         assertNotNull(model.getScore("G777"));
+
+        // remove the graded assignment
         model.removeAssignment(a2.getAssignmentID());
-        assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a2.getAssignmentID()));
-        //assertNull(model.getScore("G777"));
+
+        // after removal both should be gone
+        assertNull(
+                model.getAssignment(a2.getAssignmentID()),
+                "Graded assignment should return null after removal"
+        );
+        assertNull(
+                model.getScore("G777"),
+                "Score should return null after its assignment is removed"
+        );
     }
 
-    @Test
-    void testRemoveStudentFromCourse_RemovesEnrollment() {
-        // Setup teacher, course, student
-        Teacher teacher = new Teacher("Eric", "Courses");
-        model.addTeacher(teacher);
-        Course course = new Course("Art", "Impressionism", teacher.getTeacherID());
-        model.addCourse(course);
-        Student student = new Student("Claude", "Monet", "claude@paint.edu");
-        model.addStudent(student);
-
-        // Enroll student and verify enrollment
-        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
-        List<String> enrolled = model.getStudentIDsInCourse(course.getCourseID());
-        assertTrue(enrolled.contains(student.getStuID()), "Student should be enrolled");
-
-        // Remove student and verify removal
-        model.removeStudentFromCourse(student.getStuID(), course.getCourseID());
-        List<String> updated = model.getStudentIDsInCourse(course.getCourseID());
-        assertTrue(updated.contains(student.getStuID()), "Student should no longer be enrolled");
-
-        // Verify student's internal state no longer includes the course
-        Student updatedStudent = model.getStudent(student.getStuID());
-        assertFalse(updatedStudent.getEnrolledCourseIDs().contains(course.getCourseID()));
-    }
 
     @Test
     void testRemoveStudentFromCourse_CourseHasNoStudentList() {
@@ -602,6 +773,14 @@ public class LibraryModelTest {
         // Should still have no assignments or scores
         assertTrue(model.getAssignmentsInCourse(c.getCourseID()).isEmpty());
         assertTrue(model.getAllScores().isEmpty());
+    }
+
+
+    @Test
+    void testBuildGradeReport_ThrowsForUnknownStudent() {
+        assertThrows(IllegalArgumentException.class, () ->
+                model.buildGradeReport("NON_EXISTENT_ID")
+        );
     }
 
     @Test
@@ -1545,7 +1724,7 @@ public class LibraryModelTest {
         model.addScore(new Score("G1", hw.getAssignmentID(), student.getStuID(), 90, 100)); // 90%
 
         double avg = model.calculateClassAverage(course.getCourseID());
-        assertEquals(90.0, avg, 0.01, "Class average should match weighted score for the only student");
+        assertEquals(90.0, avg, 0.01);
     }
 
     @Test
@@ -1581,7 +1760,7 @@ public class LibraryModelTest {
         model.addScore(new Score("G3", quiz2.getAssignmentID(), s2.getStuID(), 100, 100)); // 100%
 
         double avg = model.calculateClassAverage(course.getCourseID());
-        assertEquals(90.0, avg, 0.01, "Class average should be average of both students' weighted scores");
+        assertEquals(90.0, avg, 0.01);
     }
 
     @Test
@@ -1624,7 +1803,7 @@ public class LibraryModelTest {
 
         model.removeCourse(c.getCourseID());
 
-        assertNull(model.getCourse(c.getCourseID()), "Course should be removed even if teacher didn't track it");
+        assertNull(model.getCourse(c.getCourseID()));
     }
 
     @Test
@@ -1717,7 +1896,7 @@ public class LibraryModelTest {
         double overallAverage = model.getOverallClassAverage(course.getCourseID());
 
         // Average = (80 + 90) / 2 = 85.0
-        assertEquals(85.0, overallAverage, 0.01, "Expected overall average of 85.0");
+        assertEquals(85.0, overallAverage, 0.01);
     }
 
     @Test
@@ -1764,7 +1943,7 @@ public class LibraryModelTest {
         double overallAverage = model.getOverallClassAverage(course.getCourseID());
 
         // Expect average of 85 and 95
-        assertEquals(90.0, overallAverage, 0.01, "Expected weighted class average of 90.0");
+        assertEquals(90.0, overallAverage, 0.01);
     }
 
     @Test
@@ -1773,7 +1952,7 @@ public class LibraryModelTest {
 
         double avg = model.courseAverageAcrossAll("NON_EXISTENT_COURSE", false);
 
-        assertEquals(0.0, avg, 0.01, "Should return 0.0 if course does not exist");
+        assertEquals(0.0, avg, 0.01);
     }
 
 
@@ -1792,7 +1971,7 @@ public class LibraryModelTest {
 
         double avg = model.courseAverageAcrossAll(c.getCourseID(), false);
 
-        assertEquals(0.0, avg, 0.01, "Should return 0.0 if course is not completed");
+        assertEquals(0.0, avg, 0.01);
     }
 
 
@@ -1831,7 +2010,7 @@ public class LibraryModelTest {
 
         double avg = model.courseAverageAcrossAll(c.getCourseID(), false);
 
-        assertEquals(0.0, avg, 0.01, "Expected course average of 85.0 for completed course");
+        assertEquals(0.0, avg, 0.01);
         model.clearAllData();
     }
 
@@ -1861,11 +2040,6 @@ public class LibraryModelTest {
 
         // Act
         model.removeCourse(c.getCourseID());
-
-        // After removal
-        //assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a.getAssignmentID()));
-        //assertNull(model.getScore("G1"));
-        //assertNull(model.getCourse(c.getCourseID()));
     }
 
     @Test
@@ -1889,7 +2063,7 @@ public class LibraryModelTest {
         // Act
         model.removeCourse(c.getCourseID());
 
-        assertNull(model.getCourse(c.getCourseID()), "Course should be removed even if assignment is missing");
+        assertNull(model.getCourse(c.getCourseID()));
     }
 
     @Test
@@ -1953,15 +2127,18 @@ public class LibraryModelTest {
 
         // Before removal: student should be enrolled
         List<String> studentsBefore = model.getStudentIDsInCourse(c.getCourseID());
-        assertTrue(studentsBefore.contains(s.getStuID()), "Student should be enrolled before removal");
+        assertNotNull(studentsBefore);
+        assertTrue(studentsBefore.contains(s.getStuID()));
 
         // Act: Remove student
         model.removeStudentFromCourse(s.getStuID(), c.getCourseID());
 
         // After removal: student should no longer be enrolled
         List<String> studentsAfter = model.getStudentIDsInCourse(c.getCourseID());
-        assertTrue(studentsAfter.contains(s.getStuID()), "Student should be removed from course list");
+        assertNotNull(studentsAfter);
+        assertFalse(studentsAfter.contains(s.getStuID()));
     }
+
 
     @Test
     void testRemoveAssignment_AllIfStatementsExecuted() {
@@ -1985,8 +2162,8 @@ public class LibraryModelTest {
         s.addAssignment(a.getAssignmentID());
 
         // Before removal checks
-        assertNotNull(model.getAssignment(a.getAssignmentID()), "Assignment should exist before removal");
-        assertNotNull(model.getScore("G500"), "Score should exist before removal");
+        assertNotNull(model.getAssignment(a.getAssignmentID()));
+        assertNotNull(model.getScore("G500"));
 
         // Act: Remove the assignment
         model.removeAssignment(a.getAssignmentID());
@@ -2000,14 +2177,14 @@ public class LibraryModelTest {
 
         Student fetched = model.getStudent(s.getStuID());
 
-        assertNotNull(fetched, "Fetched student should not be null");
-        assertEquals(s.getStuID(), fetched.getStuID(), "Fetched student ID should match");
-        assertEquals(s.getFirstName(), fetched.getFirstName(), "Fetched first name should match");
-        assertEquals(s.getLastName(), fetched.getLastName(), "Fetched last name should match");
-        assertEquals(s.getEmail(), fetched.getEmail(), "Fetched email should match");
+        assertNotNull(fetched);
+        assertEquals(s.getStuID(), fetched.getStuID());
+        assertEquals(s.getFirstName(), fetched.getFirstName());
+        assertEquals(s.getLastName(), fetched.getLastName());
+        assertEquals(s.getEmail(), fetched.getEmail());
 
         // Check that it's a COPY, not the same object
-        assertNotSame(s, fetched, "Fetched student should be a new copy, not same object");
+        assertNotSame(s, fetched);
     }
 
     @Test
@@ -2022,6 +2199,7 @@ public class LibraryModelTest {
 
     @Test
     void testRemoveCourse_RunsThroughBothForLoops() {
+        // --- Setup ---
         Teacher t = new Teacher("Teacher", "Example");
         model.addTeacher(t);
         Course c = new Course("CS", "TestCourse", t.getTeacherID());
@@ -2039,38 +2217,97 @@ public class LibraryModelTest {
         model.enrollStudentInCourse(s2.getStuID(), c.getCourseID());
 
         // Create two assignments for these students
-        Assignment a1 = new Assignment("HW1", s1.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
-        Assignment a2 = new Assignment("HW2", s2.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
-
+        Assignment a1 = new Assignment(
+                "HW1", s1.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(3)
+        );
+        Assignment a2 = new Assignment(
+                "HW2", s2.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(3)
+        );
         model.addAssignment(a1);
         model.addAssignment(a2);
 
-        s1.addAssignment(a1.getAssignmentID());
-        s2.addAssignment(a2.getAssignmentID());
-
-        // Before removal: Confirm everything exists
+        // Pre-removal sanity
         assertNotNull(model.getAssignment(a1.getAssignmentID()));
         assertNotNull(model.getAssignment(a2.getAssignmentID()));
         assertTrue(model.getStudentIDsInCourse(c.getCourseID()).contains(s1.getStuID()));
         assertTrue(model.getStudentIDsInCourse(c.getCourseID()).contains(s2.getStuID()));
 
-        // Act: Remove the course
+        // --- Act: Remove the course ---
         model.removeCourse(c.getCourseID());
 
-        // After removal: Course and assignments should be gone
-        model.getAssignment(a1.getAssignmentID());
-         model.getAssignment(a2.getAssignmentID());
-        model.getCourse(c.getCourseID());
+        // --- Post-removal assertions ---
 
-        // Students should not have the course in their enrolled courses
+        // Course and assignments should be gone
+        assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
+        assertNull(model.getAssignment(a1.getAssignmentID()), "Assignment a1 should be removed");
+        assertNull(model.getAssignment(a2.getAssignmentID()), "Assignment a2 should be removed");
+
+        // No student should still list that course
         Student updatedS1 = model.getStudent(s1.getStuID());
         Student updatedS2 = model.getStudent(s2.getStuID());
+        assertNotNull(updatedS1);
+        assertNotNull(updatedS2);
+        assertFalse(
+                updatedS1.getEnrolledCourseIDs().contains(c.getCourseID())
+        );
+        assertFalse(
+                updatedS2.getEnrolledCourseIDs().contains(c.getCourseID())
+        );
 
-        model.calculateClassAverage("");
-
-        assertTrue(updatedS1.getEnrolledCourseIDs().contains(c.getCourseID()), "First student should not be enrolled");
-        assertTrue(updatedS2.getEnrolledCourseIDs().contains(c.getCourseID()), "Second student should not be enrolled");
+        // The student-IDs-in-course helper should also return empty
+        assertTrue(
+                model.getStudentIDsInCourse(c.getCourseID()).isEmpty()
+        );
     }
+
+    @Test
+    void testCalculateGPA_ThrowsForUnknownStudent() {
+        assertThrows(IllegalArgumentException.class, () ->
+                model.calculateGPA("NON_EXISTENT_ID")
+        );
+    }
+
+    @Test
+    void testCalculateGPA_WeightedGradingBranch() {
+        Teacher t = new Teacher("Weight", "Tester");
+        model.addTeacher(t);
+        Course c = new Course("Math", "Weighted", t.getTeacherID());
+        model.addCourse(c);
+
+        // configure weighted grading
+        c.setGradingMode(true);
+        c.setCategoryWeight("HW", 0.6);
+        c.setCategoryWeight("Exam", 0.4);
+
+        Student s = new Student("W", "Eight", "we@weighted.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // HW assignment: 80%
+        Assignment hw = new Assignment("HW1", s.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(1));
+        hw.setCategory("HW");
+        hw.submit();
+        hw.markGraded("GHW");
+        model.addAssignment(hw);
+        model.addScore(new Score("GHW", hw.getAssignmentID(), s.getStuID(), 80, 100));
+
+        // Exam assignment: 100%
+        Assignment ex = new Assignment("Exam1", s.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(2));
+        ex.setCategory("Exam");
+        ex.submit();
+        ex.markGraded("GEX");
+        model.addAssignment(ex);
+        model.addScore(new Score("GEX", ex.getAssignmentID(), s.getStuID(), 100, 100));
+
+        double gpa = model.calculateGPA(s.getStuID());
+        // weighted percentage = 80*0.6 + 100*0.4 = 88% → Grade B → GPA 3.0
+        assertEquals(3.0, gpa, 0.01);
+    }
+
 
     @Test
     void testCalculateGPA_RunsIntoPctCalculation_Unweighted() {
@@ -2096,7 +2333,7 @@ public class LibraryModelTest {
         double gpa = model.calculateGPA(s.getStuID());
 
         // 85% -> Grade B -> GPA 3.0
-        assertEquals(3.0, gpa, 0.01, "GPA should be 3.0 for 85%");
+        assertEquals(3.0, gpa, 0.01);
     }
 
     @Test
@@ -2126,7 +2363,7 @@ public class LibraryModelTest {
         model.getAssignmentsInCourse("");
 
         // GPA should be 4.0 (grade A)
-        assertEquals(4.0, gpa, 0.01, "GPA should be 4.0 for 90%");
+        assertEquals(4.0, gpa, 0.01);
     }
 
     @Test
@@ -2144,7 +2381,7 @@ public class LibraryModelTest {
 
         // Before removal: courseToStudentIDs should contain courseID -> [studentID]
         List<String> enrolledStudentsBefore = model.getStudentIDsInCourse(c.getCourseID());
-        assertTrue(enrolledStudentsBefore.contains(s.getStuID()), "Student should be enrolled before removal");
+        assertTrue(enrolledStudentsBefore.contains(s.getStuID()));
 
         // Act: remove the student
         model.removeStudentFromCourse(s.getStuID(), c.getCourseID());
@@ -2153,6 +2390,34 @@ public class LibraryModelTest {
         List<String> enrolledStudentsAfter = model.getStudentIDsInCourse(c.getCourseID());
     }
 
+    @Test
+    void testInitPrefixWithNoMatchingIds() throws Exception {
+        LibraryModel model = new LibraryModel();
+        Method init = LibraryModel.class.getDeclaredMethod("initPrefix", String.class, Set.class);
+        init.setAccessible(true);
 
+        // empty set → next ID should start at 0
+        init.invoke(model, "ASG", Collections.emptySet());
+        assertEquals("ASG00000", IDGen.generate("ASG"));
 
+        // non‐matching IDs only → still start at 0
+        Set<String> others = Set.of("XYZ00010", "CRS00005");
+        init.invoke(model, "ASG", others);
+        assertEquals("ASG00000", IDGen.generate("ASG"));
+    }
+
+    @Test
+    void testInitPrefixWithMatchingIds() throws Exception {
+        LibraryModel model = new LibraryModel();
+        Method init = LibraryModel.class.getDeclaredMethod("initPrefix", String.class, Set.class);
+        init.setAccessible(true);
+
+        // mixed IDs: ASG00002, ASG00007, ASG00005 → max is 7, so next is 8
+        Set<String> ids = Set.of("ASG00002", "ASG00007", "XYZ123", "ASG00005");
+        init.invoke(model, "ASG", ids);
+        assertEquals("ASG00008", IDGen.generate("ASG"));
+    }
 }
+
+
+

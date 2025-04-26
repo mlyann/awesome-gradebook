@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.*;
 
@@ -24,27 +25,12 @@ public class LibraryModel {
     private final Map<String, Assignment> assignmentMap = new HashMap<>();
     private final Map<String, Score> gradeMap = new HashMap<>();
 
-    private final Map<String, List<String>> studentCourses = new HashMap<>();
-    private final Map<String, List<String>> courseStudents = new HashMap<>();
-    private final Map<String, List<String>> courseAssignments = new HashMap<>();
-    private final Map<String, List<String>> studentAssignments = new HashMap<>();
-    private final Map<String, String> assignmentGrades = new HashMap<>();
-    private final Map<String, List<String>> courseToStudentIDs = new HashMap<>();
-
-
     public void clearAllData() {
         studentMap.clear();
         teacherMap.clear();
         courseMap.clear();
         assignmentMap.clear();
         gradeMap.clear();
-
-        studentCourses.clear();
-        courseStudents.clear();
-        courseAssignments.clear();
-        studentAssignments.clear();
-        assignmentGrades.clear();
-        courseToStudentIDs.clear();
     }
 
     public int getCourseCount() {
@@ -132,10 +118,24 @@ public class LibraryModel {
 
     public void addAssignment(Assignment a) {
         assignmentMap.put(a.getAssignmentID(), a);
+
+        // tie into Course
+        Course c = courseMap.get(a.getCourseID());
+        if (c != null) {
+            c.addAssignment(a);
+        }
+
+        // tie into Student
+        Student s = studentMap.get(a.getStudentID());
+        if (s != null) {
+            s.addAssignment(a.getAssignmentID());
+        }
     }
 
     public Assignment getAssignment(String id) {
-        return new Assignment(assignmentMap.get(id));
+        Assignment original = assignmentMap.get(id);
+        if (original == null) return null;
+        return new Assignment(original);
     }
 
     public Collection<Assignment> getAllAssignments() {
@@ -169,7 +169,11 @@ public class LibraryModel {
     }
 
     public Score getScore(String gradeID) {
-        return new Score(gradeMap.get(gradeID));
+        Score original = gradeMap.get(gradeID);
+        if (original == null) {
+            return null;
+        }
+        return new Score(original);
     }
 
     public Map<String, Score> getAllScores() {
@@ -196,94 +200,72 @@ public class LibraryModel {
     }
 
     public List<String> getStudentIDsInCourse(String courseID) {
-        if (courseStudents.containsKey(courseID)){
-            return new ArrayList<>(courseStudents.get(courseID));
-        }
-        else{
-            return new ArrayList<>();
-        }
+        // Optionally check courseMap.containsKey(courseID) first
+        return studentMap.values().stream()
+                .filter(s -> s.getEnrolledCourseIDs().contains(courseID))
+                .map(Student::getStuID)
+                .collect(Collectors.toList());
     }
 
     public void enrollStudentInCourse(String studentID, String courseID) {
-        studentMap.get(studentID).enrollInCourse(courseID);
-
-        courseStudents.putIfAbsent(courseID, new ArrayList<>());
-        if (!courseStudents.get(courseID).contains(studentID)) {
-            courseStudents.get(courseID).add(studentID);
+        Student s = studentMap.get(studentID);
+        if (s == null) {
+            throw new IllegalArgumentException("No such student: " + studentID);
         }
-
-        studentCourses.putIfAbsent(studentID, new ArrayList<>());
-        if (!studentCourses.get(studentID).contains(courseID)) {
-            studentCourses.get(studentID).add(courseID);
+        Course c = courseMap.get(courseID);
+        if (c == null) {
+            throw new IllegalArgumentException("No such course: " + courseID);
         }
+        s.enrollInCourse(courseID);
     }
 
 
     public void removeAssignment(String assignmentID) {
+        // 1) Pull out and remove the Assignment object
         Assignment a = assignmentMap.remove(assignmentID);
         if (a == null) return;
-        List<String> saList = studentAssignments.get(a.getStudentID());
-        if (saList != null) saList.remove(assignmentID);
-        List<String> caList = courseAssignments.get(a.getCourseID());
-        if (caList != null) caList.remove(assignmentID);
-        if (a.getGradeID() != null) {
-            gradeMap.remove(a.getGradeID());
-            assignmentGrades.remove(assignmentID);
+
+        // 2) Detach from its Course
+        Course course = courseMap.get(a.getCourseID());
+        if (course != null) {
+            course.removeAssignmentByID(assignmentID);
+        }
+
+        // 3) Detach from its Student
+        Student student = studentMap.get(a.getStudentID());
+        if (student != null) {
+            student.removeAssignment(assignmentID);
+        }
+
+        // 4) Cascade‐delete the Score by reading it off the Assignment itself
+        String gradeID = a.getGradeID();
+        if (gradeID != null) {
+            gradeMap.remove(gradeID);
         }
     }
 
-    // Remove student from a specific course
     public void removeStudentFromCourse(String studentID, String courseID) {
-        List<String> studentList = courseToStudentIDs.get(courseID);
-        if (studentList != null) {
-            studentList.remove(studentID);
-        }
-
         Student student = studentMap.get(studentID);
         if (student != null) {
-            student.dropCourse(courseID); // Student object should update its internal list
+            student.dropCourse(courseID);
         }
     }
 
 
     public void removeCourse(String courseID) {
-        // 1. Remove all assignments associated with the course
-        List<String> assignments = courseAssignments.getOrDefault(courseID, List.of());
-        for (String aid : assignments) {
-            Assignment a = assignmentMap.get(aid);
-            if (a != null) {
-                // Remove from student's assignment list
-                String studentID = a.getStudentID();
-                studentAssignments.getOrDefault(studentID, new ArrayList<>()).remove(aid);
-                String gradeID = assignmentGrades.remove(aid);
-                if (gradeID != null) {
-                    gradeMap.remove(gradeID);
-                }
-                assignmentMap.remove(aid);
-            }
-        }
-        courseAssignments.remove(courseID);
+        // 1) pull out and delete the Course itself
+        Course c = courseMap.remove(courseID);
+        if (c == null) return;
 
-        // Remove course from students' enrolled course list
-        List<String> students = courseStudents.getOrDefault(courseID, List.of());
-        for (String sid : students) {
-            studentCourses.getOrDefault(sid, new ArrayList<>()).remove(courseID);
-        }
-        courseStudents.remove(courseID);
-        courseToStudentIDs.remove(courseID);
-
-        // Remove course from teacher
-        Course c = courseMap.get(courseID);
-        if (c != null) {
-            String teacherID = c.getTeacherID();
-            Teacher t = teacherMap.get(teacherID);
-            if (t != null) {
-                t.removeCourse(courseID);
-            }
+        // 2) delete its assignments via our single-assignment remover
+        for (String aid : new ArrayList<>(c.getAssignments().keySet())) {
+            removeAssignment(aid);
         }
 
-        // remove the course itself
-        courseMap.remove(courseID);
+        // 3) drop this course from every student’s enrolled list
+        for (Student s : studentMap.values()) {
+            s.dropCourse(courseID);
+        }
     }
 
     /*
@@ -360,34 +342,53 @@ public class LibraryModel {
     /**
      * Unchanged helper — 会逐个给 studs 添加 Assignment 并随机提交/评分
      */
-    private void createGroup(String prefix, int count, String cat, int span,
-                             LocalDate base, List<Student> studs, String cid,
-                             int minEarned, int maxEarned) {
-
+    private void createGroup(
+            String prefix,
+            int count,
+            String category,
+            int span,
+            LocalDate base,
+            List<Student> studs,
+            String courseID,
+            int minEarned,
+            int maxEarned
+    ) {
         for (int i = 1; i <= count; i++) {
             for (Student s : studs) {
+                // 1) Construct the assignment
                 Assignment a = new Assignment(
                         prefix + " " + i,
                         s.getStuID(),
-                        cid,
+                        courseID,
                         base,
                         base.plusDays(span)
                 );
-                a.setCategory(cat);
-                addAssignment(a);            // 加入 model.assignmentMap
-                courseAssignments.computeIfAbsent(cid, k -> new ArrayList<>())
-                        .add(a.getAssignmentID());
-                studentAssignments.computeIfAbsent(s.getStuID(), k -> new ArrayList<>())
-                        .add(a.getAssignmentID());
+                a.setCategory(category);
 
-                // 随机提交与评分
+                // 2) Add to model (ties into Course and Student)
+                addAssignment(a);
+
+                // 3) Simulate submission with 85% probability
                 if (Math.random() < 0.85) {
                     a.submit();
+
+                    // 4) Simulate grading with 75% probability
                     if (Math.random() < 0.75) {
-                        String gid = "G_" + a.getAssignmentID();
-                        a.markGraded(gid);
-                        int earned = minEarned + (int)(Math.random() * (maxEarned - minEarned + 1));
-                        Score score = new Score(gid, a.getAssignmentID(), s.getStuID(), earned, maxEarned);
+                        String gradeID = "G_" + a.getAssignmentID();
+                        a.markGraded(gradeID);
+
+                        // 5) Random earned points between minEarned and maxEarned
+                        int earned = minEarned
+                                + (int)(Math.random() * (maxEarned - minEarned + 1));
+
+                        // 6) Create and store the Score
+                        Score score = new Score(
+                                gradeID,
+                                a.getAssignmentID(),
+                                s.getStuID(),
+                                earned,
+                                maxEarned
+                        );
                         addScore(score);
                     }
                 }
@@ -413,11 +414,13 @@ public class LibraryModel {
     }
 
     public double calculateGPA(String studentID) {
-        List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
-        int totalPoints = 0;
-        int count = 0;
+        Student s = studentMap.get(studentID);
+        if (s == null) {
+            throw new IllegalArgumentException("No such student: " + studentID);
+        }
 
-        for (String courseID : courseIDs) {
+        int totalPoints = 0, count = 0;
+        for (String courseID : s.getEnrolledCourseIDs()) {
             Course course = courseMap.get(courseID);
             if (course == null) continue;
 
@@ -436,9 +439,9 @@ public class LibraryModel {
             totalPoints += gpaPoints;
             count++;
         }
-
-        return count == 0 ? 0.0 : (1.0 * totalPoints / count);
+        return count == 0 ? 0.0 : (double) totalPoints / count;
     }
+
     public double getOverallClassAverage(String courseID) {
         Course course = courseMap.get(courseID);
         if (course == null) return 0.0;
@@ -584,45 +587,74 @@ public class LibraryModel {
             course.markCompleted();
         }
     }
-    public List<String> getStudentCourses(String stuID) {
-        return new ArrayList<>(studentCourses.getOrDefault(stuID, List.of()));
+
+    public List<String> getStudentCourses(String studentID) {
+        Student s = studentMap.get(studentID);
+        if (s == null) {
+            // No such student → empty list
+            return Collections.emptyList();
+        }
+        // Return a copy so callers can’t mutate the internal set
+        return new ArrayList<>(s.getEnrolledCourseIDs());
     }
 
     /**
      * Build a plain-text grade report for one student
      */
-    public String buildGradeReport(String stuID) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Grade report for ").append(getStudent(stuID).getFullName()).append(":\n");
-
-        List<String> cids = studentCourses.getOrDefault(stuID, List.of());
-        for (String cid : cids) {
-            Course c = getCourse(cid);
-            double pct = getFinalPercentage(stuID, cid);
-            Grade  g   = Grade.fromScore(pct);
-            sb.append("  • ").append(c.getCourseName())
-                    .append(" – ").append(String.format("%.1f%%", pct))
-                    .append(" (").append(g).append(")\n");
+    public String buildGradeReport(String studentID) {
+        Student s = studentMap.get(studentID);
+        if (s == null) {
+            throw new IllegalArgumentException("No such student: " + studentID);
         }
-        double overall = courseAverageAcrossAll(stuID, false);
-        sb.append("Overall average: ").append(String.format("%.1f%%", overall))
-                .append(" (").append(Grade.fromScore(overall)).append(")\n");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Grade report for ")
+                .append(s.getFullName())
+                .append(":\n");
+
+        for (String courseID : s.getEnrolledCourseIDs()) {
+            Course c = courseMap.get(courseID);
+            if (c == null) continue;
+
+            double pct = getFinalPercentage(studentID, courseID);
+            Grade  g   = Grade.fromScore(pct);
+
+            sb.append("  • ")
+                    .append(c.getCourseName())
+                    .append(" – ")
+                    .append(String.format("%.1f%%", pct))
+                    .append(" (")
+                    .append(g)
+                    .append(")\n");
+        }
+
+        double overall = courseAverageAcrossAll(studentID, false);
+        sb.append("Overall average: ")
+                .append(String.format("%.1f%%", overall))
+                .append(" (")
+                .append(Grade.fromScore(overall))
+                .append(")\n");
+
         return sb.toString();
     }
     /**
      * Average of the final percentage for every course the student is enrolled in.
      */
     public double courseAverageAcrossAll(String stuID, boolean completedOnly) {
-        List<String> cids = studentCourses.getOrDefault(stuID, List.of());
-        double total  = 0.0;
-        int    counted = 0;
+        Student s = studentMap.get(stuID);
+        if (s == null) {
+            // no such student → no data → average zero
+            return 0.0;
+        }
 
-        for (String cid : cids) {
+        double total   = 0.0;
+        int    counted = 0;
+        for (String cid : s.getEnrolledCourseIDs()) {
             Course c = courseMap.get(cid);
             if (c == null) continue;
             if (completedOnly && !c.isCompleted()) continue;
 
-            total += getFinalPercentage(stuID, cid);   // already in percent
+            total   += getFinalPercentage(stuID, cid);
             counted++;
         }
         return counted == 0 ? 0.0 : total / counted;

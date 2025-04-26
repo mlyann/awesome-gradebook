@@ -130,4 +130,50 @@ class StudentTest {
         s1.addAssignment(a1.getAssignmentID());
         s1.removeAssignment(a1.getAssignmentID());
     }
+
+    @Test
+    void testDropCourse_NullId() {
+        Student s = new Student("Test", "User", "test@domain.com");
+        s.enrollInCourse("CS101");
+        Set<String> before = s.getEnrolledCourseIDs();
+        s.dropCourse(null);
+        assertEquals(before, s.getEnrolledCourseIDs());
+    }
+
+    @Test
+    void testDropCourse_EmptyId() {
+        Student s = new Student("Test", "User", "test@domain.com");
+        s.enrollInCourse("CS102");
+        Set<String> before = s.getEnrolledCourseIDs();
+        s.dropCourse("");
+        assertEquals(before, s.getEnrolledCourseIDs());
+    }
+
+    @Test
+    void testDropCourse_NotEnrolled() {
+        Student s = new Student("Test", "User", "test@domain.com");
+        s.enrollInCourse("CS103");
+        Set<String> before = s.getEnrolledCourseIDs();
+        s.dropCourse("MATH200");
+        assertEquals(before, s.getEnrolledCourseIDs());
+    }
+
+    @Test
+    void testDropCourse_SuccessfulRemoval() {
+        Student s = new Student("Test", "User", "test@domain.com");
+        s.enrollInCourse("CS104");
+        assertTrue(s.getEnrolledCourseIDs().contains("CS104"));
+        s.dropCourse("CS104");
+        assertFalse(s.getEnrolledCourseIDs().contains("CS104"));
+    }
+
+    @Test
+    void testDropCourse_IdempotentRemoval() {
+        Student s = new Student("Test", "User", "test@domain.com");
+        s.enrollInCourse("CS105");
+        s.dropCourse("CS105");
+        // second drop should not throw or change anything
+        s.dropCourse("CS105");
+        assertFalse(s.getEnrolledCourseIDs().contains("CS105"));
+    }
 }

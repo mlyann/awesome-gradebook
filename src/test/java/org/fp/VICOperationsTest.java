@@ -121,4 +121,70 @@ public class VICOperationsTest {
         assertNull(VICOperations.createStraddlingCheckerboard(null, ""));
         assertNull(VICOperations.createStraddlingCheckerboard("abcdefghij", ""));
     }
+
+    @Test
+    void testInsertAndExtractWorkflow() {
+        String input     = "ABCDEFGH";
+        String agentID   = "ID123";
+        String date      = "20250002";   // substring(5) → "002" → index = 2
+
+        // insert
+        String encoded = VICOperations.insertID(input, agentID, date);
+        assertEquals("ABID123CDEFGH", encoded);
+
+        // extract the ID
+        String extractedID = VICOperations.extractID(encoded, date);
+        assertEquals(agentID, extractedID);
+
+        // extract the original message
+        String decoded = VICOperations.extractEncodedMessage(encoded, date);
+        assertEquals(input, decoded);
+    }
+
+    @Test
+    void testInsertID_InvalidDateThrows() {
+        // date.substring(5) = "XYZ" → parseInt fails
+        assertThrows(NumberFormatException.class, () ->
+                VICOperations.insertID("Hello", "ABCDE", "2025XYZ")
+        );
+    }
+
+    @Test
+    void testExtractID_InvalidDateThrows() {
+        assertThrows(NumberFormatException.class, () ->
+                VICOperations.extractID("anything", "2025XYZ")
+        );
+    }
+
+    @Test
+    void testExtractEncodedMessage_InvalidDateThrows() {
+        assertThrows(NumberFormatException.class, () ->
+                VICOperations.extractEncodedMessage("anything", "2025XYZ")
+        );
+    }
+
+    @Test
+    void testInvalidLength() {
+        assertFalse(VICOperations.isValidAnagram("SHORT"));
+        assertFalse(VICOperations.isValidAnagram("TOO_LONG_STRING"));
+    }
+
+    @Test
+    void testNonLetterCharacter() {
+        assertFalse(VICOperations.isValidAnagram("ABCDEF1GHI"));
+        assertFalse(VICOperations.isValidAnagram("ABCDEFG!HI"));
+    }
+
+    @Test
+    void testDuplicateLetter() {
+        assertFalse(VICOperations.isValidAnagram("ABCD DFGG"));
+    }
+
+
+    @Test
+    void testInvalidSpaceCount() {
+        assertFalse(VICOperations.isValidAnagram("ABCDEFGHIJ"));
+    }
+
+
 }

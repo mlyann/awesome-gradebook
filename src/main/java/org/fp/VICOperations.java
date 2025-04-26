@@ -322,7 +322,7 @@ public class VICOperations {
 	 * @param anagram The anagram to validate.
 	 * @return true if the anagram meets the conditions, false otherwise.
 	 */
-	private static boolean isValidAnagram(String anagram) {
+	public static boolean isValidAnagram(String anagram) {
         if (anagram.length() != 10) {
             return false;
         }
