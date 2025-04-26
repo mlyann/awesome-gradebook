@@ -4,215 +4,8 @@
     "encryptedPassword": "null12345",
     "firstName": "1",
     "lastName": "1",
-    "email": "1@1",
+    "email": "@",
     "type": "SUPERADMIN"
-  },
-  "2": {
-    "username": "2",
-    "encryptedPassword": "null12345",
-    "firstName": "2",
-    "lastName": "2",
-    "email": "2@2",
-    "type": "TEACHER",
-    "objectID": "TCH00001"
-  },
-  "emma.watson@gmail.com": {
-    "username": "emma.watson@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Emma",
-    "lastName": "Watson",
-    "email": "emma.watson@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00033"
-  },
-  "owen.hughes@gmail.com": {
-    "username": "owen.hughes@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Owen",
-    "lastName": "Hughes",
-    "email": "owen.hughes@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00034"
-  },
-  "scarlet.bennett@gmail.com": {
-    "username": "scarlet.bennett@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Scarlet",
-    "lastName": "Bennett",
-    "email": "scarlet.bennett@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00035"
-  },
-  "gavin.patterson@gmail.com": {
-    "username": "gavin.patterson@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Gavin",
-    "lastName": "Patterson",
-    "email": "gavin.patterson@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00036"
-  },
-  "paisley.simmons@gmail.com": {
-    "username": "paisley.simmons@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Paisley",
-    "lastName": "Simmons",
-    "email": "paisley.simmons@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00037"
-  },
-  "caleb.foster@gmail.com": {
-    "username": "caleb.foster@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Caleb",
-    "lastName": "Foster",
-    "email": "caleb.foster@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00038"
-  },
-  "hazel.henderson@gmail.com": {
-    "username": "hazel.henderson@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Hazel",
-    "lastName": "Henderson",
-    "email": "hazel.henderson@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00039"
-  },
-  "eli.russell@gmail.com": {
-    "username": "eli.russell@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Eli",
-    "lastName": "Russell",
-    "email": "eli.russell@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00040"
-  },
-  "aria.griffin@gmail.com": {
-    "username": "aria.griffin@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Aria",
-    "lastName": "Griffin",
-    "email": "aria.griffin@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00041"
-  },
-  "landon.diaz@gmail.com": {
-    "username": "landon.diaz@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Landon",
-    "lastName": "Diaz",
-    "email": "landon.diaz@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00042"
-  },
-  "mila.hayes@gmail.com": {
-    "username": "mila.hayes@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Mila",
-    "lastName": "Hayes",
-    "email": "mila.hayes@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00043"
-  },
-  "grace.adams@gmail.com": {
-    "username": "grace.adams@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Grace",
-    "lastName": "Adams",
-    "email": "grace.adams@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00044"
-  },
-  "noah.nelson@gmail.com": {
-    "username": "noah.nelson@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Noah",
-    "lastName": "Nelson",
-    "email": "noah.nelson@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00045"
-  },
-  "zoe.carter@gmail.com": {
-    "username": "zoe.carter@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Zoe",
-    "lastName": "Carter",
-    "email": "zoe.carter@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00046"
-  },
-  "elijah.mitchell@gmail.com": {
-    "username": "elijah.mitchell@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Elijah",
-    "lastName": "Mitchell",
-    "email": "elijah.mitchell@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00047"
-  },
-  "avery.perez@gmail.com": {
-    "username": "avery.perez@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Avery",
-    "lastName": "Perez",
-    "email": "avery.perez@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00048"
-  },
-  "evelyn.roberts@gmail.com": {
-    "username": "evelyn.roberts@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Evelyn",
-    "lastName": "Roberts",
-    "email": "evelyn.roberts@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00049"
-  },
-  "liam.turner@gmail.com": {
-    "username": "liam.turner@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Liam",
-    "lastName": "Turner",
-    "email": "liam.turner@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00050"
-  },
-  "victoria.phillips@gmail.com": {
-    "username": "victoria.phillips@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Victoria",
-    "lastName": "Phillips",
-    "email": "victoria.phillips@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00051"
-  },
-  "nathan.campbell@gmail.com": {
-    "username": "nathan.campbell@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Nathan",
-    "lastName": "Campbell",
-    "email": "nathan.campbell@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00052"
-  },
-  "hannah.parker@gmail.com": {
-    "username": "hannah.parker@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Hannah",
-    "lastName": "Parker",
-    "email": "hannah.parker@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00053"
-  },
-  "christopher.evans@gmail.com": {
-    "username": "christopher.evans@gmail.com",
-    "encryptedPassword": "null12345",
-    "firstName": "Christopher",
-    "lastName": "Evans",
-    "email": "christopher.evans@gmail.com",
-    "type": "STUDENT",
-    "objectID": "STU00054"
   },
   "james.smith@gmail.com": {
     "username": "james.smith@gmail.com",
@@ -221,7 +14,7 @@
     "lastName": "Smith",
     "email": "james.smith@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00055"
+    "objectID": "STU00099"
   },
   "emily.jones@gmail.com": {
     "username": "emily.jones@gmail.com",
@@ -230,7 +23,7 @@
     "lastName": "Jones",
     "email": "emily.jones@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00056"
+    "objectID": "STU00100"
   },
   "michael.williams@gmail.com": {
     "username": "michael.williams@gmail.com",
@@ -239,7 +32,7 @@
     "lastName": "Williams",
     "email": "michael.williams@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00057"
+    "objectID": "STU00101"
   },
   "sophia.brown@gmail.com": {
     "username": "sophia.brown@gmail.com",
@@ -248,7 +41,7 @@
     "lastName": "Brown",
     "email": "sophia.brown@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00058"
+    "objectID": "STU00102"
   },
   "william.davis@gmail.com": {
     "username": "william.davis@gmail.com",
@@ -257,7 +50,7 @@
     "lastName": "Davis",
     "email": "william.davis@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00059"
+    "objectID": "STU00103"
   },
   "olivia.miller@gmail.com": {
     "username": "olivia.miller@gmail.com",
@@ -266,7 +59,7 @@
     "lastName": "Miller",
     "email": "olivia.miller@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00060"
+    "objectID": "STU00104"
   },
   "benjamin.wilson@gmail.com": {
     "username": "benjamin.wilson@gmail.com",
@@ -275,7 +68,7 @@
     "lastName": "Wilson",
     "email": "benjamin.wilson@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00061"
+    "objectID": "STU00105"
   },
   "ava.taylor@gmail.com": {
     "username": "ava.taylor@gmail.com",
@@ -284,7 +77,7 @@
     "lastName": "Taylor",
     "email": "ava.taylor@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00062"
+    "objectID": "STU00106"
   },
   "ethan.anderson@gmail.com": {
     "username": "ethan.anderson@gmail.com",
@@ -293,7 +86,7 @@
     "lastName": "Anderson",
     "email": "ethan.anderson@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00063"
+    "objectID": "STU00107"
   },
   "isabella.thomas@gmail.com": {
     "username": "isabella.thomas@gmail.com",
@@ -302,7 +95,7 @@
     "lastName": "Thomas",
     "email": "isabella.thomas@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00064"
+    "objectID": "STU00108"
   },
   "alexander.jackson@gmail.com": {
     "username": "alexander.jackson@gmail.com",
@@ -311,6 +104,213 @@
     "lastName": "Jackson",
     "email": "alexander.jackson@gmail.com",
     "type": "STUDENT",
-    "objectID": "STU00065"
+    "objectID": "STU00109"
+  },
+  "grace.adams@gmail.com": {
+    "username": "grace.adams@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Grace",
+    "lastName": "Adams",
+    "email": "grace.adams@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00110"
+  },
+  "noah.nelson@gmail.com": {
+    "username": "noah.nelson@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Noah",
+    "lastName": "Nelson",
+    "email": "noah.nelson@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00111"
+  },
+  "zoe.carter@gmail.com": {
+    "username": "zoe.carter@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Zoe",
+    "lastName": "Carter",
+    "email": "zoe.carter@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00112"
+  },
+  "elijah.mitchell@gmail.com": {
+    "username": "elijah.mitchell@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Elijah",
+    "lastName": "Mitchell",
+    "email": "elijah.mitchell@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00113"
+  },
+  "avery.perez@gmail.com": {
+    "username": "avery.perez@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Avery",
+    "lastName": "Perez",
+    "email": "avery.perez@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00114"
+  },
+  "evelyn.roberts@gmail.com": {
+    "username": "evelyn.roberts@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Evelyn",
+    "lastName": "Roberts",
+    "email": "evelyn.roberts@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00115"
+  },
+  "liam.turner@gmail.com": {
+    "username": "liam.turner@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Liam",
+    "lastName": "Turner",
+    "email": "liam.turner@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00116"
+  },
+  "victoria.phillips@gmail.com": {
+    "username": "victoria.phillips@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Victoria",
+    "lastName": "Phillips",
+    "email": "victoria.phillips@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00117"
+  },
+  "nathan.campbell@gmail.com": {
+    "username": "nathan.campbell@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Nathan",
+    "lastName": "Campbell",
+    "email": "nathan.campbell@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00118"
+  },
+  "hannah.parker@gmail.com": {
+    "username": "hannah.parker@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Hannah",
+    "lastName": "Parker",
+    "email": "hannah.parker@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00119"
+  },
+  "christopher.evans@gmail.com": {
+    "username": "christopher.evans@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Christopher",
+    "lastName": "Evans",
+    "email": "christopher.evans@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00120"
+  },
+  "emma.watson@gmail.com": {
+    "username": "emma.watson@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Emma",
+    "lastName": "Watson",
+    "email": "emma.watson@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00121"
+  },
+  "owen.hughes@gmail.com": {
+    "username": "owen.hughes@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Owen",
+    "lastName": "Hughes",
+    "email": "owen.hughes@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00122"
+  },
+  "scarlet.bennett@gmail.com": {
+    "username": "scarlet.bennett@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Scarlet",
+    "lastName": "Bennett",
+    "email": "scarlet.bennett@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00123"
+  },
+  "gavin.patterson@gmail.com": {
+    "username": "gavin.patterson@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Gavin",
+    "lastName": "Patterson",
+    "email": "gavin.patterson@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00124"
+  },
+  "paisley.simmons@gmail.com": {
+    "username": "paisley.simmons@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Paisley",
+    "lastName": "Simmons",
+    "email": "paisley.simmons@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00125"
+  },
+  "caleb.foster@gmail.com": {
+    "username": "caleb.foster@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Caleb",
+    "lastName": "Foster",
+    "email": "caleb.foster@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00126"
+  },
+  "hazel.henderson@gmail.com": {
+    "username": "hazel.henderson@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Hazel",
+    "lastName": "Henderson",
+    "email": "hazel.henderson@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00127"
+  },
+  "eli.russell@gmail.com": {
+    "username": "eli.russell@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Eli",
+    "lastName": "Russell",
+    "email": "eli.russell@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00128"
+  },
+  "aria.griffin@gmail.com": {
+    "username": "aria.griffin@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Aria",
+    "lastName": "Griffin",
+    "email": "aria.griffin@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00129"
+  },
+  "landon.diaz@gmail.com": {
+    "username": "landon.diaz@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Landon",
+    "lastName": "Diaz",
+    "email": "landon.diaz@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00130"
+  },
+  "mila.hayes@gmail.com": {
+    "username": "mila.hayes@gmail.com",
+    "encryptedPassword": "null12345",
+    "firstName": "Mila",
+    "lastName": "Hayes",
+    "email": "mila.hayes@gmail.com",
+    "type": "STUDENT",
+    "objectID": "STU00131"
+  },
+  "2": {
+    "username": "2",
+    "encryptedPassword": "null12345",
+    "firstName": "2",
+    "lastName": "2",
+    "email": "@",
+    "type": "TEACHER",
+    "objectID": "TCH00000"
   }
 }

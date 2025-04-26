@@ -537,14 +537,25 @@ public class TeacherController extends BaseController {
     /**
      * Add an existing student to the cache
      */
-    public void addExistingStudentToCache(String studentID, String courseID) {
-        Student s = model.getStudent(studentID);
-        if (s != null) {
-            addStudentToCache(s);
-            addCourseToStudentCache(studentID, courseID);
-            studentCacheDirty = true;
+    public String addExistingStudentToCache(String studentID, String courseID) {
+        boolean alreadyInCache = cachedStudents.stream()
+                .anyMatch(s -> s.getStuID().equals(studentID));
+        if (alreadyInCache) {
+            return "Student " + studentID + " is already enrolled in this course.";
         }
+
+        Student s = model.getStudent(studentID);
+        if (s == null) {
+            return "No student found with ID " + studentID + ".";
+        }
+
+        addStudentToCache(s);
+        addCourseToStudentCache(studentID, courseID);
+        studentCacheDirty = true;
+
+        return null;
     }
+
 
     public List<String> getUngradedAssignmentIDs(String courseID) {
         List<Assignment> all = model.getAssignmentsInCourse(courseID);

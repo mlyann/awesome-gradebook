@@ -32,6 +32,21 @@ public class LibraryModel {
     private final Map<String, List<String>> courseToStudentIDs = new HashMap<>();
 
 
+    public void clearAllData() {
+        studentMap.clear();
+        teacherMap.clear();
+        courseMap.clear();
+        assignmentMap.clear();
+        gradeMap.clear();
+
+        studentCourses.clear();
+        courseStudents.clear();
+        courseAssignments.clear();
+        studentAssignments.clear();
+        assignmentGrades.clear();
+        courseToStudentIDs.clear();
+    }
+
     public int getCourseCount() {
         return courseMap.size();
     }
@@ -129,6 +144,14 @@ public class LibraryModel {
             copiedList.add(new Assignment(a));
         }
         return Collections.unmodifiableCollection(copiedList);
+    }
+
+    public void submitAssignment(String assignmentID) {
+        Assignment a = assignmentMap.get(assignmentID);
+        if (a == null) {
+            throw new IllegalArgumentException("No such assignment: " + assignmentID);
+        }
+        a.submit();
     }
 
     public List<Assignment> getAssignmentsInCourse(String courseID) {
@@ -291,84 +314,6 @@ public class LibraryModel {
         IDGen.initialize(prefix, max + 1);
     }
 
-/*
-    public void state3() {
-        Teacher t = new Teacher("Zhao", "T001");
-        addTeacher(t);
-        Course c1 = new Course("CS", "Advanced Programming", t.getTeacherID());
-        c1.setGradingMode(true);
-        c1.setCategoryWeight("Homework", 0.3);
-        c1.setCategoryWeight("Project", 0.4);
-        c1.setCategoryWeight("Quiz", 0.3);
-        c1.setCategoryDropCount("Quiz", 1);  // drop lowest quiz
-        addCourse(c1);
-        t.addCourse(c1.getCourseID());
-
-        // Create students
-        List<Student> students = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
-            Student s = new Student("Stu" + i, "Demo", "stu" + i + "@cs.arizona.edu");
-            students.add(s);
-            addStudent(s);
-            enrollStudentInCourse(s.getStuID(), c1.getCourseID());
-        }
-
-        LocalDate assignDate = LocalDate.of(2025, 4, 1);
-        int hwCount = 4, projCount = 2, quizCount = 3;
-
-        for (int i = 1; i <= hwCount; i++) {
-            for (Student s : students) {
-                String sid = s.getStuID();
-                Assignment a = new Assignment("HW " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(5));
-                a.setCategory("Homework");
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
-
-                if ( i != 4 && i != 5 ) {
-                    a.submit();
-                    a.markGraded("G_" + a.getAssignmentID());
-                    int earned = 60 + (int)(Math.random() * 41);
-                    addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), sid, earned, 100));
-                }
-            }
-        }
-
-        // 示例：Project 作业
-        for (int i = 1; i <= projCount; i++) {
-            for (Student s : students) {
-                String sid = s.getStuID();
-                Assignment a = new Assignment("Project " + i, sid, c1.getCourseID(), assignDate, assignDate.plusDays(10));
-                a.setCategory("Project");
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
-
-                if (i != 4) {
-                    a.submit();
-                    a.markGraded("G_" + a.getAssignmentID());
-                    int earned = 80 + (int)(Math.random() * 41);
-                    addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), sid, earned, 100));
-                }
-            }
-        }
-
-
-        for (int i = 1; i <= quizCount; i++) {
-            for (Student s : students) {
-                Assignment a = new Assignment("Quiz " + i, s.getStuID(), c1.getCourseID(), assignDate, assignDate.plusDays(2));
-                a.setCategory("Quiz");
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
-                a.submit();
-                a.markGraded("G_" + a.getAssignmentID());
-                int score = switch (i) {
-                    case 1 -> 100; case 2 -> 80; default -> 60;
-                };
-                int earned = 70 + (int)(Math.random() * 41); // 60 ~ 100
-                addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), s.getStuID(), earned, 100));
-            }
-        }
-    }
- */
     /**
      * Populate a course with demo data (5 students + HW/Project/Quiz assignments).
      * All objects are created inside <code>courseID</code>;
@@ -450,47 +395,6 @@ public class LibraryModel {
         }
     }
 
-    /*
-    public void stateStudent() {
-        // create a new course and assign it to a teacher
-        Teacher t = new Teacher("Zhao", "Chang");
-        addTeacher(t);
-
-        Course c = new Course("CS", "Intro to Programming", t.getTeacherID());
-        addCourse(c);
-        t.addCourse(c.getCourseID());
-        for (Student s : getAllStudents()) {
-            enrollStudentInCourse(s.getStuID(), c.getCourseID());
-        }
-
-        // create assignments
-        LocalDate assignDate = LocalDate.of(2025, 4, 20);
-        for (int i = 1; i <= 3; i++) {
-            String name = "HW " + i;
-            for (Student s : getAllStudents()) {
-                Assignment a = new Assignment(
-                        name,
-                        s.getStuID(),
-                        c.getCourseID(),
-                        assignDate,
-                        assignDate.plusDays(5)
-                );
-                addAssignment(a);
-                s.addAssignment(a.getAssignmentID());
-
-                // simulate partial submission and grading
-                if (Math.random() < 0.8) {
-                    a.submit();
-                    if (Math.random() < 0.7) {
-                        a.markGraded("G_" + a.getAssignmentID());
-                        int earned = 70 + (int)(Math.random() * 31);  // 70~100
-                        addScore(new Score("G_" + a.getAssignmentID(), a.getAssignmentID(), s.getStuID(), earned, 100));
-                    }
-                }
-            }
-        }
-    }
-     */
 
     public double calculateClassAverage(String courseID) {
         Course course = courseMap.get(courseID);
@@ -673,32 +577,6 @@ public class LibraryModel {
                 : (sorted.get(mid - 1) + sorted.get(mid)) / 2.0;
     }
 
-    /*
-    public double calculateGPACompletedOnly(String studentID) {
-        List<String> courseIDs = studentCourses.getOrDefault(studentID, List.of());
-        int totalPoints = 0;
-        int count = 0;
-
-        for (String courseID : courseIDs) {
-            Course course = courseMap.get(courseID);
-            if (course == null || !course.isCompleted()) continue;
-
-            double pct = course.isUsingWeightedGrading()
-                    ? computeWeightedPercentage(studentID, courseID)
-                    : computeTotalPointsPercentage(studentID, courseID);
-
-            Grade grade = Grade.fromScore(pct);
-            int gpaPoints = switch (grade) {
-                case A -> 4; case B -> 3; case C -> 2; case D -> 1; case F -> 0;
-            };
-            totalPoints += gpaPoints;
-            count++;
-        }
-
-        return count == 0 ? 0.0 : totalPoints * 1.0 / count;
-    }
-
-     */
 
     public void markCourseAsCompleted(String courseID) {
         Course course = courseMap.get(courseID);

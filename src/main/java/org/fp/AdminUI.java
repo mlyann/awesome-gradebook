@@ -33,7 +33,7 @@ public class AdminUI {
                 case "m" -> rosterManage(users, model);
                 case "b" -> bulkRegisterStudents(users, vic, model);
                 case "c" -> {
-                    clearAllUsersUI(users, vic);
+                    clearAllUsersUI(users, vic, model);
                     return;
                 }
                 default  -> System.out.println("❌ Invalid option, please enter 'm', 'b', 'c', or '0'");
@@ -183,7 +183,7 @@ public class AdminUI {
     }
 
 
-    private static void clearAllUsersUI(LibraryUsers users, VICData vic) {
+    private static void clearAllUsersUI(LibraryUsers users, VICData vic, LibraryModel model) {
         // 1) find SUPERADMIN
         String superadmin = users.listAllUsers().entrySet().stream()
                 .filter(e -> e.getValue() == LibraryUsers.UserType.SUPERADMIN)
@@ -215,6 +215,8 @@ public class AdminUI {
         // 4) clear all users
         users.clearAllUsers();
         users.saveToJSON("data/users.json");
+
+        model.clearAllData();
         System.out.println("✅ All user data cleared. Returning to main menu.");
     }
 }
