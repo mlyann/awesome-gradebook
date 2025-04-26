@@ -530,7 +530,9 @@ Haocheng Cao - [@Haocheng](https://x.com/@boldthinkingcat) - cao8@arizona.edu
 
 Minglai Yang - [@Ming](https://x.com/iammilleryang) - mingly@arizona.edu
 
-Jerry Yu - [@Jerry]() - jerryyu1@arizona.edu
+Jerry Yu - [@Jerry](https://github.com/YuJerry1) - jerryyu1@arizona.edu 
+
+Alan Soto - [@Alan](https://github.com/mlyann/awesome-gradebook/blob/main) - asgalan04@arizona.edu
 
 Project Link: [https://github.com/mlyann/music-store](https://github.com/mlyann/music-store)
 
