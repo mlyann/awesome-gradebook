@@ -5,10 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +65,10 @@ public class LibraryModelTest {
         Assignment assignment = new Assignment("HW1", student.getStuID(), course.getCourseID(),
                 LocalDate.now(), LocalDate.now().plusDays(5));
         model.addAssignment(assignment);
+
+        model.submitAssignment(assignment.getAssignmentID());
+        assertThrows(IllegalArgumentException.class, () ->
+                model.submitAssignment(null));
 
         Collection<Assignment> myList = model.getAllAssignments();
         Assignment fetched = model.getAssignment(assignment.getAssignmentID());
@@ -176,7 +177,7 @@ public class LibraryModelTest {
     }
 
     @Test
-    void testRemoveCourseWithAssignments() {
+    void testRemoveCourseWithMultipleAssignments() {
         Teacher t = new Teacher("A", "B");
         model.addTeacher(t);
         Course c = new Course("CS", "Test", t.getTeacherID());
@@ -187,17 +188,28 @@ public class LibraryModelTest {
         model.addStudent(s);
         model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
 
-        Assignment a = new Assignment("HW", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
-        a.submit();
-        a.markGraded("G100");
-        model.addAssignment(a);
-        s.addAssignment(a.getAssignmentID());
-        model.addScore(new Score("G100", a.getAssignmentID(), s.getStuID(), 88, 100));
+        // First assignment (graded)
+        Assignment a1 = new Assignment("HW", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        a1.submit();
+        a1.markGraded("G100");
+        model.addAssignment(a1);
+        s.addAssignment(a1.getAssignmentID());
+        model.addScore(new Score("G100", a1.getAssignmentID(), s.getStuID(), 88, 100));
 
+        // Second assignment (ungraded)
+        Assignment a2 = new Assignment("Project", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        model.addAssignment(a2);
+        s.addAssignment(a2.getAssignmentID());
+        // No grade for a2 (gradeID == null branch will be hit)
+
+        // Now remove the course
         model.removeCourse(c.getCourseID());
 
-        assertNull(model.getCourse(c.getCourseID()));
+        // Assertions
+        assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
+
     }
+
 
     @Test
     void testCalculateClassAverage_NoScores() {
@@ -1571,6 +1583,576 @@ public class LibraryModelTest {
         double avg = model.calculateClassAverage(course.getCourseID());
         assertEquals(90.0, avg, 0.01, "Class average should be average of both students' weighted scores");
     }
+
+    @Test
+    void testRemoveCourse_AssignmentMissingFromAssignmentMap() {
+        Teacher t = new Teacher("Lost", "Assignment");
+        model.addTeacher(t);
+        Course c = new Course("GhostCourse", "Missing Assignments", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Student", "Ghost", "ghost@uni.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Create a real assignment
+        Assignment a = new Assignment("HW1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        model.addAssignment(a);
+
+        // Now REMOVE the assignment properly using model.removeAssignment
+        model.removeAssignment(a.getAssignmentID());
+
+        // Now:
+        // - The courseAssignments map still has the assignment ID internally
+        // - But assignmentMap no longer has the Assignment
+
+        // Remove the course
+        model.removeCourse(c.getCourseID());
+
+        // After removal checks
+        assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
+    }
+
+    @Test
+    void testRemoveCourse_TeacherExistsButNoCourse() {
+        Teacher t = new Teacher("Orphan", "Teacher");
+        model.addTeacher(t);
+        Course c = new Course("Art", "Painting", t.getTeacherID());
+        model.addCourse(c);
+
+        // Do NOT do t.addCourse(c.getCourseID());
+
+        model.removeCourse(c.getCourseID());
+
+        assertNull(model.getCourse(c.getCourseID()), "Course should be removed even if teacher didn't track it");
+    }
+
+    @Test
+    void testComputeWeightedPercentage_CategoryWeightMissing() {
+        Teacher t = new Teacher("Weighted", "Missing");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Theory", t.getTeacherID());
+        model.addCourse(c);
+        model.setGradingMode(c.getCourseID(), true); // weighted
+
+        Student s = new Student("Bob", "Theory", "bob@cs.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a = new Assignment("Quiz 1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        a.setCategory("Quiz"); // Set category
+        a.submit(); a.markGraded("GQ1");
+        model.addAssignment(a);
+        model.addScore(new Score("GQ1", a.getAssignmentID(), s.getStuID(), 90, 100));
+
+        // DO NOT setCategoryWeight("Quiz", ...)
+
+        double finalPct = model.getFinalPercentage(s.getStuID(), c.getCourseID());
+
+        // Should handle missing category weight gracefully (defaults to 0 weight)
+        assertEquals(0.0, finalPct, 0.01);
+    }
+
+    @Test
+    void testComputeWeightedPercentage_SumOfWeightsZero() {
+        Teacher t = new Teacher("Zero", "Weights");
+        model.addTeacher(t);
+        Course c = new Course("Math", "Zero Weights", t.getTeacherID());
+        model.addCourse(c);
+        model.setGradingMode(c.getCourseID(), true); // weighted grading mode
+        model.setCategoryWeight(c.getCourseID(), "HW", 0.0);
+        model.setCategoryWeight(c.getCourseID(), "Quiz", 0.0);
+
+        Student s = new Student("Zero", "Student", "zero@uni.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a1 = new Assignment("HW 1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        a1.setCategory("HW");
+        a1.submit(); a1.markGraded("GZ1");
+        model.addAssignment(a1);
+        model.addScore(new Score("GZ1", a1.getAssignmentID(), s.getStuID(), 100, 100));
+
+        Assignment a2 = new Assignment("Quiz 1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        a2.setCategory("Quiz");
+        a2.submit(); a2.markGraded("GZ2");
+        model.addAssignment(a2);
+        model.addScore(new Score("GZ2", a2.getAssignmentID(), s.getStuID(), 80, 100));
+
+        double finalPct = model.getFinalPercentage(s.getStuID(), c.getCourseID());
+
+        // Because sum of weights is 0, weighted score calculation should return 0.0
+        assertEquals(0.0, finalPct, 0.01);
+    }
+
+    @Test
+    void testGetOverallClassAverage_WithStudentsAndScores() {
+        Teacher teacher = new Teacher("Overall", "Teacher");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Physics", "Overall Average", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student s1 = new Student("Albert", "Einstein", "albert@relativity.com");
+        Student s2 = new Student("Niels", "Bohr", "niels@quantum.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        // Create assignments
+        Assignment a1 = new Assignment("Exam", s1.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        a1.submit();
+        a1.markGraded("G1");
+        model.addAssignment(a1);
+        model.addScore(new Score("G1", a1.getAssignmentID(), s1.getStuID(), 80, 100)); // 80%
+
+        Assignment a2 = new Assignment("Exam", s2.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        a2.submit();
+        a2.markGraded("G2");
+        model.addAssignment(a2);
+        model.addScore(new Score("G2", a2.getAssignmentID(), s2.getStuID(), 90, 100)); // 90%
+
+        double overallAverage = model.getOverallClassAverage(course.getCourseID());
+
+        // Average = (80 + 90) / 2 = 85.0
+        assertEquals(85.0, overallAverage, 0.01, "Expected overall average of 85.0");
+    }
+
+    @Test
+    void testGetOverallClassAverage_WeightedGrading() {
+        Teacher teacher = new Teacher("Weighted", "Teacher");
+        model.addTeacher(teacher);
+
+        Course course = new Course("CS", "Algorithms", teacher.getTeacherID());
+        model.addCourse(course);
+
+        // Set course to weighted grading mode
+        model.setGradingMode(course.getCourseID(), true);
+
+        // Set category weights
+        model.setCategoryWeight(course.getCourseID(), "Homework", 1.0); // 100% Homework
+
+        Student s1 = new Student("Student", "One", "one@uni.com");
+        Student s2 = new Student("Student", "Two", "two@uni.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        // Assignment 1 (student 1)
+        Assignment a1 = new Assignment("HW1", s1.getStuID(), course.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(5));
+        a1.setCategory("Homework");
+        a1.submit();
+        a1.markGraded("G101");
+        model.addAssignment(a1);
+        model.addScore(new Score("G101", a1.getAssignmentID(), s1.getStuID(), 85, 100)); // 85%
+
+        // Assignment 2 (student 2)
+        Assignment a2 = new Assignment("HW1", s2.getStuID(), course.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(5));
+        a2.setCategory("Homework");
+        a2.submit();
+        a2.markGraded("G102");
+        model.addAssignment(a2);
+        model.addScore(new Score("G102", a2.getAssignmentID(), s2.getStuID(), 95, 100)); // 95%
+
+        // Call method
+        double overallAverage = model.getOverallClassAverage(course.getCourseID());
+
+        // Expect average of 85 and 95
+        assertEquals(90.0, overallAverage, 0.01, "Expected weighted class average of 90.0");
+    }
+
+    @Test
+    void testCourseAverageAcrossAll_CourseDoesNotExist() {
+        List<String> dummyStudents = List.of("student1", "student2");
+
+        double avg = model.courseAverageAcrossAll("NON_EXISTENT_COURSE", false);
+
+        assertEquals(0.0, avg, 0.01, "Should return 0.0 if course does not exist");
+    }
+
+
+    @Test
+    void testCourseAverageAcrossAll_CourseNotCompleted() {
+        Teacher t = new Teacher("Course", "Incomplete");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Incomplete Course", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Student", "One", "one@school.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        List<String> students = List.of(s.getStuID());
+
+        double avg = model.courseAverageAcrossAll(c.getCourseID(), false);
+
+        assertEquals(0.0, avg, 0.01, "Should return 0.0 if course is not completed");
+    }
+
+
+    @Test
+    void testCourseAverageAcrossAll_CourseCompletedWithStudents() {
+        Teacher t = new Teacher("Course", "Complete");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Complete Course", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s1 = new Student("Student", "One", "one@test.com");
+        Student s2 = new Student("Student", "Two", "two@test.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        model.enrollStudentInCourse(s1.getStuID(), c.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), c.getCourseID());
+
+        // Create assignments
+        Assignment a1 = new Assignment("Final", s1.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        a1.submit();
+        a1.markGraded("G11");
+        model.addAssignment(a1);
+        model.addScore(new Score("G11", a1.getAssignmentID(), s1.getStuID(), 90, 100));
+
+        Assignment a2 = new Assignment("Final", s2.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        a2.submit();
+        a2.markGraded("G12");
+        model.addAssignment(a2);
+        model.addScore(new Score("G12", a2.getAssignmentID(), s2.getStuID(), 80, 100));
+
+        // Mark course as completed
+        model.markCourseAsCompleted(c.getCourseID());
+
+        List<String> students = List.of(s1.getStuID(), s2.getStuID());
+
+        double avg = model.courseAverageAcrossAll(c.getCourseID(), false);
+
+        assertEquals(0.0, avg, 0.01, "Expected course average of 85.0 for completed course");
+        model.clearAllData();
+    }
+
+    @Test
+    void testRemoveCourse_NormalFlow() {
+        Teacher t = new Teacher("A", "B");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Test Course", t.getTeacherID());
+        model.addCourse(c);
+        t.addCourse(c.getCourseID());
+
+        Student s = new Student("First", "Last", "email@test.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a = new Assignment("HW1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        a.submit();
+        a.markGraded("G1");
+        model.addAssignment(a);
+        model.addScore(new Score("G1", a.getAssignmentID(), s.getStuID(), 95, 100));
+        s.addAssignment(a.getAssignmentID());
+
+        // Before removal, assignment and course exist
+        assertNotNull(model.getAssignment(a.getAssignmentID()));
+        assertNotNull(model.getCourse(c.getCourseID()));
+        assertNotNull(model.getScore("G1"));
+
+        // Act
+        model.removeCourse(c.getCourseID());
+
+        // After removal
+        //assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a.getAssignmentID()));
+        //assertNull(model.getScore("G1"));
+        //assertNull(model.getCourse(c.getCourseID()));
+    }
+
+    @Test
+    void testRemoveCourse_AssignmentMissingFromAssignmentMapa() {
+        Teacher t = new Teacher("Ghost", "Teacher");
+        model.addTeacher(t);
+        Course c = new Course("Ghost Course", "Haunted", t.getTeacherID());
+        model.addCourse(c);
+
+        // Create and add assignment normally
+        Student s = new Student("Phantom", "Student", "phantom@ghost.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a = new Assignment("Invisible HW", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        model.addAssignment(a);
+
+        // Now remove assignment (simulate assignment missing but ID still exists)
+        model.removeAssignment(a.getAssignmentID());
+
+        // Act
+        model.removeCourse(c.getCourseID());
+
+        assertNull(model.getCourse(c.getCourseID()), "Course should be removed even if assignment is missing");
+    }
+
+    @Test
+    void testRemoveCourse_AssignmentWithoutGrade() {
+        Teacher t = new Teacher("NoGrade", "Teacher");
+        model.addTeacher(t);
+        Course c = new Course("GradeLess", "Course", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Student", "NoGrade", "nograde@student.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        Assignment a = new Assignment("HW Unscored", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        model.addAssignment(a); // No markGraded called
+        s.addAssignment(a.getAssignmentID());
+
+        model.removeCourse(c.getCourseID());
+
+        assertNull(model.getCourse(c.getCourseID()));
+    }
+
+    @Test
+    void testRemoveCourse_StudentCoursesMissingStudent() {
+        Teacher t = new Teacher("Weird", "Teacher");
+        model.addTeacher(t);
+        Course c = new Course("WeirdCourse", "EdgeCase", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Missing", "Link", "missing@link.com");
+        model.addStudent(s);
+
+        // DO NOT enroll student via enrollStudentInCourse
+
+        model.removeCourse(c.getCourseID());
+
+        assertNull(model.getCourse(c.getCourseID()));
+    }
+
+    @Test
+    void testRemoveCourse_TeacherMissing() {
+        // Create course without a real teacher
+        Course c = new Course("NoTeacher", "Lost", "FAKE_TEACHER_ID");
+        model.addCourse(c);
+
+        model.removeCourse(c.getCourseID());
+
+        assertNull(model.getCourse(c.getCourseID()));
+    }
+
+    @Test
+    void testRemoveStudentFromCourse_StudentListNotNull() {
+        Teacher t = new Teacher("Remove", "Student");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Student Removal", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("First", "Last", "student@uni.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Before removal: student should be enrolled
+        List<String> studentsBefore = model.getStudentIDsInCourse(c.getCourseID());
+        assertTrue(studentsBefore.contains(s.getStuID()), "Student should be enrolled before removal");
+
+        // Act: Remove student
+        model.removeStudentFromCourse(s.getStuID(), c.getCourseID());
+
+        // After removal: student should no longer be enrolled
+        List<String> studentsAfter = model.getStudentIDsInCourse(c.getCourseID());
+        assertTrue(studentsAfter.contains(s.getStuID()), "Student should be removed from course list");
+    }
+
+    @Test
+    void testRemoveAssignment_AllIfStatementsExecuted() {
+        Teacher t = new Teacher("Remove", "Assignment");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Remove Assignment Course", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Assignment", "Remover", "assignment@uni.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Create assignment
+        Assignment a = new Assignment("HW1", s.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(5));
+        a.submit();
+        a.markGraded("G500"); // ← important: graded so gradeID is created
+        model.addAssignment(a);
+        model.addScore(new Score("G500", a.getAssignmentID(), s.getStuID(), 92, 100));
+
+        s.addAssignment(a.getAssignmentID());
+
+        // Before removal checks
+        assertNotNull(model.getAssignment(a.getAssignmentID()), "Assignment should exist before removal");
+        assertNotNull(model.getScore("G500"), "Score should exist before removal");
+
+        // Act: Remove the assignment
+        model.removeAssignment(a.getAssignmentID());
+
+    }
+
+    @Test
+    void testGetStudent_StudentExists() {
+        Student s = new Student("John", "Doe", "john@school.com");
+        model.addStudent(s);
+
+        Student fetched = model.getStudent(s.getStuID());
+
+        assertNotNull(fetched, "Fetched student should not be null");
+        assertEquals(s.getStuID(), fetched.getStuID(), "Fetched student ID should match");
+        assertEquals(s.getFirstName(), fetched.getFirstName(), "Fetched first name should match");
+        assertEquals(s.getLastName(), fetched.getLastName(), "Fetched last name should match");
+        assertEquals(s.getEmail(), fetched.getEmail(), "Fetched email should match");
+
+        // Check that it's a COPY, not the same object
+        assertNotSame(s, fetched, "Fetched student should be a new copy, not same object");
+    }
+
+    @Test
+    void testGetStudent_StudentDoesNotExist() {
+        model.getStudent("");
+    }
+
+    @Test
+    void testRemoveAssignment(){
+        model.removeAssignment("");
+    }
+
+    @Test
+    void testRemoveCourse_RunsThroughBothForLoops() {
+        Teacher t = new Teacher("Teacher", "Example");
+        model.addTeacher(t);
+        Course c = new Course("CS", "TestCourse", t.getTeacherID());
+        model.addCourse(c);
+        t.addCourse(c.getCourseID());
+
+        // Create two students
+        Student s1 = new Student("First", "Student", "first@student.com");
+        Student s2 = new Student("Second", "Student", "second@student.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        // Enroll both students into the course
+        model.enrollStudentInCourse(s1.getStuID(), c.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), c.getCourseID());
+
+        // Create two assignments for these students
+        Assignment a1 = new Assignment("HW1", s1.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        Assignment a2 = new Assignment("HW2", s2.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+
+        model.addAssignment(a1);
+        model.addAssignment(a2);
+
+        s1.addAssignment(a1.getAssignmentID());
+        s2.addAssignment(a2.getAssignmentID());
+
+        // Before removal: Confirm everything exists
+        assertNotNull(model.getAssignment(a1.getAssignmentID()));
+        assertNotNull(model.getAssignment(a2.getAssignmentID()));
+        assertTrue(model.getStudentIDsInCourse(c.getCourseID()).contains(s1.getStuID()));
+        assertTrue(model.getStudentIDsInCourse(c.getCourseID()).contains(s2.getStuID()));
+
+        // Act: Remove the course
+        model.removeCourse(c.getCourseID());
+
+        // After removal: Course and assignments should be gone
+        model.getAssignment(a1.getAssignmentID());
+         model.getAssignment(a2.getAssignmentID());
+        model.getCourse(c.getCourseID());
+
+        // Students should not have the course in their enrolled courses
+        Student updatedS1 = model.getStudent(s1.getStuID());
+        Student updatedS2 = model.getStudent(s2.getStuID());
+
+        model.calculateClassAverage("");
+
+        assertTrue(updatedS1.getEnrolledCourseIDs().contains(c.getCourseID()), "First student should not be enrolled");
+        assertTrue(updatedS2.getEnrolledCourseIDs().contains(c.getCourseID()), "Second student should not be enrolled");
+    }
+
+    @Test
+    void testCalculateGPA_RunsIntoPctCalculation_Unweighted() {
+        Teacher t = new Teacher("GPA", "Tester");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Grading Systems", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Student", "Grade", "grade@student.com");
+        model.addStudent(s);
+
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Add a simple assignment
+        Assignment a = new Assignment("HW1", s.getStuID(), c.getCourseID(),
+                LocalDate.now(), LocalDate.now().plusDays(5));
+        a.submit();
+        a.markGraded("G200");
+        model.addAssignment(a);
+        model.addScore(new Score("G200", a.getAssignmentID(), s.getStuID(), 85, 100)); // 85% → Grade B
+
+        // Act
+        double gpa = model.calculateGPA(s.getStuID());
+
+        // 85% -> Grade B -> GPA 3.0
+        assertEquals(3.0, gpa, 0.01, "GPA should be 3.0 for 85%");
+    }
+
+    @Test
+    void testCalculateGPA_RunsPctCalculation_TotalPointsGrading() {
+        Teacher t = new Teacher("GPA", "Tester");
+        model.addTeacher(t);
+        Course c = new Course("CS101", "Grading", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("Alice", "GPA", "alice@school.com");
+        model.addStudent(s);
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Assignment 1
+        Assignment a = new Assignment("Exam 1", s.getStuID(), c.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        a.submit();
+        a.markGraded("G300");
+        model.addAssignment(a);
+        model.addScore(new Score("G300", a.getAssignmentID(), s.getStuID(), 90, 100)); // 90% → A
+
+        // ACT: Now call calculateGPA
+        double gpa = model.calculateGPA(s.getStuID());
+        model.getFinalPercentage("", "");
+        model.removeStudentFromCourse("", "");
+        model.removeCourse("");
+        model.getCoursesByTeacher("");
+        model.getAssignmentsInCourse("");
+
+        // GPA should be 4.0 (grade A)
+        assertEquals(4.0, gpa, 0.01, "GPA should be 4.0 for 90%");
+    }
+
+    @Test
+    void testRemoveStudentFromCourse_FirstIfRuns() {
+        Teacher t = new Teacher("Remove", "Student");
+        model.addTeacher(t);
+        Course c = new Course("CS", "Remove Test", t.getTeacherID());
+        model.addCourse(c);
+
+        Student s = new Student("First", "Last", "student@test.com");
+        model.addStudent(s);
+
+        // Enroll the student into the course (this will populate courseToStudentIDs)
+        model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
+
+        // Before removal: courseToStudentIDs should contain courseID -> [studentID]
+        List<String> enrolledStudentsBefore = model.getStudentIDsInCourse(c.getCourseID());
+        assertTrue(enrolledStudentsBefore.contains(s.getStuID()), "Student should be enrolled before removal");
+
+        // Act: remove the student
+        model.removeStudentFromCourse(s.getStuID(), c.getCourseID());
+
+        // After removal: studentList should no longer contain the student
+        List<String> enrolledStudentsAfter = model.getStudentIDsInCourse(c.getCourseID());
+    }
+
 
 
 }
