@@ -328,8 +328,6 @@ static String fullBar(LocalDate start, LocalDate due, LocalDate today) {
 
 ---
 
-We also use the following design principles to ensure our code is clean and maintainable:
-
 ## 4. Encapsulation
 - All mutable fields are private – callers must use getters / setters, e.g. private Map<String, Assignment> assignments inside Course.
 - Controllers never give references – every public getter returns deep copies, so UI code can’t mutate the model accidentally.
@@ -379,6 +377,8 @@ public Assignment getAssignmentByID(String id) {
 }
 ```
 
+---
+
 ## 5. Avoidance of antipatterns
 ## Temporary Field
    no GPA or class-average fields exist; they are derived on demand.
@@ -409,6 +409,8 @@ double getPercentage() { return 100.0*earned/total; }
 - **TeacherController, StudentController**: mediate model->view
 - **StudentUI, TeacherUI**: show menus, get input, print results.
 - We also have a lot of small classes to split different functionalities.
+
+---
 
 ## 6. Use of design patterns
 
@@ -489,6 +491,8 @@ double getPercentage() { return 100.0*earned/total; }
    }
    ```
 
+---
+
 - **ID Existence**
 ```java
 // StudentController.setCurrentStudent() method
@@ -508,6 +512,7 @@ We pasted the suggested unicode icons into our `TeacherUI` / `StudentUI` `System
 👉 Choice:
 ```
 
+---
 
 ## Contributing
 
