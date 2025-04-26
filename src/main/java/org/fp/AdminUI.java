@@ -141,7 +141,7 @@ public class AdminUI {
                         continue;
                     }
 
-                    // 注册为未分配
+                    // register not assigned
                     boolean reg = users.registerUser(
                             email, initPassword, first, last, email,
                             LibraryUsers.UserType.UNASSIGNED, vic
