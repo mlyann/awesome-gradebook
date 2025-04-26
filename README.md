@@ -392,7 +392,7 @@ public double calculateClassAverage(String cid) { … }
 -  Functions are in LibraryModel (computeWeightedPercentage, computeTotalPointsPercentage).
 -  UI & controllers call those helpers instead of re-implementing.
 
-#### PRIMITIVE OBSESSION
+### PRIMITIVE OBSESSION
 Wrap them in A, B, C, D, E, F:
 ```java
 enum Grade { A,B,C,D,E,F }              // domain concept, not just 'char'
