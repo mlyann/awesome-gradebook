@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 import java.util.*;
 
 /**
- * LibraryModel.java
- * <p>
  * This class serves as the model for the library system, managing students, teachers,
  * courses, assignments, and scores. It provides methods to add, remove, and retrieve
  * these entities, as well as to perform various calculations related to grades and
