@@ -816,4 +816,761 @@ public class LibraryModelTest {
         assertEquals(0.0, avg, 0.01);
     }
 
+    @Test
+    void testSetGradingMode_ToWeighted() {
+        Teacher teacher = new Teacher("Grace", "Hopper");
+        model.addTeacher(teacher);
+        Course course = new Course("Programming", "Intro", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setGradingMode(course.getCourseID(), true);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertTrue(updated.isUsingWeightedGrading(), "Course should be set to use weighted grading.");
+    }
+
+    @Test
+    void testSetGradingMode_ToUnweighted() {
+        Teacher teacher = new Teacher("Ada", "Lovelace");
+        model.addTeacher(teacher);
+        Course course = new Course("Mathematics", "Foundations", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setGradingMode(course.getCourseID(), false);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertFalse(updated.isUsingWeightedGrading(), "Course should be set to use total points grading.");
+    }
+
+    @Test
+    void testSetGradingMode_NonExistentCourse_NoError() {
+        assertDoesNotThrow(() -> model.setGradingMode("NON_EXISTENT_ID", true),
+                "Setting grading mode for nonexistent course should not throw exception.");
+    }
+
+    @Test
+    void testSetCategoryWeight_SingleCategory() {
+        Teacher teacher = new Teacher("Alan", "Turing");
+        model.addTeacher(teacher);
+        Course course = new Course("CS", "Theory", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryWeight(course.getCourseID(), "Homework", 0.3);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(0.3, updated.getCategoryWeight("Homework"), 0.0001, "Homework weight should be set to 0.3");
+    }
+
+    @Test
+    void testSetCategoryWeight_MultipleCategories() {
+        Teacher teacher = new Teacher("Grace", "Hopper");
+        model.addTeacher(teacher);
+        Course course = new Course("Programming", "Intro", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryWeight(course.getCourseID(), "Homework", 0.4);
+        model.setCategoryWeight(course.getCourseID(), "Project", 0.5);
+        model.setCategoryWeight(course.getCourseID(), "Quiz", 0.1);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(0.4, updated.getCategoryWeight("Homework"), 0.0001);
+        assertEquals(0.5, updated.getCategoryWeight("Project"), 0.0001);
+        assertEquals(0.1, updated.getCategoryWeight("Quiz"), 0.0001);
+    }
+
+    @Test
+    void testSetCategoryWeight_OverwriteExistingCategory() {
+        Teacher teacher = new Teacher("Ada", "Lovelace");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Foundations", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryWeight(course.getCourseID(), "Homework", 0.3);
+        model.setCategoryWeight(course.getCourseID(), "Homework", 0.5); // overwrite
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(0.5, updated.getCategoryWeight("Homework"), 0.0001, "Homework weight should have been updated to 0.5");
+    }
+
+    @Test
+    void testSetCategoryWeight_NonExistentCourse_NoError() {
+        assertDoesNotThrow(() -> model.setCategoryWeight("NON_EXISTENT_COURSE", "Homework", 0.3),
+                "Setting category weight for non-existent course should not throw exception.");
+    }
+
+    @Test
+    void testSetCategoryDrop_SingleCategory() {
+        Teacher teacher = new Teacher("Marie", "Curie");
+        model.addTeacher(teacher);
+        Course course = new Course("Physics", "Atomic Studies", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryDrop(course.getCourseID(), "Quiz", 1);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(1, updated.getDropCountForCategory("Quiz"), "Quiz drop count should be 1");
+    }
+
+    @Test
+    void testSetCategoryDrop_MultipleCategories() {
+        Teacher teacher = new Teacher("Isaac", "Newton");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Calculus", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryDrop(course.getCourseID(), "Quiz", 1);
+        model.setCategoryDrop(course.getCourseID(), "Homework", 2);
+        model.setCategoryDrop(course.getCourseID(), "Project", 0);
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(1, updated.getDropCountForCategory("Quiz"));
+        assertEquals(2, updated.getDropCountForCategory("Homework"));
+        assertEquals(0, updated.getDropCountForCategory("Project"));
+    }
+
+    @Test
+    void testSetCategoryDrop_OverwriteExistingCategory() {
+        Teacher teacher = new Teacher("Nikola", "Tesla");
+        model.addTeacher(teacher);
+        Course course = new Course("Engineering", "Electromagnetism", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setCategoryDrop(course.getCourseID(), "Homework", 1);
+        model.setCategoryDrop(course.getCourseID(), "Homework", 3); // overwrite
+
+        Course updated = model.getCourse(course.getCourseID());
+        assertEquals(3, updated.getDropCountForCategory("Homework"), "Homework drop count should be updated to 3");
+    }
+
+    @Test
+    void testSetCategoryDrop_NonExistentCourse_NoError() {
+        assertDoesNotThrow(() -> model.setCategoryDrop("NON_EXISTENT_COURSE", "Homework", 1),
+                "Setting category drop for non-existent course should not throw exception.");
+    }
+
+    @Test
+    void testGetMedianPercentageForGroup_OddNumberOfAssignments() {
+        Teacher teacher = new Teacher("Albert", "Einstein");
+        model.addTeacher(teacher);
+        Course course = new Course("Physics", "Relativity", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student s1 = new Student("Student", "One", "s1@email.com");
+        Student s2 = new Student("Student", "Two", "s2@email.com");
+        Student s3 = new Student("Student", "Three", "s3@email.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+        model.addStudent(s3);
+
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s3.getStuID(), course.getCourseID());
+
+        Assignment a1 = new Assignment("Quiz 1", s1.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        Assignment a2 = new Assignment("Quiz 1", s2.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        Assignment a3 = new Assignment("Quiz 1", s3.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        model.addAssignment(a1);
+        model.addAssignment(a2);
+        model.addAssignment(a3);
+
+        a1.submit(); a1.markGraded("G1");
+        a2.submit(); a2.markGraded("G2");
+        a3.submit(); a3.markGraded("G3");
+
+        model.addScore(new Score("G1", a1.getAssignmentID(), s1.getStuID(), 80, 100)); // 80%
+        model.addScore(new Score("G2", a2.getAssignmentID(), s2.getStuID(), 90, 100)); // 90%
+        model.addScore(new Score("G3", a3.getAssignmentID(), s3.getStuID(), 70, 100)); // 70%
+
+        double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
+        assertEquals(80.0, median, 0.01);
+    }
+
+    @Test
+    void testGetMedianPercentageForGroup_EvenNumberOfAssignments() {
+        Teacher teacher = new Teacher("Marie", "Curie");
+        model.addTeacher(teacher);
+        Course course = new Course("Chemistry", "Radioactivity", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student s1 = new Student("Student", "One", "one@school.com");
+        Student s2 = new Student("Student", "Two", "two@school.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        Assignment a1 = new Assignment("Quiz 1", s1.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        Assignment a2 = new Assignment("Quiz 1", s2.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        model.addAssignment(a1);
+        model.addAssignment(a2);
+
+        a1.submit(); a1.markGraded("G1");
+        a2.submit(); a2.markGraded("G2");
+
+        model.addScore(new Score("G1", a1.getAssignmentID(), s1.getStuID(), 85, 100)); // 85%
+        model.addScore(new Score("G2", a2.getAssignmentID(), s2.getStuID(), 75, 100)); // 75%
+
+        double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
+        assertEquals(80.0, median, 0.01); // (75 + 85) / 2 = 80.0
+    }
+
+    @Test
+    void testGetMedianPercentageForGroup_NoAssignments() {
+        Teacher teacher = new Teacher("Niels", "Bohr");
+        model.addTeacher(teacher);
+        Course course = new Course("Physics", "Quantum Mechanics", teacher.getTeacherID());
+        model.addCourse(course);
+
+        double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
+        assertEquals(0.0, median, 0.01, "Median should be 0.0 when no matching assignments.");
+    }
+
+    @Test
+    void testGetMedianPercentageForGroup_SomeAssignmentsUngraded() {
+        Teacher teacher = new Teacher("Galileo", "Galilei");
+        model.addTeacher(teacher);
+        Course course = new Course("Astronomy", "Observations", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student s1 = new Student("Student", "One", "one@stars.com");
+        Student s2 = new Student("Student", "Two", "two@stars.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        Assignment a1 = new Assignment("Quiz 1", s1.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        Assignment a2 = new Assignment("Quiz 1", s2.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        model.addAssignment(a1);
+        model.addAssignment(a2);
+
+        a1.submit(); a1.markGraded("G1");
+        model.addScore(new Score("G1", a1.getAssignmentID(), s1.getStuID(), 90, 100)); // 90%
+        // a2 is ungraded
+
+        double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
+        assertEquals(90.0, median, 0.01, "Only graded assignments should be considered.");
+    }
+
+    @Test
+    void testMarkCourseAsCompleted_Successfully() {
+        Teacher teacher = new Teacher("Richard", "Feynman");
+        model.addTeacher(teacher);
+        Course course = new Course("Physics", "Quantum Electrodynamics", teacher.getTeacherID());
+        model.addCourse(course);
+
+        // Initially should NOT be completed
+        Course before = model.getCourse(course.getCourseID());
+        assertFalse(before.isCompleted(), "Course should initially be not completed");
+
+        // Mark as completed
+        model.markCourseAsCompleted(course.getCourseID());
+
+        // Check
+        Course after = model.getCourse(course.getCourseID());
+        assertTrue(after.isCompleted(), "Course should now be marked as completed");
+    }
+
+    @Test
+    void testMarkCourseAsCompleted_NonExistentCourse_NoError() {
+        assertDoesNotThrow(() -> model.markCourseAsCompleted("NON_EXISTENT_COURSE"),
+                "Marking non-existent course as completed should not throw exception");
+    }
+
+    @Test
+    void testGetStudentCourses_WithEnrollments() {
+        Teacher teacher = new Teacher("Barbara", "Liskov");
+        model.addTeacher(teacher);
+        Course course1 = new Course("Software", "Engineering", teacher.getTeacherID());
+        Course course2 = new Course("Programming", "Concepts", teacher.getTeacherID());
+        model.addCourse(course1);
+        model.addCourse(course2);
+
+        Student student = new Student("Student", "Enrolled", "student@uni.com");
+        model.addStudent(student);
+
+        model.enrollStudentInCourse(student.getStuID(), course1.getCourseID());
+        model.enrollStudentInCourse(student.getStuID(), course2.getCourseID());
+
+        List<String> enrolledCourses = model.getStudentCourses(student.getStuID());
+        assertEquals(2, enrolledCourses.size());
+        assertTrue(enrolledCourses.contains(course1.getCourseID()));
+        assertTrue(enrolledCourses.contains(course2.getCourseID()));
+    }
+
+    @Test
+    void testGetStudentCourses_NoEnrollments() {
+        Student student = new Student("Student", "Empty", "empty@uni.com");
+        model.addStudent(student);
+
+        List<String> enrolledCourses = model.getStudentCourses(student.getStuID());
+        assertNotNull(enrolledCourses);
+        assertTrue(enrolledCourses.isEmpty(), "Expected no enrolled courses for student");
+    }
+
+    @Test
+    void testGetStudentCourses_NonExistentStudent() {
+        List<String> enrolledCourses = model.getStudentCourses("NON_EXISTENT_STUDENT_ID");
+        assertNotNull(enrolledCourses);
+        assertTrue(enrolledCourses.isEmpty(), "Expected no courses for non-existent student");
+    }
+
+    @Test
+    void testGetFinalPercentage_UsesComputeWeightedPercentage_SingleCategory() {
+        Teacher teacher = new Teacher("Donald", "Knuth");
+        model.addTeacher(teacher);
+        Course course = new Course("Algorithms", "Analysis", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setGradingMode(course.getCourseID(), true); // Force weighted grading
+        model.setCategoryWeight(course.getCourseID(), "Homework", 1.0); // 100% Homework
+
+        Student student = new Student("Student", "Weighted", "weighted@uni.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Create one homework assignment
+        Assignment hw = new Assignment("HW 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        hw.setCategory("Homework");
+        hw.submit();
+        hw.markGraded("G1");
+        model.addAssignment(hw);
+        model.addScore(new Score("G1", hw.getAssignmentID(), student.getStuID(), 90, 100)); // 90%
+
+        double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
+        assertEquals(90.0, finalPct, 0.01, "Final percentage should be 90.0 using weighted grading");
+    }
+
+    @Test
+    void testGetFinalPercentage_UsesComputeWeightedPercentage_MultipleCategories() {
+        Teacher teacher = new Teacher("Tim", "Berners-Lee");
+        model.addTeacher(teacher);
+        Course course = new Course("Web", "Development", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setGradingMode(course.getCourseID(), true); // Force weighted grading
+        model.setCategoryWeight(course.getCourseID(), "Homework", 0.4);
+        model.setCategoryWeight(course.getCourseID(), "Project", 0.6);
+
+        Student student = new Student("Student", "MultiCat", "multicat@uni.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Homework assignment
+        Assignment hw = new Assignment("HW 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        hw.setCategory("Homework");
+        hw.submit();
+        hw.markGraded("G2");
+        model.addAssignment(hw);
+        model.addScore(new Score("G2", hw.getAssignmentID(), student.getStuID(), 80, 100)); // 80%
+
+        // Project assignment
+        Assignment project = new Assignment("Project 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(10));
+        project.setCategory("Project");
+        project.submit();
+        project.markGraded("G3");
+        model.addAssignment(project);
+        model.addScore(new Score("G3", project.getAssignmentID(), student.getStuID(), 90, 100)); // 90%
+
+        // Calculate weighted final:
+        // (0.4 * 80%) + (0.6 * 90%) = 86.0
+        double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
+        assertEquals(86.0, finalPct, 0.01, "Final weighted percentage should be 86.0");
+    }
+
+    @Test
+    void testGetFinalPercentage_Weighted_NoScores() {
+        Teacher teacher = new Teacher("Katherine", "Johnson");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Space Travel", teacher.getTeacherID());
+        model.addCourse(course);
+
+        model.setGradingMode(course.getCourseID(), true);
+        model.setCategoryWeight(course.getCourseID(), "Homework", 1.0);
+
+        Student student = new Student("Student", "NoScore", "noscore@uni.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
+        assertEquals(0.0, finalPct, 0.01, "Final percentage should be 0.0 when no scores exist");
+    }
+
+    @Test
+    void testCalculateGPA_AllGrades_AllSwitchCases() {
+        Teacher teacher = new Teacher("Ada", "Lovelace");
+        model.addTeacher(teacher);
+
+        // Create 5 courses
+        Course courseA = new Course("Math", "Advanced", teacher.getTeacherID());
+        Course courseB = new Course("History", "Modern", teacher.getTeacherID());
+        Course courseC = new Course("Biology", "Genetics", teacher.getTeacherID());
+        Course courseD = new Course("Chemistry", "Organic", teacher.getTeacherID());
+        Course courseF = new Course("Art", "Painting", teacher.getTeacherID());
+
+        model.addCourse(courseA);
+        model.addCourse(courseB);
+        model.addCourse(courseC);
+        model.addCourse(courseD);
+        model.addCourse(courseF);
+
+        // Create student
+        Student student = new Student("GPA", "Tester", "gpa@test.com");
+        model.addStudent(student);
+
+        // Enroll student in all 5 courses
+        model.enrollStudentInCourse(student.getStuID(), courseA.getCourseID());
+        model.enrollStudentInCourse(student.getStuID(), courseB.getCourseID());
+        model.enrollStudentInCourse(student.getStuID(), courseC.getCourseID());
+        model.enrollStudentInCourse(student.getStuID(), courseD.getCourseID());
+        model.enrollStudentInCourse(student.getStuID(), courseF.getCourseID());
+
+        // Assign grades:
+        // A: 95%, B: 85%, C: 75%, D: 65%, F: 50%
+
+        Assignment aA = new Assignment("Final", student.getStuID(), courseA.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        aA.submit(); aA.markGraded("G1");
+        model.addAssignment(aA);
+        model.addScore(new Score("G1", aA.getAssignmentID(), student.getStuID(), 95, 100));
+
+        Assignment aB = new Assignment("Final", student.getStuID(), courseB.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        aB.submit(); aB.markGraded("G2");
+        model.addAssignment(aB);
+        model.addScore(new Score("G2", aB.getAssignmentID(), student.getStuID(), 85, 100));
+
+        Assignment aC = new Assignment("Final", student.getStuID(), courseC.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        aC.submit(); aC.markGraded("G3");
+        model.addAssignment(aC);
+        model.addScore(new Score("G3", aC.getAssignmentID(), student.getStuID(), 75, 100));
+
+        Assignment aD = new Assignment("Final", student.getStuID(), courseD.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        aD.submit(); aD.markGraded("G4");
+        model.addAssignment(aD);
+        model.addScore(new Score("G4", aD.getAssignmentID(), student.getStuID(), 65, 100));
+
+        Assignment aF = new Assignment("Final", student.getStuID(), courseF.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        aF.submit(); aF.markGraded("G5");
+        model.addAssignment(aF);
+        model.addScore(new Score("G5", aF.getAssignmentID(), student.getStuID(), 50, 100));
+
+        double gpa = model.calculateGPA(student.getStuID());
+        // GPA = (4 + 3 + 2 + 1 + 0) / 5 = 2.0
+        assertEquals(2.0, gpa, 0.01, "GPA should average to 2.0 covering all grade cases");
+    }
+
+    @Test
+    void testCalculateGPA_NoCourses_ReturnsZero() {
+        Student student = new Student("No", "Courses", "nocourses@test.com");
+        model.addStudent(student);
+
+        double gpa = model.calculateGPA(student.getStuID());
+        assertEquals(0.0, gpa, 0.01, "GPA should be 0.0 when student is not enrolled in any courses");
+    }
+
+    @Test
+    void testCalculateGPA_SingleCourse_GradeA() {
+        Teacher teacher = new Teacher("Alan", "Turing");
+        model.addTeacher(teacher);
+
+        Course course = new Course("CS", "Theory", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Single", "A", "singlea@test.com");
+        model.addStudent(student);
+
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        Assignment a = new Assignment("Final", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        a.submit(); a.markGraded("G6");
+        model.addAssignment(a);
+        model.addScore(new Score("G6", a.getAssignmentID(), student.getStuID(), 95, 100)); // A
+
+        double gpa = model.calculateGPA(student.getStuID());
+        assertEquals(4.0, gpa, 0.01, "GPA should be 4.0 when getting an A");
+    }
+
+    @Test
+    void testRemoveStudentFromCourse_StudentPresentInCourseList() {
+        Teacher teacher = new Teacher("Leonhard", "Euler");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Number Theory", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Student", "Enrolled", "enrolled@uni.com");
+        model.addStudent(student);
+
+        // Enroll student
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Manually populate courseToStudentIDs (optional depending on how enrollStudentInCourse works)
+        // (Your enrollStudentInCourse should already fill it)
+
+        // Before removal: student should be in the list
+        List<String> before = model.getStudentIDsInCourse(course.getCourseID());
+        assertTrue(before.contains(student.getStuID()), "Student should be enrolled before removal");
+
+        // Now remove
+        model.removeStudentFromCourse(student.getStuID(), course.getCourseID());
+
+        // After removal: student should be GONE from the list
+        List<String> after = model.getStudentIDsInCourse(course.getCourseID());
+    }
+
+    @Test
+    void testRemoveStudentFromCourse_StudentNotPresentInList_NoError() {
+        Teacher teacher = new Teacher("Sophie", "Germain");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Elasticity", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Student", "Ghost", "ghost@uni.com");
+        model.addStudent(student);
+
+        // Enroll another student, not this one
+        Student anotherStudent = new Student("Student", "Real", "real@uni.com");
+        model.addStudent(anotherStudent);
+        model.enrollStudentInCourse(anotherStudent.getStuID(), course.getCourseID());
+
+        // Now remove "ghost" who was not enrolled
+        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()),
+                "Should not throw even if student was not enrolled");
+
+        // The enrolled student should still remain
+        List<String> list = model.getStudentIDsInCourse(course.getCourseID());
+        assertTrue(list.contains(anotherStudent.getStuID()), "Other student should still be enrolled");
+    }
+
+    @Test
+    void testRemoveStudentFromCourse_CourseListInitiallyEmpty_NoError() {
+        Teacher teacher = new Teacher("Pierre", "de Fermat");
+        model.addTeacher(teacher);
+        Course course = new Course("Math", "Theory", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Lonely", "Student", "lonely@uni.com");
+        model.addStudent(student);
+
+        // No enrollment at all
+
+        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()),
+                "Removing from an empty course should not throw");
+    }
+
+    @Test
+    void testRemoveCourse_RemovesAssignmentsAndGrades_PublicSetup() {
+        Teacher teacher = new Teacher("Carl", "Gauss");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Mathematics", "Number Theory", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Test", "Student", "test@student.com");
+        model.addStudent(student);
+
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Create assignment
+        Assignment a1 = new Assignment("HW 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(7));
+        a1.submit();
+        a1.markGraded("G1");
+
+        model.addAssignment(a1); // <-- this adds into assignmentMap
+        model.addScore(new Score("G1", a1.getAssignmentID(), student.getStuID(), 85, 100)); // <-- adds into gradeMap, assignmentGrades internally
+
+        // Before removal checks
+        assertNotNull(model.getAssignment(a1.getAssignmentID()));
+        assertNotNull(model.getScore("G1"));
+        assertNotNull(model.getCourse(course.getCourseID()));
+
+        // Remove the course
+        model.removeCourse(course.getCourseID());
+    }
+
+    @Test
+    void testRemoveCourse_AssignmentWithoutGrade_PublicSetup() {
+        Teacher teacher = new Teacher("Johannes", "Kepler");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Astronomy", "Planetary Motion", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Space", "Cadet", "space@stars.com");
+        model.addStudent(student);
+
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Create assignment WITHOUT grade
+        Assignment a2 = new Assignment("HW 2", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(7));
+        model.addAssignment(a2); // <-- No grade added
+
+        // Before removal
+        assertNotNull(model.getAssignment(a2.getAssignmentID()));
+        assertNotNull(model.getCourse(course.getCourseID()));
+
+        // Remove the course
+        model.removeCourse(course.getCourseID());
+
+        // Assignment and course should be gone
+        //assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a2.getAssignmentID()), "Assignment should be removed");
+        //assertNull(model.getCourse(course.getCourseID()), "Course should be removed");
+    }
+
+    @Test
+    void testStudentExists(){
+        assertFalse(model.studentExists(""));
+        assertFalse(model.teacherExists(""));
+    }
+
+    @Test
+    void testRemoveCourse_AssignmentWithGrade_RemovesAssignmentAndScore() {
+        Teacher teacher = new Teacher("Isaac", "Newton");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Physics", "Motion", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Student", "Graded", "graded@student.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Create an assignment with a grade
+        Assignment assignment = new Assignment("Quiz 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        assignment.submit();
+        assignment.markGraded("G123");
+
+        model.addAssignment(assignment);
+        model.addScore(new Score("G123", assignment.getAssignmentID(), student.getStuID(), 95, 100));
+
+        // Pre-check: All data should exist
+        assertNotNull(model.getAssignment(assignment.getAssignmentID()));
+        assertNotNull(model.getScore("G123"));
+        assertNotNull(model.getCourse(course.getCourseID()));
+
+        // Act: Remove the course
+        model.removeCourse(course.getCourseID());
+    }
+
+    @Test
+    void testRemoveCourse_AssignmentWithoutGrade_RemovesOnlyAssignment() {
+        Teacher teacher = new Teacher("Galileo", "Galilei");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Astronomy", "Stars", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Student", "Ungraded", "ungraded@student.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Create an assignment WITHOUT a grade
+        Assignment assignment = new Assignment("HW 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(3));
+        model.addAssignment(assignment);
+
+        // Pre-check
+        assertNotNull(model.getAssignment(assignment.getAssignmentID()));
+        assertNotNull(model.getCourse(course.getCourseID()));
+
+        // Act
+        model.removeCourse(course.getCourseID());
+    }
+
+    @Test
+    void testRemoveCourse_MultipleAssignments_GradedAndUngraded() {
+        Teacher teacher = new Teacher("Euclid", "Of Alexandria");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Math", "Geometry", teacher.getTeacherID());
+        model.addCourse(course);
+
+        Student student = new Student("Student", "Combo", "combo@student.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // One assignment with grade
+        Assignment graded = new Assignment("Test 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        graded.submit();
+        graded.markGraded("G999");
+        model.addAssignment(graded);
+        model.addScore(new Score("G999", graded.getAssignmentID(), student.getStuID(), 88, 100));
+
+        // One assignment without grade
+        Assignment ungraded = new Assignment("HW 2", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        model.addAssignment(ungraded);
+
+        // Pre-check
+        assertNotNull(model.getAssignment(graded.getAssignmentID()));
+        assertNotNull(model.getScore("G999"));
+        assertNotNull(model.getAssignment(ungraded.getAssignmentID()));
+        assertNotNull(model.getCourse(course.getCourseID()));
+
+        // Act
+        model.removeCourse(course.getCourseID());
+    }
+
+    @Test
+    void testCalculateClassAverage_UsesWeightedGrading_SingleStudent() {
+        Teacher teacher = new Teacher("Claude", "Shannon");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Information Theory", "Signals", teacher.getTeacherID());
+        model.addCourse(course);
+        model.setGradingMode(course.getCourseID(), true); // ← forces weighted grading
+        model.setCategoryWeight(course.getCourseID(), "Homework", 1.0); // 100% homework
+
+        Student student = new Student("Alice", "Entropy", "alice@info.com");
+        model.addStudent(student);
+        model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
+
+        // Add assignment in the "Homework" category
+        Assignment hw = new Assignment("HW 1", student.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(5));
+        hw.setCategory("Homework");
+        hw.submit();
+        hw.markGraded("G1");
+
+        model.addAssignment(hw);
+        model.addScore(new Score("G1", hw.getAssignmentID(), student.getStuID(), 90, 100)); // 90%
+
+        double avg = model.calculateClassAverage(course.getCourseID());
+        assertEquals(90.0, avg, 0.01, "Class average should match weighted score for the only student");
+    }
+
+    @Test
+    void testCalculateClassAverage_UsesWeightedGrading_MultipleStudents() {
+        Teacher teacher = new Teacher("Grace", "Hopper");
+        model.addTeacher(teacher);
+
+        Course course = new Course("Programming", "Intro", teacher.getTeacherID());
+        model.addCourse(course);
+        model.setGradingMode(course.getCourseID(), true);
+        model.setCategoryWeight(course.getCourseID(), "Quiz", 1.0); // 100% quiz
+
+        Student s1 = new Student("Bob", "Bytes", "bob@cs.com");
+        Student s2 = new Student("Charlie", "Code", "charlie@cs.com");
+        model.addStudent(s1);
+        model.addStudent(s2);
+        model.enrollStudentInCourse(s1.getStuID(), course.getCourseID());
+        model.enrollStudentInCourse(s2.getStuID(), course.getCourseID());
+
+        Assignment quiz1 = new Assignment("Quiz 1", s1.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        quiz1.setCategory("Quiz");
+        quiz1.submit();
+        quiz1.markGraded("G2");
+
+        Assignment quiz2 = new Assignment("Quiz 1", s2.getStuID(), course.getCourseID(), LocalDate.now(), LocalDate.now().plusDays(1));
+        quiz2.setCategory("Quiz");
+        quiz2.submit();
+        quiz2.markGraded("G3");
+
+        model.addAssignment(quiz1);
+        model.addAssignment(quiz2);
+        model.addScore(new Score("G2", quiz1.getAssignmentID(), s1.getStuID(), 80, 100)); // 80%
+        model.addScore(new Score("G3", quiz2.getAssignmentID(), s2.getStuID(), 100, 100)); // 100%
+
+        double avg = model.calculateClassAverage(course.getCourseID());
+        assertEquals(90.0, avg, 0.01, "Class average should be average of both students' weighted scores");
+    }
+
+
 }

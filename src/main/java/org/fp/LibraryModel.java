@@ -263,9 +263,11 @@ public class LibraryModel {
         courseMap.remove(courseID);
     }
 
+    /*
     public void removeScore(String scoreID) {
         gradeMap.remove(scoreID);
     } // Simple removal for scores by ID
+     */
 
     public void initializeIDGen() {
         initPrefix("STU", studentMap.keySet());
