@@ -539,7 +539,7 @@ Jerry Yu - [@Jerry](https://github.com/YuJerry1) - jerryyu1@arizona.edu
 
 Alan Soto - [@Alan](https://github.com/mlyann/awesome-gradebook/blob/main) - asgalan04@arizona.edu
 
-Project Link: [https://github.com/mlyann/music-store](https://github.com/mlyann/music-store)
+Project Link: [https://github.com/mlyann/music-store](https://github.com/mlyann/awesome-gradebook)
 
 ## Acknowledgments
 We deeply appreciate the guidance and support of our instructor Malenie Lotz and TA Paulina Aguirre throughout this journey. 😊 
