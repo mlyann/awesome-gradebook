@@ -244,7 +244,7 @@ Below is a sample for Student's GPA report. Here Student can also call GPT for f
 ```
 
 ## Design
-1. **Clear separation of concerns between front and backend code**
+## 1. Clear separation of concerns between front and backend code
 
 | Layer | Folder                                 |
 |-------|----------------------------------------|
@@ -263,19 +263,18 @@ Below is a sample for Student's GPA report. Here Student can also call GPT for f
 - Convert UI actions into model calls
 - Enforce validation & transactions
 
-2. **Data structures and Java library features**
-## 2  Data-structures & Java-library features we rely on
+## 2. Data structures and Java library features
 
-| Feature | Why we chose it                                                                   | Where you can see it |
-|---------|-----------------------------------------------------------------------------------|----------------------|
-| **`List` / `ArrayList`** | Order-preserving, maps naturally to tables (rosters, assignments).                | `TeacherController.cachedStudents`, `StudentController.cachedAssignments` |
-| **`Map<K,V>` / `HashMap`** | O(1) look-ups by ID; perfect for **course → assignments** or **student → scores**. | `LibraryModel.courseMap`, `Course.categoryWeights`, `TeacherController.groupedAssignments` |
-| **`Set` / `HashSet`** | Fast membership tests without duplicates                                          | `TeacherController.deletedAssignmentIDs`, `deletedStudentIDs` |
-| **Enums** | no illegal strings, also small and FLYWEIGHT                                      | `Assignment.SubmissionStatus`, `Grade`, `TeacherUI.ViewMode` |
-| **`Comparator*`** | Multi-key sorts with classes.                                                     | `StudentController.sortCachedAssignmentsByName()` |
-| **`switch` expressions** | concise branching on enums.                                                       | `TeacherUI.nextRosterSort()` |
-| **Try-with-resources** | Auto-closing I/O, operations.                                                     | `LibraryModel.loadStudentsFromDirectory()` |
-| **`Collections.unmodifiableMap`** | Expose **read-only** for DEEPCOPY.                        | `Course.getCategoryWeights()` |
+| Feature                            | Why we chose it                                                                   | Where you can see it |
+|------------------------------------|-----------------------------------------------------------------------------------|----------------------|
+| **`List` / `ArrayList`**           | Order-preserving, maps naturally to tables (rosters, assignments).                | `TeacherController.cachedStudents`, `StudentController.cachedAssignments` |
+| **`Map<K,V>` / `HashMap`**         | O(1) look-ups by ID; perfect for **course → assignments** or **student → scores**. | `LibraryModel.courseMap`, `Course.categoryWeights`, `TeacherController.groupedAssignments` |
+| **`Set` / `HashSet`**              | Fast membership tests without duplicates                                          | `TeacherController.deletedAssignmentIDs`, `deletedStudentIDs` |
+| **Enums**                          | no illegal strings, also small and FLYWEIGHT                                      | `Assignment.SubmissionStatus`, `Grade`, `TeacherUI.ViewMode` |
+| **`Comparator*`**                  | Multi-key sorts with classes.                                                     | `StudentController.sortCachedAssignmentsByName()` |
+| **`switch` expressions**           | concise branching on enums.                                                       | `TeacherUI.nextRosterSort()` |
+| **Read resources such as CSV**     | Auto-closing I/O, operations.                                                     | `LibraryModel.loadStudentsFromDirectory()` |
+| **`Collections.unmodifiableMap`**  | Expose **read-only** for DEEPCOPY.                        | `Course.getCategoryWeights()` |
 | **`DirectoryStream<Path>` (NIO2)** | Fast, memory-light directory walks with glob filters.                             | `LibraryModel.loadStudentsFromDirectory()` |
 
 ---
@@ -320,25 +319,194 @@ static String fullBar(LocalDate start, LocalDate due, LocalDate today) {
 ```
 
 
-3. **Correct and thoughtful use of composition, inheritance, and/or interfaces**
+## 3. Correct and thoughtful use of composition, inheritance, and/or interfaces
+
+| Mechanism | Why we used it | Concrete places in the code |
+|-----------|----------------|-----------------------------|
+| **Inheritance** | Share cross-cutting logic, caches and helper methods among every controller. | ```java<br>class BaseController (abstract) …<br>class StudentController   extends BaseController<br>class TeacherController   extends BaseController<br>``` |
+| **Composition (has-a)** | Model real-world relationships and keep the inheritance tree shallow. | *Course has many Assignments* → `Course.addAssignment()`<br>*Student has many assignmentIDs* → `Student.addAssignment()`<br>*TeacherController owns a `LibraryModel` reference – it **does not** extend the model.* |
+
+---
+
+We also use the following design principles to ensure our code is clean and maintainable:
+
+## 4. Encapsulation
+- All mutable fields are private – callers must use getters / setters, e.g. private Map<String, Assignment> assignments inside Course.
+- Controllers never give references – every public getter returns deep copies, so UI code can’t mutate the model accidentally.
+
+### Deep-copy pattern we use:
+```java
+// in the Course.java - COPY CONSTRUCTOR
+public Course(Course src) {
+   this.courseID          = src.courseID;          // immutable → straight copy
+   this.courseName        = src.courseName;
+   this.courseDescription = src.courseDescription;
+   this.teacherID         = src.teacherID;
+   this.assignments = new HashMap<>();
+   for (var e : src.assignments.entrySet()) {
+      this.assignments.put(e.getKey(), new Assignment(e.getValue())); // <-- new instance!
+   }
+   this.useWeightedGrading = src.useWeightedGrading;
+   this.categoryWeights    = new HashMap<>(src.categoryWeights);
+   this.categoryDropCount  = new HashMap<>(src.categoryDropCount);
+}
+```
+### When a controller exposes cached data:
+```java
+// BaseController.java
+public List<Course> getCachedCourses() {
+   List<Course> safe = new ArrayList<>();
+   for (Course c : cachedCourses) safe.add(new Course(c));  // deep copy
+   return safe;
+}
+```
+### Model also return Copies:
+```java 
+// LibraryModel.java
+public Course getCourse(String id) {
+    Course raw = courseMap.get(id);
+    return (raw == null) ? null : new Course(raw);  // deep copy again
+}
+```
+### Private state + accessors – fields stay private; only read-only views
+```java
+// Course.java
+private final Map<String, Assignment> assignments;
+
+public Assignment getAssignmentByID(String id) {
+    Assignment raw = assignments.get(id);
+    return (raw == null) ? null : new Assignment(raw);   // returns a COPY
+}
+```
+
+## 5. Avoidance of antipatterns
+## Temporary Field
+   no GPA or class-average fields exist; they are derived on demand.
+```java
+// LibraryModel.java
+public double calculateGPA(String stuID) { … }
+public double calculateClassAverage(String cid) { … }
+```
+
+### DUPLICATE CODE
+-  Functions are in LibraryModel (computeWeightedPercentage, computeTotalPointsPercentage).
+-  UI & controllers call those helpers instead of re-implementing.
+
+#### PRIMITIVE OBSESSION
+Wrap them in A, B, C, D, E, F:
+```java
+enum Grade { A,B,C,D,E,F }              // domain concept, not just 'char'
+enum SubmissionStatus { UNSUBMITTED, SUBMITTED_UNGRADED, GRADED }
+
+record Score(int earned, int total) {      // self-checking value object
+double getPercentage() { return 100.0*earned/total; }
+}
+```
+
+### GOD CLASS
+#### Strict MVC keeps responsibilities small:
+- **LibraryModel**: holds state, does calculations.
+- **TeacherController, StudentController**: mediate model->view
+- **StudentUI, TeacherUI**: show menus, get input, print results.
+- We also have a lot of small classes to split different functionalities.
+
+## 6. Use of design patterns
 
 
-4. **Encapsulation**
+- **Flyweight – `IDGen`**
+   * **Intent :** share a *single* pool of counters for every object-prefix ( `STU-`, `TCH-`, `CRS-`, `ASG-` ) so we never create redundant counter state.
+   * **How :**
+     ```java
+     // IDGen.java
+     public final class IDGen {
+         private static final Map<String,Integer> COUNTERS = new HashMap<>();
+         public static synchronized String generate(String prefix){
+             int next = COUNTERS.merge(prefix, 1, Integer::sum) - 1;
+             return prefix + next;
+         }
+         public static void initialize(String prefix,int start){ COUNTERS.put(prefix,start); }
+     }
+     ```
+     Every call returns a lightweight `String`, while the heavy state (`COUNTERS`) is *shared*.
 
+---
 
-5. **Avoidance of antipatterns**
+- **Strategy – runtime-selectable sorting**
+   * **Intent :** allow the caller to switch “how to sort” **without** touching `TeacherController` / `StudentController` internals.
+   * **How :** an `enum` + a bank of `Comparator` lambdas are the concrete *strategies*; the `switch` merely picks one.
+     ```java
+     // TeacherController.jave
+     switch (sort) {
+         case NAME         -> names.sort(namePrefixThenNumber());
+         case ASSIGN_DATE  -> names.sort(dateCmp(a -> a.getAssignDate()));
+         case DUE_DATE     -> names.sort(dateCmp(a -> a.getDueDate()));
+         case SUBMISSION   -> names.sort(Comparator.comparingInt(this::submitted).reversed());
+         case GRADED_PERCENT -> names.sort(Comparator.comparingDouble(this::gradedPct).reversed());
+         default -> names.sort(String::compareToIgnoreCase);
+     }
+     // each helper returns a Comparator = concrete Strategy
+     ```
+     The UI just calls `nextSort(sort)` and the controller swaps in a different *strategy* object on the fly.
 
+---
 
-6. **Use of design patterns**
+- **Iterator – safe traversal without leaking internals**
+   * **Intent :** clients iterate over model data **without** holding live references.
+   * **How :** every “getter” hands back a *copy* that still supports Java’s built-in `Iterator`.
+     ```java
+     // LibraryModel.java
+     public Collection<Student> getAllStudents() {
+         List<Student> copy = new ArrayList<>();
+         for (Student s : studentMap.values()) copy.add(new Student(s)); // deep-copy
+         return Collections.unmodifiableCollection(copy);   // exposes only an Iterator
+     }
+ 
+     // usage
+     for (Student s : model.getAllStudents()) { … }   // ← external code can iterate safely
+     ```
+     The client gets an *iterator* view, but the mutable map inside `LibraryModel` stays encapsulated.
 
+## 7.  Input validation
+- **Constructor‐level guards** – never let a broken object exist.
+  ```java
+  // Assignment.java
+  public Assignment(String name,String stuID,String cid,
+                    LocalDate assign,LocalDate due){
+      if (stuID==null || cid==null || assign==null || due==null)
+          throw new IllegalArgumentException("Assignment requires all fields.");
+      ...
+  }
+   ```
+- **Safe numeric parsing in the console UI**
+   ```java
+   // TeacherUI.java
+   String choice = sc.nextLine().trim();
+   if (choice.matches("[1-9][0-9]*") &&
+           Integer.parseInt(choice) <= courseData.size()) {
+           ...
+           } else {
+           System.out.println("❌ Invalid choice.");
+   }
+   ```
 
-7. **Input validation**
-
-
+** ID Existence**
+```java
+// StudentController.setCurrentStudent() method
+if (model.studentExists(id)) {
+    currentStudentID = id;
+} else {
+    System.out.println("❌ Tried to set non-existent student: " + id);
+}
+```
 
 8. **Explain what any AI-generated code**
 
+We pasted the suggested unicode icons into our `TeacherUI` / `StudentUI` `System.out.println(...)` calls.
 
+```java
+1) 🔍 Select a course    s) 🔀 Change sort    p) 🤖 Personal feedback    g) 📈 GPA    0) 🚪 Exit
+👉 Choice:
+```
 
 
 ## Contributing
