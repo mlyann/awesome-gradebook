@@ -528,7 +528,6 @@ public class LibraryModel {
                 : computeTotalPointsPercentage(studentID, courseID);
     }
 
-    // LibraryModel.java
     public void setGradingMode(String courseID, boolean weighted) {
         Course c = courseMap.get(courseID);
         if (c != null) c.setGradingMode(weighted);
