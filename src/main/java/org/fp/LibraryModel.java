@@ -467,7 +467,8 @@ public class LibraryModel {
             double pct = course.isUsingWeightedGrading()
                     ? computeWeightedPercentage(sid, courseID)
                     : computeTotalPointsPercentage(sid, courseID);
-            result.put(sid, Grade.fromScore(pct));
+            String name = studentMap.get(sid).getFullName();
+            result.put(name, Grade.fromScore(pct));
         }
         return result;
     }

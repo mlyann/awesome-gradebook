@@ -27,17 +27,6 @@ public class StudentController extends BaseController {
     }
 
 
-
-    public void createStudent(String first, String last, String email) {
-        Student s = new Student(first, last, email);
-        model.addStudent(s);
-    }
-
-    public void createCourse(String name, String desc, String teacherID) {
-        Course c = new Course(name, desc, teacherID); // Course generates its own ID
-        model.addCourse(c);
-    }
-
     public void loadStudentCourses() {
         Student student = model.getStudent(currentStudentID);
         if (student == null) return;
@@ -51,14 +40,6 @@ public class StudentController extends BaseController {
         for (Course c : cachedCourses) {
             String status = c.isCompleted() ? "✅ Completed" : "🟢 In Progress";
             output.add(List.of(c.getCourseName(), c.getCourseDescription(), status));
-        }
-        return output;
-    }
-    public List<String> getFormattedCourseListForDisplay() {
-        List<String> output = new ArrayList<>();
-        for (int i = 0; i < cachedCourses.size(); i++) {
-            Course c = cachedCourses.get(i);
-            output.add((i + 1) + ". " + c.getCourseName() + " - " + c.getCourseDescription());
         }
         return output;
     }
@@ -121,16 +102,6 @@ public class StudentController extends BaseController {
                             }
                         })
         );
-    }
-
-
-    public int extractAssignmentNumber(String name) {
-        String[] parts = name.trim().split(" ");
-        try {
-            return Integer.parseInt(parts[parts.length - 1]);
-        } catch (NumberFormatException e) {
-            return Integer.MAX_VALUE; // fallback
-        }
     }
 
 

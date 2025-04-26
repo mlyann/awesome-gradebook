@@ -69,9 +69,8 @@ public class TeacherController extends BaseController {
 
 
     public void loadAssignmentsForCourse(String courseID) {
-        this.currentCourseID = courseID;  //  同步缓存当前操作的课程
+        this.currentCourseID = courseID;
         this.cachedAssignments = model.getAssignmentsInCourse(courseID);
-        this.cacheValid = false; // ⚠️ 如果需要更新 groupedAssignments，可一并刷新缓存
     }
 
 
@@ -81,26 +80,6 @@ public class TeacherController extends BaseController {
                 .map(model::getStudent)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    public int countSubmitted(String assignmentID) {
-        return (int) model.getAllStudents().stream()
-                .filter(s -> {
-                    Assignment a = model.getAssignment(assignmentID);
-                    return a != null && a.getStudentID().equals(s.getStuID())
-                            && a.getStatus() != UNSUBMITTED;
-                })
-                .count();
-    }
-
-    public int countGraded(String assignmentID) {
-        return (int) model.getAllStudents().stream()
-                .filter(s -> {
-                    Assignment a = model.getAssignment(assignmentID);
-                    return a != null && a.getStudentID().equals(s.getStuID())
-                            && a.getStatus() == GRADED;
-                })
-                .count();
     }
 
     public List<String> getSortedAssignmentNames() {
@@ -115,18 +94,6 @@ public class TeacherController extends BaseController {
         return groupedAssignments.getOrDefault(name, List.of());
     }
 
-
-    public int getGradedPercentage(String assignmentID) {
-        int submitted = countSubmitted(assignmentID);
-        int graded = countGraded(assignmentID);
-        if (submitted == 0) return 0;
-        return (int) ((graded / (double) submitted) * 100);
-    }
-
-    public Map<String, List<Assignment>> getGroupedAssignments(String courseID) {
-        return model.getAssignmentsInCourse(courseID).stream()
-                .collect(Collectors.groupingBy(Assignment::getAssignmentName));
-    }
 
     enum AssignmentSort {
         NONE, NAME, ASSIGN_DATE, DUE_DATE, SUBMISSION, GRADED_PERCENT
@@ -148,7 +115,6 @@ public class TeacherController extends BaseController {
 
         switch (sort) {
             case NAME -> names.sort(Comparator
-                    // 1) 比较前缀（去掉最后的数字部分）
                     .comparing((String fullName) -> {
                         int i = fullName.lastIndexOf(' ');
                         return i > 0
@@ -210,9 +176,6 @@ public class TeacherController extends BaseController {
         }
     }
 
-    public String getSelectedAssignmentGroup() {
-        return currentAssignmentGroupName;
-    }
 
     public String getSubmissionStatsForStudent(String studentID, String courseID) {
         List<Assignment> all = model.getAssignmentsForStudentInCourse(studentID, courseID);
@@ -238,9 +201,6 @@ public class TeacherController extends BaseController {
         currentAssignmentGroupList = new ArrayList<>(list); // avoid escaping reference
     }
 
-    public List<Assignment> getCurrentAssignmentGroupList() {
-        return currentAssignmentGroupList;
-    }
     public Course getCourseByAssignment(String assignmentID) {
         Assignment a = model.getAssignment(assignmentID);
         if (a == null) return null;
@@ -261,7 +221,7 @@ public class TeacherController extends BaseController {
         if (list != null) {
             for (Assignment a : list) {
                 assignmentIDMap.remove(a.getAssignmentID());
-                deletedAssignmentIDs.add(a.getAssignmentID());  //  标记待删除
+                deletedAssignmentIDs.add(a.getAssignmentID());
             }
             cacheValid = false;
             assignmentCacheDirty = true;
@@ -278,20 +238,18 @@ public class TeacherController extends BaseController {
     }
 
     public void commitAssignmentChanges() {
-        //  删除阶段
         for (String id : deletedAssignmentIDs) {
             Assignment a = model.getAssignment(id);
             if (a != null) {
-                model.removeAssignment(id);  // 从模型中删除
+                model.removeAssignment(id);
                 Student s = model.getStudent(a.getStudentID());
-                if (s != null) s.removeAssignment(id);  // 从学生对象中删除引用
+                if (s != null) s.removeAssignment(id);
             }
         }
 
-        //  添加/更新阶段
         for (List<Assignment> group : groupedAssignments.values()) {
             for (Assignment a : group) {
-                model.addAssignment(a);  // 添加或覆盖
+                model.addAssignment(a);
                 Student s = model.getStudent(a.getStudentID());
                 if (s != null && !s.getAssignmentIDs().contains(a.getAssignmentID())) {
                     s.addAssignment(a.getAssignmentID());
@@ -309,28 +267,6 @@ public class TeacherController extends BaseController {
         refreshGroupedAssignments(getCurrentCourseID());
         assignmentCacheDirty = false;
         System.out.println("🚫 Changes discarded.");
-    }
-
-    public void addAssignment(Assignment a) {
-        model.addAssignment(a);
-        assignmentIDMap.put(a.getAssignmentID(), a);
-        cacheValid = false; // 视情况决定
-    }
-
-    public void removeAssignment(String assignmentID) {
-        model.removeAssignment(assignmentID);
-        assignmentIDMap.remove(assignmentID);
-        cacheValid = false;
-    }
-
-    public Assignment getAssignment(String assignmentID) {
-        return assignmentIDMap.get(assignmentID);
-    }
-
-
-
-    public void setCurrentCourseID(String courseID) {
-        this.currentCourseID = courseID;
     }
 
     public String getCurrentCourseID() {
@@ -382,25 +318,20 @@ public class TeacherController extends BaseController {
     }
 
     public void commitStudentChanges() {
-        // 先把所有 assignment 按名字分组，方便为新同学生成对应作业
         List<Assignment> allAssignments = model.getAssignmentsInCourse(currentCourseID);
         Map<String, List<Assignment>> assignmentGroups = allAssignments.stream()
                 .collect(Collectors.groupingBy(Assignment::getAssignmentName));
 
-        // 1) 处理 cachedStudents 中的每个学生
         for (Student s : cachedStudents) {
             String sid = s.getStuID();
             boolean existed = model.getStudent(sid) != null;
 
-            // 1a) 如果模型里还没有这位学生，先 addStudent
             if (!existed) {
                 model.addStudent(s);
             }
 
-            // 1b) 不论新旧，都要 enroll 到课程里
             model.enrollStudentInCourse(sid, currentCourseID);
 
-            // 1c) 只有新生才需要生成作业副本
             if (!existed) {
                 for (Map.Entry<String, List<Assignment>> entry : assignmentGroups.entrySet()) {
                     Assignment sample = entry.getValue().get(0);
@@ -417,7 +348,6 @@ public class TeacherController extends BaseController {
             }
         }
 
-        // 2) 处理删除
         for (String sid : deletedStudentIDs) {
             model.removeStudentFromCourse(sid, currentCourseID);
             model.getAssignmentsForStudentInCourse(sid, currentCourseID)
@@ -473,12 +403,6 @@ public class TeacherController extends BaseController {
         return rows;
     }
 
-
-    public void removeCourseFromCache(String courseID) {
-        cachedCourses.removeIf(c -> c.getCourseID().equals(courseID));
-        deletedCourseIDs.add(courseID);
-        setCourseCacheDirty(true);
-    }
 
     public void commitCourseChanges() {
         // add new courses
@@ -561,7 +485,7 @@ public class TeacherController extends BaseController {
         List<Assignment> all = model.getAssignmentsInCourse(courseID);
         return all.stream()
                 .filter(a -> a.getStatus() == Assignment.SubmissionStatus.SUBMITTED_UNGRADED)
-                .map(Assignment::getAssignmentID)
+                .map(Assignment::getAssignmentName)
                 .collect(Collectors.toList());
     }
 
