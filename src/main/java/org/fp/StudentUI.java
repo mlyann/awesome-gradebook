@@ -12,23 +12,17 @@ import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
 import io.github.cdimascio.dotenv.Dotenv;
-/**
-* REQUIRED FUNCTIONS NOT CHECKED YET.
- */
+
 public class StudentUI {
 
-    /* =============================================================
-     *  Runtime state
-     * ============================================================= */
+    /* runtime state */
     private static final Scanner sc = new Scanner(System.in);
     private static StudentController studentController;
     private static final LocalDate SYSTEM_DATE = LocalDate.of(2025,4,6);
     private static LibraryModel model;    // shared model
     // GPT client – created lazily
     private static OpenAIClient gpt;
-    /* =============================================================
-     *  Entry
-     * ============================================================= */
+    /* entry*/
 
     public static void start(LibraryModel modelInstance, String studentID) {
         // use this model instance
@@ -57,9 +51,7 @@ public class StudentUI {
     }
 
 
-    /* =============================================================
-     *  LEVEL‑1  – list courses with dynamic sort & GPA option
-     * ============================================================= */
+    /* LEVEL - 1*/
 
 
     private static void level_1(StudentController studentController, Scanner sc) {
@@ -128,7 +120,6 @@ public class StudentUI {
         }
     }
 
-    // StudentUI.java
     private static void printCourseTable(String stuName, List<List<String>> data, StudentController.CourseSort mode) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(List.of("No.", "Course Name", "Description", "Status"));
@@ -146,7 +137,6 @@ public class StudentUI {
     }
 
 
-    // StudentUI.java
     private static void showGPA(StudentController ctl) {
         Student cur = ctl.getCurrentStudent();
         if (cur == null) { System.out.println("❌ No student selected."); return; }

@@ -21,9 +21,7 @@ import com.openai.client.OpenAIClient;
  */
 public class TeacherUI {
 
-    /* =============================================================
-     *  Runtime state & helpers
-     * ============================================================= */
+    /* runtime and helper */
     private static final Scanner sc = new Scanner(System.in);
     private static TeacherController TeacherController;
     private static final LocalDate SYSTEM_DATE = LocalDate.now();

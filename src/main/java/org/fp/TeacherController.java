@@ -331,7 +331,7 @@ public class TeacherController extends BaseController {
             }
 
             model.enrollStudentInCourse(sid, currentCourseID);
-
+            // add course to student
             if (!existed) {
                 for (Map.Entry<String, List<Assignment>> entry : assignmentGroups.entrySet()) {
                     Assignment sample = entry.getValue().get(0);

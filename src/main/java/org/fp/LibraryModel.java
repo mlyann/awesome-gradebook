@@ -66,6 +66,7 @@ public class LibraryModel {
         return studentMap.containsKey(id);
     }
 
+    /// This method returns a copy of the student list
     public Collection<Student> getAllStudents() {
         List<Student> copiedList = new ArrayList<>();
         for (Student s : studentMap.values()) {
@@ -140,6 +141,7 @@ public class LibraryModel {
         }
     }
 
+    /// This method is used to add an assignment from a file
     public Assignment getAssignment(String id) {
         Assignment original = assignmentMap.get(id);
         if (original == null) return null;
@@ -231,19 +233,17 @@ public class LibraryModel {
     public void removeAssignment(String assignmentID) {
         Assignment a = assignmentMap.remove(assignmentID);
         if (a == null) return;
-        // Detach from its Course
+        // detach from Course
         Course course = courseMap.get(a.getCourseID());
         if (course != null) {
             course.removeAssignmentByID(assignmentID);
         }
 
-        // Detach from its Student
+        // detach from Student
         Student student = studentMap.get(a.getStudentID());
         if (student != null) {
             student.removeAssignment(assignmentID);
         }
-
-        // Cascade‐delete the Score by reading it off the Assignment itself
         String gradeID = a.getGradeID();
         if (gradeID != null) {
             gradeMap.remove(gradeID);

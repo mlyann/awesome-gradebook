@@ -10,8 +10,8 @@ public class ProgressBar {
     /**
      * Returns a combined progress bar and time left string, fixed width.
      * Progress is based on assigned date to due date.
-     * Example: [#####---------------] ⏳ 10 days left
-     *          [####################] ⌛ Overdue by 2 days
+     * [#####---------------] ⏳ 10 days left
+     * [####################] ⌛ Overdue by 2 days
      */
     public static String fullBar(LocalDate assigned, LocalDate due, LocalDate now) {
         String bar;
