@@ -11,9 +11,7 @@ public final class GPT {
     private static final OpenAIClient client;
     static {
         Dotenv env   = Dotenv.configure().ignoreIfMissing().load();
-        client = OpenAIOkHttpClient.builder()
-                .apiKey(env.get("OPENAI_API_KEY", ""))
-                .build();
+        client = OpenAIOkHttpClient.builder().apiKey(env.get("OPENAI_API_KEY", "")).build();
     }
     private GPT() { }// Prevent instantiation (fake method)
     public static String chat(String userPrompt) {

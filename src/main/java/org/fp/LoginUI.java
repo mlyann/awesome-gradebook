@@ -49,7 +49,7 @@ public class LoginUI {
                 ""
         );
 
-        // 4) Main loop
+        // Main loop
         boolean running = true;
         while (running) {
             System.out.println("1) Register  2) Login  3) Exit");

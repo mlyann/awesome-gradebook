@@ -66,7 +66,7 @@ public class LibraryModel {
         return studentMap.containsKey(id);
     }
 
-    /// This method returns a copy of the student list
+    // This method returns a copy of the student list
     public Collection<Student> getAllStudents() {
         List<Student> copiedList = new ArrayList<>();
         for (Student s : studentMap.values()) {
