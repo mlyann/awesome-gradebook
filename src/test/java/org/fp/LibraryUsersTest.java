@@ -16,11 +16,11 @@ class LibraryUsersTest {
     private VICData makeVic() {
         // numeric step3 and step5, and anagram covering A–D for message "ABCD"
         return new VICData(
-                "12345",         // agentID
-                "210101",        // date YYMMDD
-                "JKLMNOPQRS",    // phrase (10 unique letters)
-                "ABCD EFG H",    // anagram (8 letters A–H plus 2 spaces)
-                null             // message set by encrypt()
+                "12345",
+                "210101",
+                "JKLMNOPQRS",
+                "ABCD EFG H",
+                null
         );
     }
 
@@ -90,24 +90,16 @@ class LibraryUsersTest {
     void testSuperAdminExistsAndGetObjectIDBranches() {
         LibraryUsers lu = new LibraryUsers();
         VICData vic = makeVic();
-
-        // 1) superAdminExists() should be false when there’s no one at all
         assertFalse(lu.superAdminExists());
-
-        // 2) getObjectID on a non-existent user → null
         assertNull(lu.getObjectID("no_such_user"));
-
-        // register a non-admin user
         assertTrue(lu.registerUser(
                 "user", "PW", "F", "L", "u@e.com",
                 LibraryUsers.UserType.STUDENT, vic
         ));
-        // still no superadmin
         assertFalse(lu.superAdminExists());
         // user has no objectID until you assignRole
         assertNull(lu.getObjectID("user"));
 
-        // register a SUPERADMIN
         assertTrue(lu.registerUser(
                 "sa", "PASS", "S", "A", "sa@ex.com",
                 LibraryUsers.UserType.SUPERADMIN, vic
@@ -115,20 +107,16 @@ class LibraryUsersTest {
         // now superAdminExists() → true
         assertTrue(lu.superAdminExists());
 
-        // objectID for a superadmin is never set (assignRole refuses), so still null
         assertNull(lu.getObjectID("sa"));
 
-        // listAllUsers includes both entries
         Map<String, LibraryUsers.UserType> all = lu.listAllUsers();
         assertEquals(2, all.size());
         assertEquals(LibraryUsers.UserType.STUDENT, all.get("user"));
         assertEquals(LibraryUsers.UserType.SUPERADMIN, all.get("sa"));
 
-        // cannot assignRole on SUPERADMIN
         LibraryModel model = new LibraryModel();
         assertFalse(lu.assignRole("sa", LibraryUsers.UserType.TEACHER, model));
 
-        // assignRole on the student → sets objectID
         assertTrue(lu.assignRole("user", LibraryUsers.UserType.TEACHER, model));
         String obj = lu.getObjectID("user");
         assertNotNull(obj);
@@ -169,9 +157,6 @@ class LibraryUsersTest {
         // create a directory instead of a file
         Path dir = tmp.resolve("outputDir");
         Files.createDirectory(dir);
-
-        // Attempting to write JSON to a directory should trigger an IOException internally,
-        // but saveToJSON must catch it and not rethrow.
         assertDoesNotThrow(() -> lu.saveToJSON(dir.toString()));
     }
 
@@ -179,30 +164,21 @@ class LibraryUsersTest {
     void testLoadFromJSON_CatchesIOException(@TempDir Path tmp) throws IOException {
         LibraryUsers lu = new LibraryUsers();
 
-        // Create a directory at the target path so FileReader will throw an IOException
         Path dir = tmp.resolve("userDir");
         Files.createDirectory(dir);
         assertTrue(Files.isDirectory(dir));
 
-        // Should catch the IOException internally and not throw
         assertDoesNotThrow(() -> lu.loadFromJSON(dir.toString()));
 
-        // Since loading failed, users map remains empty
         assertFalse(lu.userExists("anything"));
     }
 
     @Test
     void testLoadFromJSON_FileNotFoundBranch(@TempDir Path tmp) {
         LibraryUsers lu = new LibraryUsers();
-
-        // Point to a path that does not exist
         Path missing = tmp.resolve("nonexistent.json");
         assertFalse(missing.toFile().exists());
-
-        // Should return gracefully without throwing
         assertDoesNotThrow(() -> lu.loadFromJSON(missing.toString()));
-
-        // Users map should still be empty
         assertFalse(lu.userExists("anyone"));
     }
 }

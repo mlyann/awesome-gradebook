@@ -1,4 +1,3 @@
-// File: AdminUI.java
 package org.fp;
 
 import java.io.BufferedReader;

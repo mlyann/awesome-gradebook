@@ -1,4 +1,3 @@
-// File: IDGen.java
 package org.fp;
 
 import java.util.Map;

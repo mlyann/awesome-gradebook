@@ -2363,18 +2363,10 @@ public class LibraryModelTest {
 
         Student s = new Student("First", "Last", "student@test.com");
         model.addStudent(s);
-
-        // Enroll the student into the course (this will populate courseToStudentIDs)
         model.enrollStudentInCourse(s.getStuID(), c.getCourseID());
-
-        // Before removal: courseToStudentIDs should contain courseID -> [studentID]
         List<String> enrolledStudentsBefore = model.getStudentIDsInCourse(c.getCourseID());
         assertTrue(enrolledStudentsBefore.contains(s.getStuID()));
-
-        // Act: remove the student
         model.removeStudentFromCourse(s.getStuID(), c.getCourseID());
-
-        // After removal: studentList should no longer contain the student
         List<String> enrolledStudentsAfter = model.getStudentIDsInCourse(c.getCourseID());
     }
 
@@ -2384,11 +2376,11 @@ public class LibraryModelTest {
         Method init = LibraryModel.class.getDeclaredMethod("initPrefix", String.class, Set.class);
         init.setAccessible(true);
 
-        // empty set → next ID should start at 0
+        // empty set → 0
         init.invoke(model, "ASG", Collections.emptySet());
         assertEquals("ASG00000", IDGen.generate("ASG"));
 
-        // non‐matching IDs only → still start at 0
+        // non‐matching IDs only →  0
         Set<String> others = Set.of("XYZ00010", "CRS00005");
         init.invoke(model, "ASG", others);
         assertEquals("ASG00000", IDGen.generate("ASG"));

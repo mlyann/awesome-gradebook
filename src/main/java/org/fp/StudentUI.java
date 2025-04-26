@@ -31,23 +31,23 @@ public class StudentUI {
      * ============================================================= */
 
     public static void start(LibraryModel modelInstance, String studentID) {
-        // 1) use this model instance
+        // use this model instance
         StudentUI.model = modelInstance;
 
-        // 2) StudentController
+        // StudentController
         studentController = new StudentController(StudentUI.model);
 
-        // 3) Check if student exists
+        // Check if student exists
         if (!StudentUI.model.studentExists(studentID)) {
             System.out.println("❌ Student ID not exist: " + studentID);
             return;
         }
         studentController.setCurrentStudent(studentID);
 
-        // 4) Clear the console
+        // Clear the console
         clear();
 
-        // 5) Start the main menu
+        // Start the main menu
         level_1(studentController, sc);
     }
 
