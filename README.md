@@ -489,7 +489,7 @@ double getPercentage() { return 100.0*earned/total; }
    }
    ```
 
-** ID Existence**
+**ID Existence**
 ```java
 // StudentController.setCurrentStudent() method
 if (model.studentExists(id)) {
