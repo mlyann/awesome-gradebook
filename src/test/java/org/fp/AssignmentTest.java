@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssignmentTest {
-//    fake data to test first
     private Assignment makeAssignment() {
         return new Assignment(
                 "Test Assignment",
@@ -59,12 +58,10 @@ class AssignmentTest {
         a.submit();
         assertEquals(Assignment.SubmissionStatus.SUBMITTED_UNGRADED, a.getStatus());
 
-        // 再次 submit 不会改变状态
         a.submit();
         assertEquals(Assignment.SubmissionStatus.SUBMITTED_UNGRADED, a.getStatus());
     }
 
-    //—— markGraded() ——//
     @Test
     void markGradedThrowsIfNotSubmitted() {
         Assignment a = makeAssignment();
@@ -126,5 +123,7 @@ class AssignmentTest {
         assertTrue(s.contains("2025-04-10"));
         assertTrue(s.contains("UNSUBMITTED"));
         assertTrue(s.contains("false"));  // published=false
+        assertEquals("2025-04-01", a.getAssignDate().toString());
+        assertEquals("2025-04-10", a.getDueDate().toString());
     }
 }

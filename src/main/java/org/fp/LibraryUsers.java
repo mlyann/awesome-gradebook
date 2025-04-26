@@ -1,4 +1,3 @@
-// File: LibraryUsers.java
 package org.fp;
 
 import java.io.File;

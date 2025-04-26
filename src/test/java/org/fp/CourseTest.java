@@ -13,10 +13,9 @@ class CourseTest {
     void constructorGeneratesNonNullID() {
         Course c = new Course("Math", "Basic Algebra", "T001");
         String id = c.getCourseID();
-        assertNotNull(id, "Course ID 不应为 null");
-        assertFalse(id.isEmpty(), "Course ID 不应为空串");
-        // 默认 IDGen.generate("CRS") 应该以 "CRS" 开头
-        assertTrue(id.startsWith("CRS"), "Course ID 应以 CRS 开头，实际为 " + id);
+        assertNotNull(id);
+        assertFalse(id.isEmpty());
+        assertTrue(id.startsWith("CRS"));
     }
 
     @Test
@@ -44,40 +43,35 @@ class CourseTest {
     @Test
     void addAndGetAssignmentByID() {
         Course c = new Course("CS", "Data Structures", "T004");
-        // 新建一个 Assignment
         Assignment a1 = new Assignment("Homework 1", "STU01", c.getCourseID(),
                 LocalDate.of(2025,4,1), LocalDate.of(2025,4,10)
         );
-        // 调用 addAssignment
         c.addAssignment(a1);
-        // 通过 ID 检索
         Assignment fetched = c.getAssignmentByID(a1.getAssignmentID());
-        assertNotNull(fetched, "应能检索到刚添加的作业");
-        assertSame(a1, fetched, "返回的实例应与添加时一致");
+        assertNotNull(fetched);
+        assertSame(a1, fetched);
     }
 
     @Test
     void getAssignmentByIDReturnsNullIfMissing() {
         Course c = new Course("Chem", "Organic", "T005");
-        assertNull(c.getAssignmentByID("不存在的ID"), "未添加的作业应返回 null");
+        assertNull(c.getAssignmentByID("不存在的ID"));
     }
 
     @Test
     void testGradingModeToggle() {
         Course c = new Course("Econ", "Microeconomics", "T010");
-        assertFalse(c.isUsingWeightedGrading(), "Default should not use weighted grading");
+        assertFalse(c.isUsingWeightedGrading());
 
         c.setGradingMode(true);
-        assertTrue(c.isUsingWeightedGrading(), "Should use weighted grading after being set to true");
+        assertTrue(c.isUsingWeightedGrading());
     }
 
     @Test
     void testCategoryWeightAndDropCountDefaults() {
         Course c = new Course("Eng", "Grammar", "T011");
 
-        // Default weight for nonexistent category should be 0.0
         assertEquals(0.0, c.getCategoryWeight("Quiz"), 1e-9);
-        // Default drop count for nonexistent category should be 0
         assertEquals(0, c.getDropCountForCategory("Quiz"));
     }
 
@@ -121,7 +115,6 @@ class CourseTest {
         assertTrue(copy.isUsingWeightedGrading());
         assertEquals(0.6, copy.getCategoryWeight("Scene"), 1e-9);
 
-        // Changing the copy should not affect the original
         copy.setCategoryWeight("Scene", 0.1);
         assertEquals(0.6, original.getCategoryWeight("Scene"), 1e-9);
     }

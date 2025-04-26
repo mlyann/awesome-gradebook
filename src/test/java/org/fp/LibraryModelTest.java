@@ -307,7 +307,7 @@ public class LibraryModelTest {
         model.removeCourse(c.getCourseID());
 
         // Assertions
-        assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
+        assertNull(model.getCourse(c.getCourseID()));
 
     }
 
@@ -393,7 +393,7 @@ public class LibraryModelTest {
         model.addCourse(emptyCourse);
 
         List<Assignment> emptyAssignments = model.getAssignmentsInCourse(emptyCourse.getCourseID());
-        assertTrue(emptyAssignments.isEmpty(), "Expected no assignments for empty course");
+        assertTrue(emptyAssignments.isEmpty());
 
         // Case 2: Course with two assignments
         Student student = new Student("Stu", "Dent", "stu@school.edu");
@@ -530,7 +530,7 @@ public class LibraryModelTest {
         // Case 1: No students enrolled
         List<String> noStudents = model.getStudentIDsInCourse(course.getCourseID());
         assertNotNull(noStudents);
-        assertTrue(noStudents.isEmpty(), "Expected no students");
+        assertTrue(noStudents.isEmpty());
 
         // Case 2: Enroll two students
         Student s1 = new Student("Jessie", "Pinkman", "jessie@high.edu");
@@ -575,8 +575,7 @@ public class LibraryModelTest {
         model.removeAssignment(a1.getAssignmentID());
         // now it should be gone
         assertNull(
-                model.getAssignment(a1.getAssignmentID()),
-                "Un‐graded assignment should return null after removal"
+                model.getAssignment(a1.getAssignmentID())
         );
 
         // --- Assignment with grade ---
@@ -608,12 +607,10 @@ public class LibraryModelTest {
 
         // after removal both should be gone
         assertNull(
-                model.getAssignment(a2.getAssignmentID()),
-                "Graded assignment should return null after removal"
+                model.getAssignment(a2.getAssignmentID())
         );
         assertNull(
-                model.getScore("G777"),
-                "Score should return null after its assignment is removed"
+                model.getScore("G777")
         );
     }
 
@@ -733,8 +730,8 @@ public class LibraryModelTest {
         long submitted = all.stream().filter(a -> a.getStatus() != Assignment.SubmissionStatus.UNSUBMITTED).count();
 
         // These are probabilistic, so use ranges
-        assertFalse(submitted >= 4, "Most should be submitted");
-        assertFalse(graded >= 2, "Most submissions should be graded");
+        assertFalse(submitted >= 4);
+        assertFalse(graded >= 2);
     }
 
     @Test
@@ -754,7 +751,7 @@ public class LibraryModelTest {
         assertFalse(assignments.isEmpty());
 
         boolean hasGrades = assignments.stream().anyMatch(a -> model.getScoreForAssignment(a.getAssignmentID()) != null);
-        assertTrue(hasGrades, "At least one assignment should be graded");
+        assertTrue(hasGrades);
     }
 
     @Test
@@ -1017,7 +1014,7 @@ public class LibraryModelTest {
         model.setGradingMode(course.getCourseID(), true);
 
         Course updated = model.getCourse(course.getCourseID());
-        assertTrue(updated.isUsingWeightedGrading(), "Course should be set to use weighted grading.");
+        assertTrue(updated.isUsingWeightedGrading());
     }
 
     @Test
@@ -1030,13 +1027,12 @@ public class LibraryModelTest {
         model.setGradingMode(course.getCourseID(), false);
 
         Course updated = model.getCourse(course.getCourseID());
-        assertFalse(updated.isUsingWeightedGrading(), "Course should be set to use total points grading.");
+        assertFalse(updated.isUsingWeightedGrading());
     }
 
     @Test
     void testSetGradingMode_NonExistentCourse_NoError() {
-        assertDoesNotThrow(() -> model.setGradingMode("NON_EXISTENT_ID", true),
-                "Setting grading mode for nonexistent course should not throw exception.");
+        assertDoesNotThrow(() -> model.setGradingMode("NON_EXISTENT_ID", true));
     }
 
     @Test
@@ -1049,7 +1045,7 @@ public class LibraryModelTest {
         model.setCategoryWeight(course.getCourseID(), "Homework", 0.3);
 
         Course updated = model.getCourse(course.getCourseID());
-        assertEquals(0.3, updated.getCategoryWeight("Homework"), 0.0001, "Homework weight should be set to 0.3");
+        assertEquals(0.3, updated.getCategoryWeight("Homework"), 0.0001);
     }
 
     @Test
@@ -1080,13 +1076,12 @@ public class LibraryModelTest {
         model.setCategoryWeight(course.getCourseID(), "Homework", 0.5); // overwrite
 
         Course updated = model.getCourse(course.getCourseID());
-        assertEquals(0.5, updated.getCategoryWeight("Homework"), 0.0001, "Homework weight should have been updated to 0.5");
+        assertEquals(0.5, updated.getCategoryWeight("Homework"), 0.0001);
     }
 
     @Test
     void testSetCategoryWeight_NonExistentCourse_NoError() {
-        assertDoesNotThrow(() -> model.setCategoryWeight("NON_EXISTENT_COURSE", "Homework", 0.3),
-                "Setting category weight for non-existent course should not throw exception.");
+        assertDoesNotThrow(() -> model.setCategoryWeight("NON_EXISTENT_COURSE", "Homework", 0.3));
     }
 
     @Test
@@ -1099,7 +1094,7 @@ public class LibraryModelTest {
         model.setCategoryDrop(course.getCourseID(), "Quiz", 1);
 
         Course updated = model.getCourse(course.getCourseID());
-        assertEquals(1, updated.getDropCountForCategory("Quiz"), "Quiz drop count should be 1");
+        assertEquals(1, updated.getDropCountForCategory("Quiz"));
     }
 
     @Test
@@ -1130,13 +1125,12 @@ public class LibraryModelTest {
         model.setCategoryDrop(course.getCourseID(), "Homework", 3); // overwrite
 
         Course updated = model.getCourse(course.getCourseID());
-        assertEquals(3, updated.getDropCountForCategory("Homework"), "Homework drop count should be updated to 3");
+        assertEquals(3, updated.getDropCountForCategory("Homework"));
     }
 
     @Test
     void testSetCategoryDrop_NonExistentCourse_NoError() {
-        assertDoesNotThrow(() -> model.setCategoryDrop("NON_EXISTENT_COURSE", "Homework", 1),
-                "Setting category drop for non-existent course should not throw exception.");
+        assertDoesNotThrow(() -> model.setCategoryDrop("NON_EXISTENT_COURSE", "Homework", 1));
     }
 
     @Test
@@ -1214,7 +1208,7 @@ public class LibraryModelTest {
         model.addCourse(course);
 
         double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
-        assertEquals(0.0, median, 0.01, "Median should be 0.0 when no matching assignments.");
+        assertEquals(0.0, median, 0.01);
     }
 
     @Test
@@ -1242,7 +1236,7 @@ public class LibraryModelTest {
         // a2 is ungraded
 
         double median = model.getMedianPercentageForGroup(course.getCourseID(), "Quiz 1");
-        assertEquals(90.0, median, 0.01, "Only graded assignments should be considered.");
+        assertEquals(90.0, median, 0.01);
     }
 
     @Test
@@ -1254,20 +1248,19 @@ public class LibraryModelTest {
 
         // Initially should NOT be completed
         Course before = model.getCourse(course.getCourseID());
-        assertFalse(before.isCompleted(), "Course should initially be not completed");
+        assertFalse(before.isCompleted());
 
         // Mark as completed
         model.markCourseAsCompleted(course.getCourseID());
 
         // Check
         Course after = model.getCourse(course.getCourseID());
-        assertTrue(after.isCompleted(), "Course should now be marked as completed");
+        assertTrue(after.isCompleted());
     }
 
     @Test
     void testMarkCourseAsCompleted_NonExistentCourse_NoError() {
-        assertDoesNotThrow(() -> model.markCourseAsCompleted("NON_EXISTENT_COURSE"),
-                "Marking non-existent course as completed should not throw exception");
+        assertDoesNotThrow(() -> model.markCourseAsCompleted("NON_EXISTENT_COURSE"));
     }
 
     @Test
@@ -1298,14 +1291,14 @@ public class LibraryModelTest {
 
         List<String> enrolledCourses = model.getStudentCourses(student.getStuID());
         assertNotNull(enrolledCourses);
-        assertTrue(enrolledCourses.isEmpty(), "Expected no enrolled courses for student");
+        assertTrue(enrolledCourses.isEmpty());
     }
 
     @Test
     void testGetStudentCourses_NonExistentStudent() {
         List<String> enrolledCourses = model.getStudentCourses("NON_EXISTENT_STUDENT_ID");
         assertNotNull(enrolledCourses);
-        assertTrue(enrolledCourses.isEmpty(), "Expected no courses for non-existent student");
+        assertTrue(enrolledCourses.isEmpty());
     }
 
     @Test
@@ -1331,7 +1324,7 @@ public class LibraryModelTest {
         model.addScore(new Score("G1", hw.getAssignmentID(), student.getStuID(), 90, 100)); // 90%
 
         double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
-        assertEquals(90.0, finalPct, 0.01, "Final percentage should be 90.0 using weighted grading");
+        assertEquals(90.0, finalPct, 0.01);
     }
 
     @Test
@@ -1368,7 +1361,7 @@ public class LibraryModelTest {
         // Calculate weighted final:
         // (0.4 * 80%) + (0.6 * 90%) = 86.0
         double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
-        assertEquals(86.0, finalPct, 0.01, "Final weighted percentage should be 86.0");
+        assertEquals(86.0, finalPct, 0.01);
     }
 
     @Test
@@ -1386,7 +1379,7 @@ public class LibraryModelTest {
         model.enrollStudentInCourse(student.getStuID(), course.getCourseID());
 
         double finalPct = model.getFinalPercentage(student.getStuID(), course.getCourseID());
-        assertEquals(0.0, finalPct, 0.01, "Final percentage should be 0.0 when no scores exist");
+        assertEquals(0.0, finalPct, 0.01);
     }
 
     @Test
@@ -1448,7 +1441,7 @@ public class LibraryModelTest {
 
         double gpa = model.calculateGPA(student.getStuID());
         // GPA = (4 + 3 + 2 + 1 + 0) / 5 = 2.0
-        assertEquals(2.0, gpa, 0.01, "GPA should average to 2.0 covering all grade cases");
+        assertEquals(2.0, gpa, 0.01);
     }
 
     @Test
@@ -1457,7 +1450,7 @@ public class LibraryModelTest {
         model.addStudent(student);
 
         double gpa = model.calculateGPA(student.getStuID());
-        assertEquals(0.0, gpa, 0.01, "GPA should be 0.0 when student is not enrolled in any courses");
+        assertEquals(0.0, gpa, 0.01);
     }
 
     @Test
@@ -1479,7 +1472,7 @@ public class LibraryModelTest {
         model.addScore(new Score("G6", a.getAssignmentID(), student.getStuID(), 95, 100)); // A
 
         double gpa = model.calculateGPA(student.getStuID());
-        assertEquals(4.0, gpa, 0.01, "GPA should be 4.0 when getting an A");
+        assertEquals(4.0, gpa, 0.01);
     }
 
     @Test
@@ -1500,7 +1493,7 @@ public class LibraryModelTest {
 
         // Before removal: student should be in the list
         List<String> before = model.getStudentIDsInCourse(course.getCourseID());
-        assertTrue(before.contains(student.getStuID()), "Student should be enrolled before removal");
+        assertTrue(before.contains(student.getStuID()));
 
         // Now remove
         model.removeStudentFromCourse(student.getStuID(), course.getCourseID());
@@ -1525,12 +1518,11 @@ public class LibraryModelTest {
         model.enrollStudentInCourse(anotherStudent.getStuID(), course.getCourseID());
 
         // Now remove "ghost" who was not enrolled
-        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()),
-                "Should not throw even if student was not enrolled");
+        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()));
 
         // The enrolled student should still remain
         List<String> list = model.getStudentIDsInCourse(course.getCourseID());
-        assertTrue(list.contains(anotherStudent.getStuID()), "Other student should still be enrolled");
+        assertTrue(list.contains(anotherStudent.getStuID()));
     }
 
     @Test
@@ -1545,8 +1537,7 @@ public class LibraryModelTest {
 
         // No enrollment at all
 
-        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()),
-                "Removing from an empty course should not throw");
+        assertDoesNotThrow(() -> model.removeStudentFromCourse(student.getStuID(), course.getCourseID()));
     }
 
     @Test
@@ -1603,9 +1594,6 @@ public class LibraryModelTest {
         // Remove the course
         model.removeCourse(course.getCourseID());
 
-        // Assignment and course should be gone
-        //assertThrows(IllegalArgumentException.class, () -> model.getAssignment(a2.getAssignmentID()), "Assignment should be removed");
-        //assertNull(model.getCourse(course.getCourseID()), "Course should be removed");
     }
 
     @Test
@@ -1789,7 +1777,7 @@ public class LibraryModelTest {
         model.removeCourse(c.getCourseID());
 
         // After removal checks
-        assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
+        assertNull(model.getCourse(c.getCourseID()));
     }
 
     @Test
@@ -2241,8 +2229,8 @@ public class LibraryModelTest {
 
         // Course and assignments should be gone
         assertNull(model.getCourse(c.getCourseID()), "Course should be removed");
-        assertNull(model.getAssignment(a1.getAssignmentID()), "Assignment a1 should be removed");
-        assertNull(model.getAssignment(a2.getAssignmentID()), "Assignment a2 should be removed");
+        assertNull(model.getAssignment(a1.getAssignmentID()));
+        assertNull(model.getAssignment(a2.getAssignmentID()));
 
         // No student should still list that course
         Student updatedS1 = model.getStudent(s1.getStuID());

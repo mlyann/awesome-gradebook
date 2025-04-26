@@ -136,7 +136,6 @@ public class AdminUI {
                         continue;
                     }
 
-                    // 如果 email 已经作为用户名注册过
                     if (users.userExists(email)) {
                         dupCount++;
                         System.out.println("⚠️ Already registered, skipping: " + email);
