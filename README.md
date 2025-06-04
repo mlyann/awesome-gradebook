@@ -3,6 +3,8 @@
 
 Welcome to the **Gradebook App**! This console-based Java application allows you to manage a Gradebook, calculating GPAs, add/remove assignments, grade the assignments, and customize different weights for each quizzes. It is a project for **CSC 335 Final Project**, taught by **Instructor Malenie Lotz** with the assistance of **TA Paulina**. The authors of this project are **[Haocheng Cao](https://github.com/Boldthinkingcat)**, **[Minglai Yang](https://ymingl.com)**, **[Jerry Yu]()** and **[Alan Soto]()**. This project will be open-source after the grades released.
 
+Update (June 04): We got 105% in this final project, the best score in this class!
+
 ![Gradebook App](REV10-ML+Logo.png)
 
 ---
